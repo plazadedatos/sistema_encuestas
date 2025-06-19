@@ -1,0 +1,16 @@
+/* app/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body { @apply font-['Inter',sans-serif] bg-slate-50 text-slate-900; }
+@keyframes fade { from { opacity:0; transform:translateY(30px);} to { opacity:1; transform:translateY(0);} }
+.animate-fade { animation: fade .8s ease-out both;}
+@media (prefers-reduced-motion: reduce) {
+  .transition-opacity { transition: none; }
+  .animate-fade { animation: none; }
+}
+/* app/globals.css */
+html {
+  scroll-behavior: smooth;
+}
