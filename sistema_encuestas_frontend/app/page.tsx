@@ -4,9 +4,9 @@ import TarjetaEncuesta from "../components/TarjetaEncuesta";
 const encuestas = [
   { id: 1, titulo: "Encuesta de satisfacción", puntos: 50 },
   { id: 2, titulo: "Preferencias 2025", puntos: 30 },
-  { id: 2, titulo: "Encuesta 3", puntos: 30 },
-  { id: 2, titulo: "Encuesta 4", puntos: 50 },
-  { id: 2, titulo: "Encuesta 5", puntos: 100 },
+  { id: 3, titulo: "Encuesta 3", puntos: 30 },
+  { id: 4, titulo: "Encuesta 4", puntos: 50 },
+  { id: 5, titulo: "Encuesta 5", puntos: 100 },
 ];
 
 export default function Home() {
