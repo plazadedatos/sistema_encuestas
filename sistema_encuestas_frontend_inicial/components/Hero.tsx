@@ -64,16 +64,18 @@ export default function Hero() {
     className="mx-auto my-10 max-w-7xl rounded-3xl overflow-hidden shadow-2xl shadow-black/20 animate-fade">
       {/* fondo cambiante */}
       {fotos.map((f, idx) => (
-        <Image
+      <Image
+        key={`${f}-${idx}`} // <-- 🔧 Aquí está la corrección
         fill
         src={f}
         alt=""
-        priority={idx === i}      // solo la primera se pinta con priority
+        priority={idx === i}
         quality={80}
         className={`absolute inset-0 object-cover transition-opacity duration-700
             ${idx === i ? "opacity-100 z-0" : "opacity-0"}`}
-        />
-        ))}
+      />
+    ))}
+
 
 
       {/* gradiente overlay + blur */}
