@@ -1,14 +1,14 @@
 // app/layout.tsx
 import "./globals.css";
 import AuthWrapper from "../components/AuthWrapper";
-
+import { AuthProvider } from "../context/authContext";
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
       <body>
-        <AuthWrapper>
+        <AuthProvider>
           {children}
-        </AuthWrapper>
+        </AuthProvider>
       </body>
     </html>
   );
