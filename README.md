@@ -14,7 +14,7 @@ crear y gestionar encuestas de forma sencilla.
 ### Frontend
 
 ```bash
-cd sistema_encuestas_frontend
+cd sistema_encuestas_frontend_inicial
 npm install
 npm run dev
 ```
@@ -37,5 +37,5 @@ El backend se inicia por defecto en `http://localhost:8000`.
 
 ## Estructura del repositorio
 
-- `sistema_encuestas_frontend/` – Aplicacion cliente con Next.js.
+- `sistema_encuestas_frontend_inicial/` – Aplicacion cliente con Next.js.
 - `sistema_encuestas_backend/` – Codigo del servidor en Python.
