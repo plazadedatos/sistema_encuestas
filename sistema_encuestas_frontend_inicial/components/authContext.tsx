@@ -1,33 +1,20 @@
-"use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 
 
-interface AuthContextProps {
+interface AuthContextType {
   isAuthenticated: boolean;
   user: any;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextProps | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const decoded: any = jwtDecode(token);
-        setUser(decoded);
-      } catch {
-        localStorage.removeItem("token");
-      }
-    }
-  }, []);
 
   const login = async (email: string, password: string) => {
     try {
@@ -42,7 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (!res.ok) return false;
 
       const data = await res.json();
-      const decoded: any = jwtDecode(data.access_token);
+      const decoded = jwtDecode(data.access_token);
       setUser(decoded);
       localStorage.setItem("token", data.access_token);
       router.push("/panel");
@@ -66,8 +53,4 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth debe usarse dentro de AuthProvider");
-  return context;
-};
+export const useAuth = () => useContext(AuthContext)!;
