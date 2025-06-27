@@ -1,43 +1,65 @@
-// ✅ PASO 1: Crear archivo authContext.tsx en carpeta context
-"use client"; // 👈 DEBE IR COMO PRIMERA LÍNEA
-import { createContext, useContext, useState, useEffect } from "react";
+"use client";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import jwtDecode from "jwt-decode";
 
 interface AuthContextProps {
   isAuthenticated: boolean;
-  login: (username: string, password: string) => boolean;
+  user: any;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    const auth = localStorage.getItem("auth");
-    if (auth === "true") setIsAuthenticated(true);
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded: any = jwtDecode(token);
+        setUser(decoded);
+      } catch {
+        localStorage.removeItem("token");
+      }
+    }
   }, []);
 
-  const login = (username: string, password: string) => {
-    if (username === "admin" && password === "123") {
-      localStorage.setItem("auth", "true");
-      setIsAuthenticated(true);
+  const login = async (email: string, password: string) => {
+    try {
+      const res = await fetch("http://localhost:8000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!res.ok) return false;
+
+      const data = await res.json();
+      const decoded: any = jwtDecode(data.access_token);
+      setUser(decoded);
+      localStorage.setItem("token", data.access_token);
       router.push("/panel");
       return true;
+    } catch (err) {
+      console.error("Error en login:", err);
+      return false;
     }
-    return false;
   };
 
   const logout = () => {
-    localStorage.removeItem("auth");
-    setIsAuthenticated(false);
-    router.push("/");
+    setUser(null);
+    localStorage.removeItem("token");
+    router.push("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated: !!user, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

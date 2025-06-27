@@ -5,13 +5,13 @@ import { useAuth } from "../../context/authContext";
 
 export default function LoginPage() {
   const { login } = useAuth();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = login(username, password);
+    const success = await login(email, password);
     if (!success) setError("Credenciales inválidas");
   };
 
@@ -22,9 +22,9 @@ export default function LoginPage() {
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
         <input
           type="text"
-          placeholder="Usuario"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Correo"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="w-full mb-3 p-2 border rounded"
         />
         <input
