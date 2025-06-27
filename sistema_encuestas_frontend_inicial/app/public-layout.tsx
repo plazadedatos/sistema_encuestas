@@ -1,7 +1,6 @@
 import "./globals.css";
 import Topbar from "../components/Topbar";
 import Footer from "../components/Footer";
-import { AuthProvider } from "../context/authContext"; // 👈 Importa esto
 
 export const metadata = {
   title: "Encuestas con Recompensas",
