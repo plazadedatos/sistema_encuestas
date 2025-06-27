@@ -1,10 +1,9 @@
 "use client";
-import Hero from "../components/Hero";
-import TarjetaEncuesta from "../components/TarjetaEncuesta";
+import Hero from "../../components/Hero";
+import TarjetaEncuesta from "../../components/TarjetaEncuesta";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "../context/authContext";
-import PublicLayout from "./public-layout";
+import { useAuth } from "../../context/authContext";
 
 const encuestas = [
   { id: 1, titulo: "Encuesta de satisfacción", puntos: 50 },
