@@ -1,6 +1,6 @@
 "use client";
 
-export default function TopbarInterno() {
+export default function FooterInterno() {
   return (
     <header className="bg-white shadow px-6 py-4 flex justify-between items-center">
       <h1 className="text-xl font-bold text-primary">Panel de Control</h1>
