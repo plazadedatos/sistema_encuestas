@@ -9,20 +9,47 @@ export default function Sidebar() {
   return (
     <aside className="w-64 bg-primary text-white min-h-screen flex flex-col justify-between p-6">
       {/* Parte superior: navegación */}
-      <div>
-        <h2 className="text-lg font-semibold mb-6">Menú</h2>
-        <nav className="flex flex-col gap-4 text-sm">
-          <Link href="/panel" className="hover:underline">Inicio</Link>
-          <Link href="/panel/encuestas" className="hover:underline">Encuestas</Link>
-          <Link href="/panel/recompensas" className="hover:underline">Recompensas</Link>
+        <div>
+        <h2 className="text-xl font-bold mb-6 text-white">Menú</h2>
+        <nav className="flex flex-col gap-3 text-base">
+            <Link
+            href="/panel"
+            className="transition-all duration-300 px-4 py-2 rounded-xl text-white hover:bg-blue-800 hover:scale-[1.03] hover:ring-2 hover:ring-white/20"
+            >
+            Inicio
+            </Link>
+            <Link
+            href="/panel/encuestas"
+            className="transition-all duration-300 px-4 py-2 rounded-xl text-white hover:bg-blue-800 hover:scale-[1.03] hover:ring-2 hover:ring-white/20"
+            >
+            Encuestas
+            </Link>
+            <Link
+            href="/panel/recompensas"
+            className="transition-all duration-300 px-4 py-2 rounded-xl text-white hover:bg-blue-800 hover:scale-[1.03] hover:ring-2 hover:ring-white/20"
+            >
+            Recompensas
+            </Link>
+            <Link
+            href="/panel/misdatos"
+            className="transition-all duration-300 px-4 py-2 rounded-xl text-white hover:bg-blue-800 hover:scale-[1.03] hover:ring-2 hover:ring-white/20"
+            >
+            Mis Datos
+            </Link>
+            <Link
+            href="/panel/historial"
+            className="transition-all duration-300 px-4 py-2 rounded-xl text-white hover:bg-blue-800 hover:scale-[1.03] hover:ring-2 hover:ring-white/20"
+            >
+            Historial
+            </Link>
         </nav>
-      </div>
+        </div>
 
       {/* Parte inferior: botón de cerrar sesión */}
       <div>
         <button
           onClick={logout}
-          className="mt-10 text-sm text-white/90 hover:text-red-300 hover:underline transition"
+          className="transition-all duration-300 px-4 py-2 rounded-xl text-white hover:bg-blue-800 hover:scale-[1.03] hover:ring-2 hover:ring-white/20"
         >
           🔒 Cerrar sesión
         </button>
