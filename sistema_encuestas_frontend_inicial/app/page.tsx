@@ -1,5 +1,10 @@
+"use client";
 import Hero from "../components/Hero";
 import TarjetaEncuesta from "../components/TarjetaEncuesta";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../context/authContext";
+import PublicLayout from "./public-layout";
 
 const encuestas = [
   { id: 1, titulo: "Encuesta de satisfacción", puntos: 50 },
@@ -8,8 +13,13 @@ const encuestas = [
   { id: 4, titulo: "Encuesta 4", puntos: 50 },
   { id: 5, titulo: "Encuesta 5", puntos: 100 },
 ];
+export default function HomePage() {
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
 
-export default function Home() {
+  useEffect(() => {
+    if (isAuthenticated) router.push("/panel");
+  }, [isAuthenticated]);
   return (
     <>
       <Hero />
