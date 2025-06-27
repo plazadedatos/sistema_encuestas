@@ -12,7 +12,7 @@ export default function PanelPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated) router.push("/login");
+    if (!isAuthenticated) router.push("/");
   }, [isAuthenticated, router]);
 
   return (
