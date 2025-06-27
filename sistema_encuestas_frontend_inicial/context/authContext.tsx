@@ -1,41 +1,49 @@
 "use client";
+
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 
-
-interface AuthContextProps {
+interface AuthContextType {
   isAuthenticated: boolean;
   user: any;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextProps | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
 
+  // ✅ Al iniciar, decodifica token y mapea rol_id => rol
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
         const decoded: any = jwtDecode(token);
-        setUser(decoded);
-      } catch {
+        console.log("🟢 Token cargado al iniciar sesión:", decoded);
+
+        const usuario = {
+          ...decoded,
+          rol: decoded.rol_id, // ✅ normalizamos el campo
+        };
+
+        setUser(usuario);
+      } catch (err) {
+        console.error("❌ Token inválido", err);
         localStorage.removeItem("token");
       }
     }
   }, []);
 
+  // ✅ Login: guarda token y mapea rol_id => rol
   const login = async (email: string, password: string) => {
     try {
       const res = await fetch("http://localhost:8000/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
@@ -43,12 +51,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       const data = await res.json();
       const decoded: any = jwtDecode(data.access_token);
-      setUser(decoded);
+      console.log("🟢 Token recibido en login:", decoded);
+
+      const usuario = {
+        ...decoded,
+        rol: decoded.rol_id, // ✅ normalizamos el campo
+      };
+
+      setUser(usuario);
       localStorage.setItem("token", data.access_token);
       router.push("/panel");
       return true;
     } catch (err) {
-      console.error("Error en login:", err);
+      console.error("❌ Error en login:", err);
       return false;
     }
   };
@@ -60,14 +75,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated: !!user, user, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        isAuthenticated: !!user,
+        user,
+        login,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth debe usarse dentro de AuthProvider");
-  return context;
-};
+export const useAuth = () => useContext(AuthContext)!;

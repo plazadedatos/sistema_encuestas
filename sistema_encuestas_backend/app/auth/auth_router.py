@@ -18,5 +18,11 @@ async def login(datos: UsuarioLogin, db: AsyncSession = Depends(get_db)):
     if not user or not bcrypt.verify(datos.password, user.password_hash):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciales incorrectas")
 
-    token = crear_token({"id_usuario": str(user.id_usuario), "rol_id": user.rol_id})
+    token = crear_token({
+    "id_usuario": str(user.id_usuario),
+    "rol_id": user.rol_id,
+    "nombre": user.nombre,
+    "apellido": user.apellido
+})
+
     return {"access_token": token}

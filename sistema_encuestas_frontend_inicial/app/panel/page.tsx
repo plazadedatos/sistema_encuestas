@@ -10,6 +10,7 @@ import { FaBullhorn, FaGift } from "react-icons/fa";
 export default function PanelPage() {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
+  const { user } = useAuth();
 
   useEffect(() => {
     if (!isAuthenticated) router.push("/");
@@ -21,11 +22,15 @@ export default function PanelPage() {
       <div className="flex-1 flex flex-col">
         <TopbarInterno />
         <main className="p-8 flex-1">
-          <h2 className="text-3xl font-bold mb-6 text-primary">¡Hola, admin!</h2>
-          <p className="text-gray-600 mb-10">
-            Comparte tu opinión en las encuestas y canjea tus puntos por recompensas reales 🎁
-          </p>
+    <div className="p-6">
+        <h1 className="text-3xl font-bold text-blue-800 mb-4">
+        ¡Hola, {user?.nombre} {user?.apellido}!
+        </h1>
 
+      <p className="text-gray-700">
+        Comparte tu opinión en las encuestas y canjea tus puntos por recompensas.
+      </p>
+    </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Tarjeta: Encuestas */}
             <div className="bg-violet-200/80 rounded-3xl p-8 shadow-xl hover:scale-105 transition duration-300">
