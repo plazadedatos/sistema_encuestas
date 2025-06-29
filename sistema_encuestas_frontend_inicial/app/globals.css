@@ -14,3 +14,6 @@ body { @apply font-['Inter',sans-serif] bg-slate-50 text-slate-900; }
 html {
   scroll-behavior: smooth;
 }
+body {
+  overflow-x: hidden;
+}

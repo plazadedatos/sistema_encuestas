@@ -41,7 +41,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // ✅ Login: guarda token y mapea rol_id => rol
   const login = async (email: string, password: string) => {
     try {
-      const res = await fetch("http://localhost:8000/login", {
+      const res = await fetch("http://localhost:8000/auth/login", {
+
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

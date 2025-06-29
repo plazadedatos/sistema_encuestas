@@ -1,43 +1,44 @@
-// app/login/page.tsx
 "use client";
+
 import { useState } from "react";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "@/context/authContext";
 
 export default function LoginPage() {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async () => {
     const success = await login(email, password);
-    if (!success) setError("Credenciales inválidas");
+
+    if (!success) {
+      alert("Credenciales inválidas o error en el servidor");
+    }
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center">
-      <form onSubmit={handleLogin} className="bg-white shadow-md p-8 rounded-lg w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-4">Iniciar sesión</h2>
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-        <input
-          type="text"
-          placeholder="Correo"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-3 p-2 border rounded"
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-4 p-2 border rounded"
-        />
-        <button className="bg-primary text-white w-full py-2 rounded hover:bg-primary-dark">
-          Entrar
-        </button>
-      </form>
-    </section>
+    <div className="max-w-sm mx-auto mt-20 p-6 bg-white shadow-md rounded-xl">
+      <h2 className="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
+      <input
+        type="email"
+        placeholder="Correo electrónico"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="w-full p-2 mb-4 border border-gray-300 rounded"
+      />
+      <input
+        type="password"
+        placeholder="Contraseña"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="w-full p-2 mb-4 border border-gray-300 rounded"
+      />
+      <button
+        onClick={handleLogin}
+        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+      >
+        Iniciar Sesión
+      </button>
+    </div>
   );
 }

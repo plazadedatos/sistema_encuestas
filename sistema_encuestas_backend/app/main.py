@@ -1,22 +1,19 @@
+# app/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.auth.auth_router import router as auth_router
-from app.users.routes import router as admin_router
-app = FastAPI(
-    title="Sistema de Encuestas con Recompensas",
-    version="1.0.0"
-)
+from app.routers import auth_router
+from app.routers import encuestas_router  # 👈 Importá el router
 
-# Configuración de CORS para permitir solicitudes desde el frontend
+app = FastAPI()
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],  # Podés restringir a tu frontend después
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Incluir rutas
-app.include_router(auth_router)
-app.include_router(admin_router)
+app.include_router(auth_router.router)
 
+app.include_router(encuestas_router.router)  # 👈 Registrá el router
