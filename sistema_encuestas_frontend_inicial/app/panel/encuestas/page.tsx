@@ -6,6 +6,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import TopbarInterno from "../../../components/TopbarInterno";
 import Sidebar from "../../../components/Sidebar";
 
@@ -87,9 +88,11 @@ return (
                     <strong>Tiempo estimado:</strong> {encuesta.tiempo_estimado}
                   </p>
                 </div>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 transition text-white">
-                Responder Encuesta
-              </Button>
+                <Link href={`/panel/encuestas/${encuesta.id_encuesta}`} className="block">
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 transition text-white">
+                    Responder Encuesta
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           ))}
