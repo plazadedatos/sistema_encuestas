@@ -39,6 +39,7 @@ const [loading, setLoading] = useState(true);
         localStorage.removeItem("token");
       }
     }
+    setLoading(false);
   }, []);
 
   // ✅ Login: guarda token y mapea rol_id => rol
