@@ -81,3 +81,67 @@ async def crear_encuesta(data: CrearEncuestaSchema, db: AsyncSession = Depends(g
     except SQLAlchemyError as e:
         await db.rollback()
         raise HTTPException(status_code=500, detail=f"Error al crear encuesta: {str(e)}")
+    
+    
+@router.get("/activas")
+async def obtener_encuestas_activas(db: AsyncSession = Depends(get_db)):
+    try:
+        result = await db.execute(select(Encuesta).where(Encuesta.estado == True))
+        encuestas = result.scalars().all()
+        return [  # Convertimos a dict para que sea JSON serializable
+            {
+                "id_encuesta": e.id_encuesta,
+                "titulo": e.titulo,
+                "descripcion": e.descripcion,
+                "fecha_inicio": e.fecha_inicio.strftime("%Y-%m-%d") if e.fecha_inicio else "",
+                "fecha_fin": e.fecha_fin.strftime("%Y-%m-%d") if e.fecha_fin else "",
+                "puntos_otorga": e.puntos_otorga,
+                "imagen": e.imagen,
+                "tiempo_estimado": e.tiempo_estimado,
+            }
+            for e in encuestas
+        ]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error obteniendo encuestas: {str(e)}")
+
+#Ruta para que al responder me traigan todo
+@router.get("/{encuesta_id}", response_model=dict)
+async def obtener_encuesta_completa(encuesta_id: int, db: AsyncSession = Depends(get_db)):
+    try:
+        query_encuesta = await db.execute(
+            select(Encuesta).where(Encuesta.id_encuesta == encuesta_id)
+        )
+        encuesta = query_encuesta.scalar_one_or_none()
+        if not encuesta:
+            raise HTTPException(status_code=404, detail="Encuesta no encontrada")
+
+        query_preguntas = await db.execute(
+            select(Pregunta).where(Pregunta.id_encuesta == encuesta_id)
+        )
+        preguntas = query_preguntas.scalars().all()
+
+        preguntas_con_opciones = []
+        for p in preguntas:
+            query_opciones = await db.execute(
+                select(Opcion).where(Opcion.id_pregunta == p.id_pregunta)
+            )
+            opciones = query_opciones.scalars().all()
+            preguntas_con_opciones.append({
+                "id_pregunta": p.id_pregunta,
+                "texto": p.texto,
+                "tipo": p.tipo,
+                "orden": p.orden,
+                "opciones": [{"id_opcion": o.id_opcion, "texto_opcion": o.texto_opcion} for o in opciones]
+            })
+
+        return {
+            "id_encuesta": encuesta.id_encuesta,
+            "titulo": encuesta.titulo,
+            "descripcion": encuesta.descripcion,
+            "fecha_inicio": encuesta.fecha_inicio,
+            "fecha_fin": encuesta.fecha_fin,
+            "tiempo_estimado": encuesta.tiempo_estimado,
+            "preguntas": preguntas_con_opciones
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")

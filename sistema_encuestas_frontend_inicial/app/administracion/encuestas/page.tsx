@@ -91,18 +91,18 @@ export default function CrearEncuestaPage() {
       const uploadRes = imagen
         ? await axios.post("/api/imagenes", formData)
         : { data: { url: null } };
-const payload = {
-  titulo,
-  descripcion,
-  fecha_inicio: fechaInicio ? new Date(fechaInicio).toISOString().split("T")[0] : null,
-  fecha_fin: fechaFin ? new Date(fechaFin).toISOString().split("T")[0] : null,
-  estado: true,
-  visible_para: visiblePara,
-  imagen_url: uploadRes.data.url,
-  puntos_otorga: puntos,
-  tiempo_estimado: tiempoEstimado,
-  preguntas,
-};
+        const payload = {
+          titulo,
+          descripcion,
+          fecha_inicio: fechaInicio ? new Date(fechaInicio).toISOString().split("T")[0] : null,
+          fecha_fin: fechaFin ? new Date(fechaFin).toISOString().split("T")[0] : null,
+          estado: true,
+          visible_para: visiblePara,
+          imagen_url: uploadRes.data.url,
+          puntos_otorga: puntos,
+          tiempo_estimado: tiempoEstimado,
+          preguntas,
+        };
 
 
 
