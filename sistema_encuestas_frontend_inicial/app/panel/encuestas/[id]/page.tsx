@@ -63,7 +63,11 @@ export default function ResponderEncuestaPage() {
         fecha_respuesta: new Date().toISOString(),
       }));
 
-      await axios.post("http://localhost:8000/api/respuestas", payload);
+      await axios.post("http://localhost:8000/api/respuestas/", {
+        id_usuario: user?.sub,
+        respuestas: payload
+        });
+
       alert("Respuestas enviadas exitosamente ✅");
     } catch (err) {
       console.error("Error al enviar respuestas", err);
