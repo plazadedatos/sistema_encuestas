@@ -57,16 +57,14 @@ export default function ResponderEncuestaPage() {
     try {
       const payload = Object.entries(respuestas).map(([id_pregunta, valor]) => ({
         id_pregunta: Number(id_pregunta),
-        id_usuario: 1, // ⚠️ reemplazar luego por usuario autenticado
-        id_opcion: typeof valor === "number" ? valor : null,
-        respuesta_texto: typeof valor === "string" ? valor : null,
-        fecha_respuesta: new Date().toISOString(),
+        id_opcion: typeof valor === "number" ? valor : undefined,
+        respuesta_texto: typeof valor === "string" ? valor : undefined,
       }));
 
       await axios.post("http://localhost:8000/api/respuestas/", {
-        id_usuario: user?.sub,
-        respuestas: payload
-        });
+        id_usuario: user?.usuario_id,
+        respuestas: payload,
+      });
 
       alert("Respuestas enviadas exitosamente ✅");
     } catch (err) {
