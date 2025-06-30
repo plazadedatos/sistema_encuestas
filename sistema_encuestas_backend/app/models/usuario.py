@@ -22,4 +22,6 @@ class Usuario(Base):
 
     rol = relationship("Rol", back_populates="usuarios")
 
-participaciones = relationship("Participacion", back_populates="usuario")
+    participaciones = relationship(
+        "Participacion", back_populates="usuario"
+    )
