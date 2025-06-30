@@ -5,18 +5,21 @@ import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import TopbarInterno from "@/components/TopbarInterno";
+import Link from "next/link";
 
 import api from "@/app/services/api";
-interface HistorialItem {
+interface ParticipacionItem {
+  id_participacion: number;
   id_encuesta: number;
-  titulo: string;
-  fecha_respuesta: string;
-  cantidad_respuestas: number;
+  titulo_encuesta: string;
+  fecha_participacion: string;
+  puntaje_obtenido: number;
+  tiempo_respuesta_segundos: number;
 }
 
 export default function HistorialPage() {
   const { user, isAuthenticated, loading } = useAuth();
-  const [historial, setHistorial] = useState<HistorialItem[]>([]);
+  const [historial, setHistorial] = useState<ParticipacionItem[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -29,7 +32,9 @@ export default function HistorialPage() {
     const fetchHistorial = async () => {
       if (!user) return;
       try {
-        const res = await api.get(`/api/respuestas/historial/${user.usuario_id}`);
+        const res = await api.get(
+          `/api/respuestas/participaciones/${user.usuario_id}`
+        );
         setHistorial(res.data);
       } catch (error) {
         console.error("Error cargando historial", error);
@@ -54,22 +59,26 @@ export default function HistorialPage() {
             <div className="space-y-4">
               {historial.map((item) => (
                 <div
-                  key={item.id_encuesta}
+                  key={item.id_participacion}
                   className="bg-white shadow rounded-xl p-4 flex justify-between items-center"
                 >
                   <div>
-                    <h2 className="text-lg font-semibold text-blue-700">{item.titulo}</h2>
+                    <h2 className="text-lg font-semibold text-blue-700">
+                      {item.titulo_encuesta}
+                    </h2>
                     <p className="text-sm text-gray-600">
-                      Respondida el {new Date(item.fecha_respuesta).toLocaleDateString()}
+                      Respondida el {new Date(item.fecha_participacion).toLocaleDateString()}
                     </p>
-                    <p className="text-sm text-gray-500">{item.cantidad_respuestas} respuestas</p>
+                    <p className="text-sm text-gray-500">
+                      Puntaje obtenido: {item.puntaje_obtenido}
+                    </p>
                   </div>
-                  <button
-                    onClick={() => alert("Funcionalidad de detalle próximamente")}
+                  <Link
+                    href={`/panel/historial/${item.id_participacion}`}
                     className="text-blue-600 hover:underline text-sm"
                   >
                     Ver detalle →
-                  </button>
+                  </Link>
                 </div>
               ))}
             </div>
