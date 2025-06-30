@@ -29,7 +29,7 @@ export default function HistorialPage() {
     const fetchHistorial = async () => {
       if (!user) return;
       try {
-        const res = await api.get(`/api/respuestas/historial/${user.sub}`);
+        const res = await api.get(`/api/respuestas/historial/${user.usuario_id}`);
         setHistorial(res.data);
       } catch (error) {
         console.error("Error cargando historial", error);
