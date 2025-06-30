@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
+import api from "@/app/services/api";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -45,16 +46,11 @@ const [loading, setLoading] = useState(true);
   // ✅ Login: guarda token y mapea rol_id => rol
   const login = async (email: string, password: string) => {
     try {
-      const res = await fetch("http://localhost:8000/auth/login", {
+      const res = await api.post("/auth/login", { email, password });
 
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      if (res.status !== 200) return false;
 
-      if (!res.ok) return false;
-
-      const data = await res.json();
+      const data = res.data;
       const decoded: any = jwtDecode(data.access_token);
       console.log("🟢 Token recibido en login:", decoded);
 

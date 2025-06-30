@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/app/services/api";
 import { useParams } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import TopbarInterno from "@/components/TopbarInterno";
@@ -37,7 +37,7 @@ export default function ResponderEncuestaPage() {
   useEffect(() => {
     const obtenerEncuesta = async () => {
       try {
-        const res = await axios.get(`http://localhost:8000/api/encuestas/${id}`);
+        const res = await api.get(`/api/encuestas/${id}`);
         setEncuesta(res.data);
       } catch (error) {
         console.error("Error cargando encuesta", error);
@@ -61,7 +61,7 @@ export default function ResponderEncuestaPage() {
         respuesta_texto: typeof valor === "string" ? valor : undefined,
       }));
 
-      await axios.post("http://localhost:8000/api/respuestas/", {
+      await api.post("/api/respuestas/", {
         id_usuario: user?.usuario_id,
         respuestas: payload,
       });

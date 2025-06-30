@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import api from "@/app/services/api";
 
 export default function RegistroPage() {
   const router = useRouter();
@@ -21,25 +22,19 @@ export default function RegistroPage() {
 
   const handleSubmit = async () => {
     try {
-      const res = await fetch("http://localhost:8000/auth/registro", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...form,
-          rol_id: 3, // ✅ Se agrega correctamente acá
-        }),
+      const res = await api.post("/auth/registro", {
+        ...form,
+        rol_id: 3, // ✅ Se agrega correctamente acá
       });
 
-      const data = await res.json();
-
-      if (res.ok) {
+      if (res.status === 200) {
         alert("Usuario registrado. Ahora podés iniciar sesión.");
         router.push("/login");
       } else {
-        alert(data.detail || "Error en el registro");
+        alert(res.data.detail || "Error en el registro");
       }
-    } catch (err) {
-      alert("Error de conexión con el servidor");
+    } catch (err: any) {
+      alert(err?.response?.data?.detail || "Error de conexión con el servidor");
     }
   };
 

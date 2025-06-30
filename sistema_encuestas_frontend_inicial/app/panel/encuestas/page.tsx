@@ -12,7 +12,7 @@ import Sidebar from "../../../components/Sidebar";
 
 
 import Image from "next/image";
-import axios from "axios";
+import api from "@/app/services/api";
 
 interface Encuesta {
   id_encuesta: number;
@@ -31,7 +31,7 @@ export default function EncuestasPage() {
   useEffect(() => {
   const fetchEncuestas = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/encuestas/activas");
+      const response = await api.get("/api/encuestas/activas");
       setEncuestas(response.data);
     } catch (error) {
       console.error("Error al obtener encuestas:", error);
