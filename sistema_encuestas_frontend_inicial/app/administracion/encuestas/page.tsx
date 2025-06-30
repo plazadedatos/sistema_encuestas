@@ -6,6 +6,7 @@ import Sidebar from "@/components/Sidebar";
 import TopbarInterno from "@/components/TopbarInterno";
 import Image from "next/image";
 import axios from "axios";
+import api from "@/app/services/api";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -106,7 +107,7 @@ export default function CrearEncuestaPage() {
 
 
 
-      await axios.post("http://localhost:8000/api/encuestas/", payload);
+      await api.post("/api/encuestas/", payload);
 
 
       toast.success("Encuesta creada exitosamente ✅");
