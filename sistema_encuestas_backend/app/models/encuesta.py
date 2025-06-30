@@ -20,3 +20,5 @@ class Encuesta(Base):
     imagen = Column(Text)
 
     preguntas = relationship("Pregunta", back_populates="encuesta")
+    
+    participaciones = relationship("Participacion", back_populates="encuesta")

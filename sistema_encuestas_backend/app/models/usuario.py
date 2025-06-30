@@ -21,3 +21,5 @@ class Usuario(Base):
     fecha_registro = Column(DateTime, default=datetime.utcnow)
 
     rol = relationship("Rol", back_populates="usuarios")
+
+participaciones = relationship("Participacion", back_populates="usuario")
