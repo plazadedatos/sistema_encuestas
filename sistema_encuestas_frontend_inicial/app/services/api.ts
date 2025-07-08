@@ -1,21 +1,66 @@
 // services/api.ts
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
-// Crea una instancia de Axios
+// Configuración de la API
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+// Crear instancia de Axios
 const api = axios.create({
-  baseURL: "http://localhost:8000", // 👈 poné aquí tu backend base
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api",
 });
 
-// Opcional: inyectar el token automáticamente si está en localStorage
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+// Función para limpiar datos de autenticación
+const clearAuthData = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  console.log("🔒 Datos de autenticación eliminados");
+};
+
+// Interceptor para requests - agregar token automáticamente
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-  return config;
-});
+);
+
+// Interceptor para responses - manejo global de errores
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error: AxiosError) => {
+    // Manejo de errores globales
+    const status = error.response?.status;
+    
+    if (status === 401) {
+      // Token expirado o inválido
+      clearAuthData();
+      toast.error("Sesión expirada. Por favor, inicia sesión nuevamente.");
+      
+      // Redirigir a login solo si no estamos ya en login
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = "/login";
+      }
+    } else if (status === 403) {
+      toast.error("No tienes permisos para realizar esta acción.");
+    } else if (status && status >= 500) {
+      toast.error("Error del servidor. Intenta nuevamente más tarde.");
+    } else if (error.code === "ECONNABORTED") {
+      toast.error("La petición tardó demasiado. Verifica tu conexión.");
+    } else if (!error.response) {
+      toast.error("No se puede conectar al servidor. Verifica tu conexión.");
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export default api;

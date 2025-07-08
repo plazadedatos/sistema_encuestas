@@ -10,7 +10,7 @@ from app.models.opcion import Opcion
 from app.models.respuesta import Respuesta
 from app.models.usuario import Usuario
 
-router = APIRouter(prefix="/api/participaciones", tags=["Participaciones"])
+router = APIRouter(prefix="/participaciones", tags=["Participaciones"])
 
 @router.get("/{id_participacion}/detalle")
 async def detalle_participacion(id_participacion: int, db: AsyncSession = Depends(get_db)):
@@ -21,7 +21,12 @@ async def detalle_participacion(id_participacion: int, db: AsyncSession = Depend
         .where(Participacion.id_participacion == id_participacion)
     )
     result = await db.execute(participacion_query)
-    participacion, encuesta = result.fetchone()
+    row = result.fetchone()
+    
+    if not row:
+        raise HTTPException(status_code=404, detail="Participación no encontrada")
+    
+    participacion, encuesta = row
 
     if not participacion:
         raise HTTPException(status_code=404, detail="Participación no encontrada")
@@ -97,3 +102,32 @@ async def obtener_participaciones(id_usuario: int, db: AsyncSession = Depends(ge
         }
         for r in participaciones
     ]
+
+@router.post("/completar/{id_encuesta}")
+async def completar_participacion(
+    id_encuesta: int,
+    id_usuario: int,
+    puntaje_obtenido: int = 0,
+    tiempo_respuesta_segundos: int = 0,
+    db: AsyncSession = Depends(get_db)
+):
+    """Marcar una participación como completada y otorgar puntos"""
+    try:
+        # Crear la participación
+        participacion = Participacion(
+            id_usuario=id_usuario,
+            id_encuesta=id_encuesta,
+            puntaje_obtenido=puntaje_obtenido,
+            tiempo_respuesta_segundos=tiempo_respuesta_segundos
+        )
+        db.add(participacion)
+        await db.commit()
+        
+        return {
+            "id_participacion": participacion.id_participacion,
+            "mensaje": "Participación completada exitosamente"
+        }
+        
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error al completar participación: {str(e)}")

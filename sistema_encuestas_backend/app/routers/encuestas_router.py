@@ -14,7 +14,7 @@ from app.models.encuesta import Encuesta
 from app.models.pregunta import Pregunta
 from app.models.opcion import Opcion
 
-router = APIRouter(prefix="/api/encuestas", tags=["Encuestas"])
+router = APIRouter(prefix="/encuestas", tags=["Encuestas"])
 
 # ✔️ SCHEMAS
 class OpcionSchema(BaseModel):

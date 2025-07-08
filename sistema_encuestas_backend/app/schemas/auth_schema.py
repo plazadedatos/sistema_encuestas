@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 
 class LoginRequest(BaseModel):
@@ -7,22 +7,40 @@ class LoginRequest(BaseModel):
     password: str
 
 class LoginResponse(BaseModel):
-    mensaje: str
-    rol_id: int
-    usuario_id: int
+    access_token: str
+    token_type: str = "bearer"
+    usuario: dict
 
-# ✅ Nuevo esquema para el registro
 class RegistroRequest(BaseModel):
+    nombre: str = Field(..., min_length=2, max_length=100)
+    apellido: str = Field(..., min_length=2, max_length=100)
+    documento_numero: str = Field(..., min_length=5, max_length=20)
+    celular_numero: Optional[str] = Field(None, max_length=20)
+    email: EmailStr
+    password: str = Field(..., min_length=6)
+
+class GoogleAuthRequest(BaseModel):
+    id_token: str = Field(..., description="ID token de Google OAuth2")
+    
+class VerifyEmailRequest(BaseModel):
+    email: EmailStr
+
+class VerificationTokenResponse(BaseModel):
+    mensaje: str
+    email: str
+    
+class ReenviarVerificacionRequest(BaseModel):
+    email: EmailStr
+
+class UsuarioResponse(BaseModel):
+    id: int
     nombre: str
     apellido: str
-    documento_numero: str
-    celular_numero: Optional[str]
-    email: EmailStr
-    password: str
+    email: str
     rol_id: int
-    metodo_registro: str = "local"
-
-class RegistroResponse(BaseModel):
-    mensaje: str
-    usuario_id: int
-    fecha_registro: datetime
+    email_verificado: bool
+    puntos_disponibles: int
+    avatar_url: Optional[str] = None
+    
+    class Config:
+        from_attributes = True

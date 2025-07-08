@@ -9,11 +9,12 @@ class Respuesta(Base):
 
     id_respuesta = Column(Integer, primary_key=True, index=True, autoincrement=True)
     id_pregunta = Column(Integer, ForeignKey("preguntas.id_pregunta"), nullable=False)
-    id_usuario = Column(Integer, nullable=False)
+    id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=False)
     id_opcion = Column(Integer, ForeignKey("opciones.id_opcion"), nullable=True)
     respuesta_texto = Column(String, nullable=True)
     fecha_respuesta = Column(DateTime, default=datetime.utcnow)
 
-    # Opcional: relaciones si quieres traer datos relacionados más fácil
+    # Relaciones
     pregunta = relationship("Pregunta", backref="respuestas")
     opcion = relationship("Opcion", backref="respuestas")
+    usuario = relationship("Usuario", back_populates="respuestas")

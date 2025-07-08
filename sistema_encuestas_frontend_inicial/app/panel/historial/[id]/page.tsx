@@ -39,7 +39,7 @@ export default function DetalleParticipacionPage() {
   useEffect(() => {
     const fetchDetalle = async () => {
       try {
-        const res = await api.get(`/api/participaciones/${id}/detalle`);
+        const res = await api.get(`/participaciones/${id}/detalle`);
         setDetalle(res.data);
       } catch (error) {
         console.error("Error cargando detalle", error);

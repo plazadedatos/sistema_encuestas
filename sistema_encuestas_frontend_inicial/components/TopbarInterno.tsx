@@ -23,7 +23,8 @@ export default function Topbar() {
   }, []);
 
   return (
-    <header className="w-full bg-white shadow flex justify-end items-center px-6 py-3 border-b relative">
+    <header className="w-full bg-white shadow flex justify-end items-center px-6 py-3 border-b z-10 sticky top-0">
+
       <div className="flex items-center gap-3" ref={menuRef}>
         {/* Nombre del usuario */}
         <span className="text-gray-800 font-medium hidden sm:inline">

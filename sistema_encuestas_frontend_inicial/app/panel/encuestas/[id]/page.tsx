@@ -37,7 +37,7 @@ export default function ResponderEncuestaPage() {
   useEffect(() => {
     const obtenerEncuesta = async () => {
       try {
-        const res = await api.get(`/api/encuestas/${id}`);
+        const res = await api.get(`/encuestas/${id}`);
         setEncuesta(res.data);
       } catch (error) {
         console.error("Error cargando encuesta", error);
@@ -61,8 +61,8 @@ export default function ResponderEncuestaPage() {
         respuesta_texto: typeof valor === "string" ? valor : undefined,
       }));
 
-      await api.post("/api/respuestas/", {
-        id_usuario: user?.usuario_id,
+      await api.post("/respuestas/", {
+        id_encuesta: Number(id),
         respuestas: payload,
       });
 

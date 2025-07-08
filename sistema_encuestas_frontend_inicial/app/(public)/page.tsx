@@ -1,24 +1,46 @@
 "use client";
 import Hero from "../../components/Hero";
 import TarjetaEncuesta from "../../components/TarjetaEncuesta";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../context/authContext";
-
-const encuestas = [
-  { id: 1, titulo: "Encuesta de satisfacción", puntos: 50 },
-  { id: 2, titulo: "Preferencias 2025", puntos: 30 },
-  { id: 3, titulo: "Encuesta 3", puntos: 30 },
-  { id: 4, titulo: "Encuesta 4", puntos: 50 },
-  { id: 5, titulo: "Encuesta 5", puntos: 100 },
-];
+import { Encuesta, encuestasService } from "@/app/services/encuestas";
+import { SkeletonCard } from "../../components/ui/loading";
+import { toast } from "react-toastify";
 export default function HomePage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
   const router = useRouter();
+  const [encuestas, setEncuestas] = useState<Encuesta[]>([]);
+  const [cargandoEncuestas, setCargandoEncuestas] = useState(true);
 
+  // Redirección inmediata para usuarios autenticados
   useEffect(() => {
-    if (isAuthenticated) router.push("/panel");
-  }, [isAuthenticated]);
+    if (!loading && isAuthenticated) {
+      console.log("🔄 Usuario autenticado detectado, redirigiendo a /panel");
+      router.push("/panel");
+    }
+  }, [isAuthenticated, loading, router]);
+
+  // Cargar encuestas públicas
+  useEffect(() => {
+    const cargarEncuestas = async () => {
+      try {
+        setCargandoEncuestas(true);
+        const encuestasPublicas = await encuestasService.obtenerEncuestasActivas({
+          limit: 6,
+          filtro_visibilidad: 'todos'
+        });
+        setEncuestas(encuestasPublicas);
+      } catch (error) {
+        console.error('Error al cargar encuestas:', error);
+        toast.error('No se pudieron cargar las encuestas');
+      } finally {
+        setCargandoEncuestas(false);
+      }
+    };
+
+    cargarEncuestas();
+  }, []);
   return (
     <>
       <Hero />
@@ -74,13 +96,59 @@ export default function HomePage() {
          <section id="encuestas" className="max-w-7xl mx-auto px-4 py-24" >
         <h2 className="text-2xl font-bold text-center mb-6">Encuestas Disponibles</h2>
        
-        <p className="text-center text-gray-600 mb-10">Participa en nuestras encuestas y acumula puntos que podrás canjear por increíbles premios. ¡Tu opinión es valiosa!</p>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          
-          {encuestas.map((e) => (
-            <TarjetaEncuesta key={e.id} titulo={e.titulo} puntos={e.puntos} />
-          ))}
-        </div>
+        <p className="text-center text-gray-600 mb-10">
+          Participa en nuestras encuestas y acumula puntos que podrás canjear por increíbles premios. ¡Tu opinión es valiosa!
+        </p>
+        
+        {cargandoEncuestas ? (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {[...Array(6)].map((_, index) => (
+              <SkeletonCard key={index} />
+            ))}
+          </div>
+        ) : encuestas.length > 0 ? (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {encuestas.map((encuesta) => (
+              <TarjetaEncuesta 
+                key={encuesta.id_encuesta} 
+                encuesta={encuesta}
+                mostrarEstado={false}
+                onParticipate={() => {
+                  if (!isAuthenticated) {
+                    toast.info("Inicia sesión para responder encuestas");
+                    router.push("/login");
+                  } else {
+                    router.push(`/panel/encuestas/${encuesta.id_encuesta}`);
+                  }
+                }}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <div className="text-gray-400 text-6xl mb-4">📝</div>
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">
+              No hay encuestas disponibles
+            </h3>
+            <p className="text-gray-500">
+              Vuelve pronto para encontrar nuevas encuestas
+            </p>
+          </div>
+        )}
+        
+        {!isAuthenticated && encuestas.length > 0 && (
+          <div className="text-center mt-8">
+            <p className="text-gray-600 mb-4">
+              ¿Quieres participar en más encuestas y ganar puntos?
+            </p>
+            <button
+              onClick={() => router.push("/registro")}
+              className="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-md font-medium transition-colors"
+            >
+              Regístrate Gratis
+            </button>
+          </div>
+        )}
         </section>
         <section className="max-w-4xl mx-auto px-4 py-20" id="faq">
           <h2 className="text-4xl font-bold text-center text-primary mb-10">

@@ -6,12 +6,16 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 from app.database import get_db
-from app.models.respuesta import Respuesta  # tu modelo ORM
-
+from app.models.respuesta import Respuesta
 from app.models.participacion import Participacion
 from app.models.pregunta import Pregunta
+from app.models.usuario import Usuario
+from app.models.encuesta import Encuesta
+from app.middleware.auth_middleware import get_current_user
+from app.middleware.verification_middleware import get_current_user_verified
 from sqlalchemy import select
-router = APIRouter(prefix="/api/respuestas", tags=["Respuestas"])
+
+router = APIRouter(prefix="/respuestas", tags=["Respuestas"])
 
 class RespuestaSchema(BaseModel):
     id_pregunta: int    
@@ -20,50 +24,101 @@ class RespuestaSchema(BaseModel):
     tiempo_respuesta_segundos: Optional[int] = None
 
 class RespuestasEnvio(BaseModel):
-    id_usuario: int
-    tiempo_total: Optional[int] = None  # ✅ agregar esto
+    id_encuesta: int
+    tiempo_total: Optional[int] = None
     respuestas: List[RespuestaSchema]
 
 @router.post("/")
-async def guardar_respuestas(data: RespuestasEnvio, db: AsyncSession = Depends(get_db)):
+async def guardar_respuestas(
+    data: RespuestasEnvio, 
+    db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(get_current_user_verified)  # 🔐 Requiere usuario verificado
+):
+    """
+    Guarda las respuestas de una encuesta.
+    
+    ⚠️ Requiere que el usuario tenga el email verificado.
+    """
     try:
-        # ✅ Obtener id_encuesta una sola vez
-        primer_id_pregunta = data.respuestas[0].id_pregunta
-        pregunta_result = await db.execute(
-            select(Pregunta.id_encuesta).where(Pregunta.id_pregunta == primer_id_pregunta)
-        )
-        encuesta_id = pregunta_result.scalar_one()
+        usuario_id = current_user.get("usuario_id")
+        
+        # Obtener el usuario
+        usuario = await db.get(Usuario, usuario_id)
+        if not usuario:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        # Verificar que la encuesta existe
+        encuesta = await db.get(Encuesta, data.id_encuesta)
+        if not encuesta:
+            raise HTTPException(status_code=404, detail="Encuesta no encontrada")
 
-        # ✅ Crear la participación una sola vez
+        # Verificar si el usuario ya participó
+        query_participacion = select(Participacion).where(
+            Participacion.id_usuario == usuario.id_usuario,
+            Participacion.id_encuesta == data.id_encuesta
+        )
+        result = await db.execute(query_participacion)
+        participacion_existente = result.scalar_one_or_none()
+        
+        if participacion_existente:
+            raise HTTPException(status_code=400, detail="Ya has respondido esta encuesta")
+
+        # Crear la participación
         nueva_participacion = Participacion(
-            id_usuario=data.id_usuario,
-            id_encuesta=encuesta_id,
+            id_usuario=usuario.id_usuario,
+            id_encuesta=data.id_encuesta,
             fecha_participacion=datetime.now(),
-            puntaje_obtenido=0,
-            tiempo_respuesta_segundos=data.tiempo_total
+            puntaje_obtenido=encuesta.puntos_otorga,  # Dar los puntos de la encuesta
+            tiempo_respuesta_segundos=data.tiempo_total or 0
         )
         db.add(nueva_participacion)
 
-        # ✅ Guardar cada respuesta
+        # Guardar cada respuesta
         for r in data.respuestas:
-            nueva = Respuesta(
+            nueva_respuesta = Respuesta(
                 id_pregunta=r.id_pregunta,
-                id_usuario=data.id_usuario,
+                id_usuario=usuario.id_usuario,
                 id_opcion=r.id_opcion,
                 respuesta_texto=r.respuesta_texto,
                 fecha_respuesta=datetime.now()
             )
-            db.add(nueva)
+            db.add(nueva_respuesta)
+
+        # Agregar puntos al usuario manualmente
+        usuario.puntos_totales += encuesta.puntos_otorga
+        usuario.puntos_disponibles += encuesta.puntos_otorga
 
         await db.commit()
-        return {"mensaje": "Respuestas registradas correctamente"}
+        
+        return {
+            "mensaje": "Respuestas registradas correctamente",
+            "puntos_obtenidos": encuesta.puntos_otorga,
+            "puntos_totales": usuario.puntos_totales
+        }
+        
+    except HTTPException:
+        await db.rollback()
+        raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=str(e))
-
+        print(f"Error en guardar_respuestas: {e}")
+        raise HTTPException(status_code=500, detail=f"Error interno: {str(e)}")
 
 @router.get("/historial/{id_usuario}")
-async def obtener_historial(id_usuario: int, db: AsyncSession = Depends(get_db)):
+async def obtener_historial(
+    id_usuario: int, 
+    db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(get_current_user_verified)  # 🔐 Requiere usuario verificado
+):
+    """
+    Obtiene el historial de respuestas del usuario.
+    
+    ⚠️ Requiere que el usuario tenga el email verificado.
+    """
+    # Verificar que el usuario solo puede ver su propio historial
+    if current_user.get("usuario_id") != id_usuario and current_user.get("rol_id") != 1:
+        raise HTTPException(status_code=403, detail="No tienes permiso para ver este historial")
+    
     from sqlalchemy import select, func
     from app.models.encuesta import Encuesta
     from app.models.pregunta import Pregunta
@@ -97,7 +152,20 @@ async def obtener_historial(id_usuario: int, db: AsyncSession = Depends(get_db))
     ]
 
 @router.get("/participaciones/{id_usuario}")
-async def obtener_participaciones_detalladas(id_usuario: int, db: AsyncSession = Depends(get_db)):
+async def obtener_participaciones_detalladas(
+    id_usuario: int, 
+    db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(get_current_user_verified)  # 🔐 Requiere usuario verificado
+):
+    """
+    Obtiene las participaciones detalladas del usuario.
+    
+    ⚠️ Requiere que el usuario tenga el email verificado.
+    """
+    # Verificar que el usuario solo puede ver sus propias participaciones
+    if current_user.get("usuario_id") != id_usuario and current_user.get("rol_id") != 1:
+        raise HTTPException(status_code=403, detail="No tienes permiso para ver estas participaciones")
+    
     from sqlalchemy import select
     from app.models.encuesta import Encuesta
     from app.models.participacion import Participacion

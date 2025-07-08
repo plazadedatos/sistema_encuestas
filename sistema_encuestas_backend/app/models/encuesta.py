@@ -22,3 +22,5 @@ class Encuesta(Base):
     preguntas = relationship("Pregunta", back_populates="encuesta")
     
     participaciones = relationship("Participacion", back_populates="encuesta")
+    
+    asignaciones_encuestador = relationship("AsignacionEncuestador", back_populates="encuesta")
