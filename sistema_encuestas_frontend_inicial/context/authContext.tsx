@@ -24,9 +24,11 @@ interface AuthContextType {
   showWelcome: boolean;
   setShowWelcome: (show: boolean) => void;
   login: (email: string, password: string) => Promise<boolean>;
+  loginWithGoogle: (accessToken: string, userData: any) => Promise<boolean>;
   logout: () => void;
   refreshToken: () => Promise<boolean>;
   updateUser: (userData: Partial<User>) => void;
+  checkProfileComplete: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -237,10 +239,53 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  // Función de login con Google
+  const loginWithGoogle = async (accessToken: string, userData: any): Promise<boolean> => {
+    console.log("🔐 Iniciando proceso de login con Google para:", userData.email);
+    try {
+      setToken(accessToken);
+      localStorage.setItem('token', accessToken);
+      
+      setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
+      setIsAuthenticated(true);
+      
+      // Mostrar pantalla de bienvenida
+      setShowWelcome(true);
+      
+      toast.success("¡Bienvenido! Sesión iniciada correctamente con Google.");
+      
+      // Redirigir TODOS los usuarios a /panel
+      router.push("/panel");
+      
+      return true;
+    } catch (error: any) {
+      console.error("❌ Error en login con Google:", error);
+      toast.error("Error al iniciar sesión con Google. Verifica tu conexión.");
+      return false;
+    }
+  };
+
   // Función para actualizar datos del usuario
   const updateUser = useCallback((userData: Partial<User>) => {
     setUser(prevUser => prevUser ? { ...prevUser, ...userData } : null);
   }, []);
+
+  // Función para verificar si el perfil está completo
+  const checkProfileComplete = useCallback(async (): Promise<boolean> => {
+    if (!token) return false;
+    
+    try {
+      const response = await api.get('/perfil/estado', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      return response.data.perfil_completo;
+    } catch (error) {
+      console.error("Error verificando perfil:", error);
+      return true; // En caso de error, asumir que está completo para no bloquear
+    }
+  }, [token]);
 
   const contextValue: AuthContextType = {
     isAuthenticated,
@@ -250,9 +295,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     showWelcome,
     setShowWelcome,
     login,
+    loginWithGoogle,
     logout,
     refreshToken,
-    updateUser
+    updateUser,
+    checkProfileComplete
   };
 
   return (

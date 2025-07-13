@@ -1,0 +1,1071 @@
+{
+  "resourceType" : "CodeSystem",
+  "id" : "GeoCiudadesPYCS",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>This code system <code>http://vigicanpy.mspbs.gov.py/CodeSystem/GeoCiudadesPYCS</code> defines the following codes:</p><table class=\"codes\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td></tr><tr><td style=\"white-space:nowrap\">101<a name=\"GeoCiudadesPYCS-101\"> </a></td><td>CONCEPCION</td></tr><tr><td style=\"white-space:nowrap\">102<a name=\"GeoCiudadesPYCS-102\"> </a></td><td>BELEN</td></tr><tr><td style=\"white-space:nowrap\">103<a name=\"GeoCiudadesPYCS-103\"> </a></td><td>HORQUETA</td></tr><tr><td style=\"white-space:nowrap\">104<a name=\"GeoCiudadesPYCS-104\"> </a></td><td>LORETO</td></tr><tr><td style=\"white-space:nowrap\">105<a name=\"GeoCiudadesPYCS-105\"> </a></td><td>SAN CARLOS</td></tr><tr><td style=\"white-space:nowrap\">106<a name=\"GeoCiudadesPYCS-106\"> </a></td><td>SAN LAZARO</td></tr><tr><td style=\"white-space:nowrap\">107<a name=\"GeoCiudadesPYCS-107\"> </a></td><td>YBY YAU</td></tr><tr><td style=\"white-space:nowrap\">108<a name=\"GeoCiudadesPYCS-108\"> </a></td><td>AZOTEY</td></tr><tr><td style=\"white-space:nowrap\">109<a name=\"GeoCiudadesPYCS-109\"> </a></td><td>SARGENTO JOSE FELIX LOPEZ</td></tr><tr><td style=\"white-space:nowrap\">110<a name=\"GeoCiudadesPYCS-110\"> </a></td><td>SAN ALFREDO</td></tr><tr><td style=\"white-space:nowrap\">111<a name=\"GeoCiudadesPYCS-111\"> </a></td><td>PASO BARRETO</td></tr><tr><td style=\"white-space:nowrap\">112<a name=\"GeoCiudadesPYCS-112\"> </a></td><td>ARROYITO</td></tr><tr><td style=\"white-space:nowrap\">113<a name=\"GeoCiudadesPYCS-113\"> </a></td><td>PASO HORQUETA</td></tr><tr><td style=\"white-space:nowrap\">201<a name=\"GeoCiudadesPYCS-201\"> </a></td><td>SAN PEDRO DEL YCUAMANDYYU</td></tr><tr><td style=\"white-space:nowrap\">202<a name=\"GeoCiudadesPYCS-202\"> </a></td><td>ANTEQUERA</td></tr><tr><td style=\"white-space:nowrap\">203<a name=\"GeoCiudadesPYCS-203\"> </a></td><td>CHORE</td></tr><tr><td style=\"white-space:nowrap\">204<a name=\"GeoCiudadesPYCS-204\"> </a></td><td>GENERAL ELIZARDO AQUINO</td></tr><tr><td style=\"white-space:nowrap\">205<a name=\"GeoCiudadesPYCS-205\"> </a></td><td>ITACURUBI DEL ROSARIO</td></tr><tr><td style=\"white-space:nowrap\">206<a name=\"GeoCiudadesPYCS-206\"> </a></td><td>LIMA</td></tr><tr><td style=\"white-space:nowrap\">207<a name=\"GeoCiudadesPYCS-207\"> </a></td><td>NUEVA GERMANIA</td></tr><tr><td style=\"white-space:nowrap\">208<a name=\"GeoCiudadesPYCS-208\"> </a></td><td>SAN ESTANISLAO</td></tr><tr><td style=\"white-space:nowrap\">209<a name=\"GeoCiudadesPYCS-209\"> </a></td><td>SAN PABLO</td></tr><tr><td style=\"white-space:nowrap\">210<a name=\"GeoCiudadesPYCS-210\"> </a></td><td>TACUATI</td></tr><tr><td style=\"white-space:nowrap\">211<a name=\"GeoCiudadesPYCS-211\"> </a></td><td>UNION</td></tr><tr><td style=\"white-space:nowrap\">212<a name=\"GeoCiudadesPYCS-212\"> </a></td><td>25 DE DICIEMBRE</td></tr><tr><td style=\"white-space:nowrap\">213<a name=\"GeoCiudadesPYCS-213\"> </a></td><td>VILLA DEL ROSARIO</td></tr><tr><td style=\"white-space:nowrap\">214<a name=\"GeoCiudadesPYCS-214\"> </a></td><td>GENERAL FRANCISCO ISIDORO RESQUIN</td></tr><tr><td style=\"white-space:nowrap\">215<a name=\"GeoCiudadesPYCS-215\"> </a></td><td>YATAITY DEL NORTE</td></tr><tr><td style=\"white-space:nowrap\">216<a name=\"GeoCiudadesPYCS-216\"> </a></td><td>GUAJAYVI</td></tr><tr><td style=\"white-space:nowrap\">217<a name=\"GeoCiudadesPYCS-217\"> </a></td><td>CAPIIBARY</td></tr><tr><td style=\"white-space:nowrap\">218<a name=\"GeoCiudadesPYCS-218\"> </a></td><td>SANTA ROSA DEL AGUARAY</td></tr><tr><td style=\"white-space:nowrap\">219<a name=\"GeoCiudadesPYCS-219\"> </a></td><td>YRYBUCUA</td></tr><tr><td style=\"white-space:nowrap\">220<a name=\"GeoCiudadesPYCS-220\"> </a></td><td>LIBERACION</td></tr><tr><td style=\"white-space:nowrap\">221<a name=\"GeoCiudadesPYCS-221\"> </a></td><td>SAN VICENTE PANCHOLO</td></tr><tr><td style=\"white-space:nowrap\">222<a name=\"GeoCiudadesPYCS-222\"> </a></td><td>SAN JOSÉ DEL ROSARIO</td></tr><tr><td style=\"white-space:nowrap\">301<a name=\"GeoCiudadesPYCS-301\"> </a></td><td>CAACUPE</td></tr><tr><td style=\"white-space:nowrap\">302<a name=\"GeoCiudadesPYCS-302\"> </a></td><td>ALTOS</td></tr><tr><td style=\"white-space:nowrap\">303<a name=\"GeoCiudadesPYCS-303\"> </a></td><td>ARROYOS Y ESTEROS</td></tr><tr><td style=\"white-space:nowrap\">304<a name=\"GeoCiudadesPYCS-304\"> </a></td><td>ATYRA</td></tr><tr><td style=\"white-space:nowrap\">305<a name=\"GeoCiudadesPYCS-305\"> </a></td><td>CARAGUATAY</td></tr><tr><td style=\"white-space:nowrap\">306<a name=\"GeoCiudadesPYCS-306\"> </a></td><td>EMBOSCADA</td></tr><tr><td style=\"white-space:nowrap\">307<a name=\"GeoCiudadesPYCS-307\"> </a></td><td>EUSEBIO AYALA</td></tr><tr><td style=\"white-space:nowrap\">308<a name=\"GeoCiudadesPYCS-308\"> </a></td><td>ISLA PUCU</td></tr><tr><td style=\"white-space:nowrap\">309<a name=\"GeoCiudadesPYCS-309\"> </a></td><td>ITACURUBI DE LA CORDILLERA</td></tr><tr><td style=\"white-space:nowrap\">310<a name=\"GeoCiudadesPYCS-310\"> </a></td><td>JUAN DE MENA</td></tr><tr><td style=\"white-space:nowrap\">311<a name=\"GeoCiudadesPYCS-311\"> </a></td><td>LOMA GRANDE</td></tr><tr><td style=\"white-space:nowrap\">312<a name=\"GeoCiudadesPYCS-312\"> </a></td><td>MBOCAYATY DEL YHAGUY</td></tr><tr><td style=\"white-space:nowrap\">313<a name=\"GeoCiudadesPYCS-313\"> </a></td><td>NUEVA COLOMBIA</td></tr><tr><td style=\"white-space:nowrap\">314<a name=\"GeoCiudadesPYCS-314\"> </a></td><td>PIRIBEBUY</td></tr><tr><td style=\"white-space:nowrap\">315<a name=\"GeoCiudadesPYCS-315\"> </a></td><td>PRIMERO DE MARZO</td></tr><tr><td style=\"white-space:nowrap\">316<a name=\"GeoCiudadesPYCS-316\"> </a></td><td>SAN BERNARDINO</td></tr><tr><td style=\"white-space:nowrap\">317<a name=\"GeoCiudadesPYCS-317\"> </a></td><td>SANTA ELENA</td></tr><tr><td style=\"white-space:nowrap\">318<a name=\"GeoCiudadesPYCS-318\"> </a></td><td>TOBATI</td></tr><tr><td style=\"white-space:nowrap\">319<a name=\"GeoCiudadesPYCS-319\"> </a></td><td>VALENZUELA</td></tr><tr><td style=\"white-space:nowrap\">320<a name=\"GeoCiudadesPYCS-320\"> </a></td><td>SAN JOSE OBRERO</td></tr><tr><td style=\"white-space:nowrap\">401<a name=\"GeoCiudadesPYCS-401\"> </a></td><td>VILLARRICA</td></tr><tr><td style=\"white-space:nowrap\">402<a name=\"GeoCiudadesPYCS-402\"> </a></td><td>BORJA</td></tr><tr><td style=\"white-space:nowrap\">403<a name=\"GeoCiudadesPYCS-403\"> </a></td><td>CAPITAN MAURICIO JOSE TROCHE</td></tr><tr><td style=\"white-space:nowrap\">404<a name=\"GeoCiudadesPYCS-404\"> </a></td><td>CORONEL MARTINEZ</td></tr><tr><td style=\"white-space:nowrap\">405<a name=\"GeoCiudadesPYCS-405\"> </a></td><td>FELIX PEREZ CARDOZO</td></tr><tr><td style=\"white-space:nowrap\">406<a name=\"GeoCiudadesPYCS-406\"> </a></td><td>GRAL. EUGENIO A. GARAY</td></tr><tr><td style=\"white-space:nowrap\">407<a name=\"GeoCiudadesPYCS-407\"> </a></td><td>INDEPENDENCIA</td></tr><tr><td style=\"white-space:nowrap\">408<a name=\"GeoCiudadesPYCS-408\"> </a></td><td>ITAPE</td></tr><tr><td style=\"white-space:nowrap\">409<a name=\"GeoCiudadesPYCS-409\"> </a></td><td>ITURBE</td></tr><tr><td style=\"white-space:nowrap\">410<a name=\"GeoCiudadesPYCS-410\"> </a></td><td>JOSE FASSARDI</td></tr><tr><td style=\"white-space:nowrap\">411<a name=\"GeoCiudadesPYCS-411\"> </a></td><td>MBOCAYATY</td></tr><tr><td style=\"white-space:nowrap\">412<a name=\"GeoCiudadesPYCS-412\"> </a></td><td>NATALICIO TALAVERA</td></tr><tr><td style=\"white-space:nowrap\">413<a name=\"GeoCiudadesPYCS-413\"> </a></td><td>ÑUMI</td></tr><tr><td style=\"white-space:nowrap\">414<a name=\"GeoCiudadesPYCS-414\"> </a></td><td>SAN SALVADOR</td></tr><tr><td style=\"white-space:nowrap\">415<a name=\"GeoCiudadesPYCS-415\"> </a></td><td>YATAITY</td></tr><tr><td style=\"white-space:nowrap\">416<a name=\"GeoCiudadesPYCS-416\"> </a></td><td>DOCTOR BOTTRELL</td></tr><tr><td style=\"white-space:nowrap\">417<a name=\"GeoCiudadesPYCS-417\"> </a></td><td>PASO YOBAI</td></tr><tr><td style=\"white-space:nowrap\">418<a name=\"GeoCiudadesPYCS-418\"> </a></td><td>TEBICUARY</td></tr><tr><td style=\"white-space:nowrap\">501<a name=\"GeoCiudadesPYCS-501\"> </a></td><td>CORONEL OVIEDO</td></tr><tr><td style=\"white-space:nowrap\">502<a name=\"GeoCiudadesPYCS-502\"> </a></td><td>CAAGUAZU</td></tr><tr><td style=\"white-space:nowrap\">503<a name=\"GeoCiudadesPYCS-503\"> </a></td><td>CARAYAO</td></tr><tr><td style=\"white-space:nowrap\">504<a name=\"GeoCiudadesPYCS-504\"> </a></td><td>DR. CECILIO BAEZ</td></tr><tr><td style=\"white-space:nowrap\">505<a name=\"GeoCiudadesPYCS-505\"> </a></td><td>SANTA ROSA DEL MBUTUY</td></tr><tr><td style=\"white-space:nowrap\">506<a name=\"GeoCiudadesPYCS-506\"> </a></td><td>DR. JUAN MANUEL FRUTOS</td></tr><tr><td style=\"white-space:nowrap\">507<a name=\"GeoCiudadesPYCS-507\"> </a></td><td>REPATRIACION</td></tr><tr><td style=\"white-space:nowrap\">508<a name=\"GeoCiudadesPYCS-508\"> </a></td><td>NUEVA LONDRES</td></tr><tr><td style=\"white-space:nowrap\">509<a name=\"GeoCiudadesPYCS-509\"> </a></td><td>SAN JOAQUIN</td></tr><tr><td style=\"white-space:nowrap\">510<a name=\"GeoCiudadesPYCS-510\"> </a></td><td>SAN JOSE DE LOS ARROYOS</td></tr><tr><td style=\"white-space:nowrap\">511<a name=\"GeoCiudadesPYCS-511\"> </a></td><td>YHU</td></tr><tr><td style=\"white-space:nowrap\">512<a name=\"GeoCiudadesPYCS-512\"> </a></td><td>DR. J. EULOGIO ESTIGARRIBIA</td></tr><tr><td style=\"white-space:nowrap\">513<a name=\"GeoCiudadesPYCS-513\"> </a></td><td>R.I. 3 CORRALES</td></tr><tr><td style=\"white-space:nowrap\">514<a name=\"GeoCiudadesPYCS-514\"> </a></td><td>RAUL ARSENIO OVIEDO</td></tr><tr><td style=\"white-space:nowrap\">515<a name=\"GeoCiudadesPYCS-515\"> </a></td><td>JOSE DOMINGO OCAMPOS</td></tr><tr><td style=\"white-space:nowrap\">516<a name=\"GeoCiudadesPYCS-516\"> </a></td><td>MCAL. FRANCISCO SOLANO LOPEZ</td></tr><tr><td style=\"white-space:nowrap\">517<a name=\"GeoCiudadesPYCS-517\"> </a></td><td>LA PASTORA</td></tr><tr><td style=\"white-space:nowrap\">518<a name=\"GeoCiudadesPYCS-518\"> </a></td><td>3 DE FEBRERO</td></tr><tr><td style=\"white-space:nowrap\">519<a name=\"GeoCiudadesPYCS-519\"> </a></td><td>SIMON BOLIVAR</td></tr><tr><td style=\"white-space:nowrap\">520<a name=\"GeoCiudadesPYCS-520\"> </a></td><td>VAQUERIA</td></tr><tr><td style=\"white-space:nowrap\">521<a name=\"GeoCiudadesPYCS-521\"> </a></td><td>TEMBIAPORA</td></tr><tr><td style=\"white-space:nowrap\">522<a name=\"GeoCiudadesPYCS-522\"> </a></td><td>NUEVA TOLEDO</td></tr><tr><td style=\"white-space:nowrap\">601<a name=\"GeoCiudadesPYCS-601\"> </a></td><td>CAAZAPA</td></tr><tr><td style=\"white-space:nowrap\">602<a name=\"GeoCiudadesPYCS-602\"> </a></td><td>ABAI</td></tr><tr><td style=\"white-space:nowrap\">603<a name=\"GeoCiudadesPYCS-603\"> </a></td><td>BUENA VISTA</td></tr><tr><td style=\"white-space:nowrap\">604<a name=\"GeoCiudadesPYCS-604\"> </a></td><td>MOISES BERTONI</td></tr><tr><td style=\"white-space:nowrap\">605<a name=\"GeoCiudadesPYCS-605\"> </a></td><td>GENERAL HIGINIO MORINIGO</td></tr><tr><td style=\"white-space:nowrap\">606<a name=\"GeoCiudadesPYCS-606\"> </a></td><td>MACIEL</td></tr><tr><td style=\"white-space:nowrap\">607<a name=\"GeoCiudadesPYCS-607\"> </a></td><td>SAN JUAN NEPOMUCENO</td></tr><tr><td style=\"white-space:nowrap\">608<a name=\"GeoCiudadesPYCS-608\"> </a></td><td>TAVAI</td></tr><tr><td style=\"white-space:nowrap\">609<a name=\"GeoCiudadesPYCS-609\"> </a></td><td>FULGENCIO YEGROS</td></tr><tr><td style=\"white-space:nowrap\">610<a name=\"GeoCiudadesPYCS-610\"> </a></td><td>YUTY</td></tr><tr><td style=\"white-space:nowrap\">611<a name=\"GeoCiudadesPYCS-611\"> </a></td><td>3 DE MAYO</td></tr><tr><td style=\"white-space:nowrap\">701<a name=\"GeoCiudadesPYCS-701\"> </a></td><td>ENCARNACION</td></tr><tr><td style=\"white-space:nowrap\">702<a name=\"GeoCiudadesPYCS-702\"> </a></td><td>BELLA VISTA SUR</td></tr><tr><td style=\"white-space:nowrap\">703<a name=\"GeoCiudadesPYCS-703\"> </a></td><td>CAMBYRETA</td></tr><tr><td style=\"white-space:nowrap\">704<a name=\"GeoCiudadesPYCS-704\"> </a></td><td>CAPITAN MEZA</td></tr><tr><td style=\"white-space:nowrap\">705<a name=\"GeoCiudadesPYCS-705\"> </a></td><td>CAPITAN MIRANDA</td></tr><tr><td style=\"white-space:nowrap\">706<a name=\"GeoCiudadesPYCS-706\"> </a></td><td>NUEVA ALBORADA</td></tr><tr><td style=\"white-space:nowrap\">707<a name=\"GeoCiudadesPYCS-707\"> </a></td><td>CARMEN DEL PARANA</td></tr><tr><td style=\"white-space:nowrap\">708<a name=\"GeoCiudadesPYCS-708\"> </a></td><td>CORONEL BOGADO</td></tr><tr><td style=\"white-space:nowrap\">709<a name=\"GeoCiudadesPYCS-709\"> </a></td><td>CARLOS ANTONIO LOPEZ</td></tr><tr><td style=\"white-space:nowrap\">710<a name=\"GeoCiudadesPYCS-710\"> </a></td><td>NATALIO</td></tr><tr><td style=\"white-space:nowrap\">711<a name=\"GeoCiudadesPYCS-711\"> </a></td><td>FRAM</td></tr><tr><td style=\"white-space:nowrap\">712<a name=\"GeoCiudadesPYCS-712\"> </a></td><td>GENERAL ARTIGAS</td></tr><tr><td style=\"white-space:nowrap\">713<a name=\"GeoCiudadesPYCS-713\"> </a></td><td>GENERAL DELGADO</td></tr><tr><td style=\"white-space:nowrap\">714<a name=\"GeoCiudadesPYCS-714\"> </a></td><td>HOHENAU</td></tr><tr><td style=\"white-space:nowrap\">715<a name=\"GeoCiudadesPYCS-715\"> </a></td><td>JESUS</td></tr><tr><td style=\"white-space:nowrap\">716<a name=\"GeoCiudadesPYCS-716\"> </a></td><td>LEANDRO OVIEDO</td></tr><tr><td style=\"white-space:nowrap\">717<a name=\"GeoCiudadesPYCS-717\"> </a></td><td>OBLIGADO</td></tr><tr><td style=\"white-space:nowrap\">718<a name=\"GeoCiudadesPYCS-718\"> </a></td><td>MAYOR JULIO DIONISIO OTAÑO</td></tr><tr><td style=\"white-space:nowrap\">719<a name=\"GeoCiudadesPYCS-719\"> </a></td><td>SAN COSME Y DAMIAN</td></tr><tr><td style=\"white-space:nowrap\">720<a name=\"GeoCiudadesPYCS-720\"> </a></td><td>SAN PEDRO DEL PARANA</td></tr><tr><td style=\"white-space:nowrap\">721<a name=\"GeoCiudadesPYCS-721\"> </a></td><td>SAN RAFAEL DEL PARANA</td></tr><tr><td style=\"white-space:nowrap\">722<a name=\"GeoCiudadesPYCS-722\"> </a></td><td>TRINIDAD</td></tr><tr><td style=\"white-space:nowrap\">723<a name=\"GeoCiudadesPYCS-723\"> </a></td><td>EDELIRA</td></tr><tr><td style=\"white-space:nowrap\">724<a name=\"GeoCiudadesPYCS-724\"> </a></td><td>TOMAS ROMERO PEREIRA</td></tr><tr><td style=\"white-space:nowrap\">725<a name=\"GeoCiudadesPYCS-725\"> </a></td><td>ALTO VERA</td></tr><tr><td style=\"white-space:nowrap\">726<a name=\"GeoCiudadesPYCS-726\"> </a></td><td>LA PAZ</td></tr><tr><td style=\"white-space:nowrap\">727<a name=\"GeoCiudadesPYCS-727\"> </a></td><td>YATYTAY</td></tr><tr><td style=\"white-space:nowrap\">728<a name=\"GeoCiudadesPYCS-728\"> </a></td><td>SAN JUAN DEL PARANA</td></tr><tr><td style=\"white-space:nowrap\">729<a name=\"GeoCiudadesPYCS-729\"> </a></td><td>PIRAPO</td></tr><tr><td style=\"white-space:nowrap\">730<a name=\"GeoCiudadesPYCS-730\"> </a></td><td>ITAPUA POTY</td></tr><tr><td style=\"white-space:nowrap\">801<a name=\"GeoCiudadesPYCS-801\"> </a></td><td>SAN JUAN BAUTISTA</td></tr><tr><td style=\"white-space:nowrap\">802<a name=\"GeoCiudadesPYCS-802\"> </a></td><td>AYOLAS</td></tr><tr><td style=\"white-space:nowrap\">803<a name=\"GeoCiudadesPYCS-803\"> </a></td><td>SAN IGNACIO</td></tr><tr><td style=\"white-space:nowrap\">804<a name=\"GeoCiudadesPYCS-804\"> </a></td><td>SAN MIGUEL</td></tr><tr><td style=\"white-space:nowrap\">805<a name=\"GeoCiudadesPYCS-805\"> </a></td><td>SAN PATRICIO</td></tr><tr><td style=\"white-space:nowrap\">806<a name=\"GeoCiudadesPYCS-806\"> </a></td><td>SANTA MARIA</td></tr><tr><td style=\"white-space:nowrap\">807<a name=\"GeoCiudadesPYCS-807\"> </a></td><td>SANTA ROSA</td></tr><tr><td style=\"white-space:nowrap\">808<a name=\"GeoCiudadesPYCS-808\"> </a></td><td>SANTIAGO</td></tr><tr><td style=\"white-space:nowrap\">809<a name=\"GeoCiudadesPYCS-809\"> </a></td><td>VILLA FLORIDA</td></tr><tr><td style=\"white-space:nowrap\">810<a name=\"GeoCiudadesPYCS-810\"> </a></td><td>YABEBYRY</td></tr><tr><td style=\"white-space:nowrap\">901<a name=\"GeoCiudadesPYCS-901\"> </a></td><td>PARAGUARI</td></tr><tr><td style=\"white-space:nowrap\">902<a name=\"GeoCiudadesPYCS-902\"> </a></td><td>ACAHAY</td></tr><tr><td style=\"white-space:nowrap\">903<a name=\"GeoCiudadesPYCS-903\"> </a></td><td>CAAPUCU</td></tr><tr><td style=\"white-space:nowrap\">904<a name=\"GeoCiudadesPYCS-904\"> </a></td><td>GENERAL BERNARDINO CABALLERO</td></tr><tr><td style=\"white-space:nowrap\">905<a name=\"GeoCiudadesPYCS-905\"> </a></td><td>CARAPEGUA</td></tr><tr><td style=\"white-space:nowrap\">906<a name=\"GeoCiudadesPYCS-906\"> </a></td><td>ESCOBAR</td></tr><tr><td style=\"white-space:nowrap\">907<a name=\"GeoCiudadesPYCS-907\"> </a></td><td>LA COLMENA</td></tr><tr><td style=\"white-space:nowrap\">908<a name=\"GeoCiudadesPYCS-908\"> </a></td><td>MBUYAPEY</td></tr><tr><td style=\"white-space:nowrap\">909<a name=\"GeoCiudadesPYCS-909\"> </a></td><td>PIRAYU</td></tr><tr><td style=\"white-space:nowrap\">910<a name=\"GeoCiudadesPYCS-910\"> </a></td><td>QUINDY</td></tr><tr><td style=\"white-space:nowrap\">911<a name=\"GeoCiudadesPYCS-911\"> </a></td><td>QUYQUYHO</td></tr><tr><td style=\"white-space:nowrap\">912<a name=\"GeoCiudadesPYCS-912\"> </a></td><td>SAN ROQUE GONZALEZ DE SANTACRUZ</td></tr><tr><td style=\"white-space:nowrap\">913<a name=\"GeoCiudadesPYCS-913\"> </a></td><td>SAPUCAI</td></tr><tr><td style=\"white-space:nowrap\">914<a name=\"GeoCiudadesPYCS-914\"> </a></td><td>TEBICUARY-MI</td></tr><tr><td style=\"white-space:nowrap\">915<a name=\"GeoCiudadesPYCS-915\"> </a></td><td>YAGUARON</td></tr><tr><td style=\"white-space:nowrap\">916<a name=\"GeoCiudadesPYCS-916\"> </a></td><td>YBYCUI</td></tr><tr><td style=\"white-space:nowrap\">917<a name=\"GeoCiudadesPYCS-917\"> </a></td><td>YBYTYMI</td></tr><tr><td style=\"white-space:nowrap\">918<a name=\"GeoCiudadesPYCS-918\"> </a></td><td>MARIA ANTONIA</td></tr><tr><td style=\"white-space:nowrap\">1001<a name=\"GeoCiudadesPYCS-1001\"> </a></td><td>CIUDAD DEL ESTE</td></tr><tr><td style=\"white-space:nowrap\">1002<a name=\"GeoCiudadesPYCS-1002\"> </a></td><td>PRESIDENTE FRANCO</td></tr><tr><td style=\"white-space:nowrap\">1003<a name=\"GeoCiudadesPYCS-1003\"> </a></td><td>DOMINGO MARTINEZ DE IRALA</td></tr><tr><td style=\"white-space:nowrap\">1004<a name=\"GeoCiudadesPYCS-1004\"> </a></td><td>DR. JUAN LEON MALLORQUIN</td></tr><tr><td style=\"white-space:nowrap\">1005<a name=\"GeoCiudadesPYCS-1005\"> </a></td><td>HERNANDARIAS</td></tr><tr><td style=\"white-space:nowrap\">1006<a name=\"GeoCiudadesPYCS-1006\"> </a></td><td>ITAKYRY</td></tr><tr><td style=\"white-space:nowrap\">1007<a name=\"GeoCiudadesPYCS-1007\"> </a></td><td>JUAN E. OLEARY</td></tr><tr><td style=\"white-space:nowrap\">1008<a name=\"GeoCiudadesPYCS-1008\"> </a></td><td>ÑACUNDAY</td></tr><tr><td style=\"white-space:nowrap\">1009<a name=\"GeoCiudadesPYCS-1009\"> </a></td><td>YGUAZU</td></tr><tr><td style=\"white-space:nowrap\">1010<a name=\"GeoCiudadesPYCS-1010\"> </a></td><td>LOS CEDRALES</td></tr><tr><td style=\"white-space:nowrap\">1011<a name=\"GeoCiudadesPYCS-1011\"> </a></td><td>MINGA GUAZU</td></tr><tr><td style=\"white-space:nowrap\">1012<a name=\"GeoCiudadesPYCS-1012\"> </a></td><td>SAN CRISTOBAL</td></tr><tr><td style=\"white-space:nowrap\">1013<a name=\"GeoCiudadesPYCS-1013\"> </a></td><td>SANTA RITA</td></tr><tr><td style=\"white-space:nowrap\">1014<a name=\"GeoCiudadesPYCS-1014\"> </a></td><td>NARANJAL</td></tr><tr><td style=\"white-space:nowrap\">1015<a name=\"GeoCiudadesPYCS-1015\"> </a></td><td>SANTA ROSA DEL MONDAY</td></tr><tr><td style=\"white-space:nowrap\">1016<a name=\"GeoCiudadesPYCS-1016\"> </a></td><td>MINGA PORA</td></tr><tr><td style=\"white-space:nowrap\">1017<a name=\"GeoCiudadesPYCS-1017\"> </a></td><td>MBARACAYU</td></tr><tr><td style=\"white-space:nowrap\">1018<a name=\"GeoCiudadesPYCS-1018\"> </a></td><td>SAN ALBERTO</td></tr><tr><td style=\"white-space:nowrap\">1019<a name=\"GeoCiudadesPYCS-1019\"> </a></td><td>IRUÑA</td></tr><tr><td style=\"white-space:nowrap\">1020<a name=\"GeoCiudadesPYCS-1020\"> </a></td><td>SANTA FE DEL PARANA</td></tr><tr><td style=\"white-space:nowrap\">1021<a name=\"GeoCiudadesPYCS-1021\"> </a></td><td>TAVAPY</td></tr><tr><td style=\"white-space:nowrap\">1022<a name=\"GeoCiudadesPYCS-1022\"> </a></td><td>DR. RAUL PEÑA</td></tr><tr><td style=\"white-space:nowrap\">1101<a name=\"GeoCiudadesPYCS-1101\"> </a></td><td>AREGUA</td></tr><tr><td style=\"white-space:nowrap\">1102<a name=\"GeoCiudadesPYCS-1102\"> </a></td><td>CAPIATA</td></tr><tr><td style=\"white-space:nowrap\">1103<a name=\"GeoCiudadesPYCS-1103\"> </a></td><td>FERNANDO DE LA MORA</td></tr><tr><td style=\"white-space:nowrap\">1104<a name=\"GeoCiudadesPYCS-1104\"> </a></td><td>GUARAMBARE</td></tr><tr><td style=\"white-space:nowrap\">1105<a name=\"GeoCiudadesPYCS-1105\"> </a></td><td>ITÁ</td></tr><tr><td style=\"white-space:nowrap\">1106<a name=\"GeoCiudadesPYCS-1106\"> </a></td><td>ITAUGUA</td></tr><tr><td style=\"white-space:nowrap\">1107<a name=\"GeoCiudadesPYCS-1107\"> </a></td><td>LAMBARE</td></tr><tr><td style=\"white-space:nowrap\">1108<a name=\"GeoCiudadesPYCS-1108\"> </a></td><td>LIMPIO</td></tr><tr><td style=\"white-space:nowrap\">1109<a name=\"GeoCiudadesPYCS-1109\"> </a></td><td>LUQUE</td></tr><tr><td style=\"white-space:nowrap\">1110<a name=\"GeoCiudadesPYCS-1110\"> </a></td><td>MARIANO ROQUE ALONSO</td></tr><tr><td style=\"white-space:nowrap\">1111<a name=\"GeoCiudadesPYCS-1111\"> </a></td><td>NUEVA ITALIA</td></tr><tr><td style=\"white-space:nowrap\">1112<a name=\"GeoCiudadesPYCS-1112\"> </a></td><td>ÑEMBY</td></tr><tr><td style=\"white-space:nowrap\">1113<a name=\"GeoCiudadesPYCS-1113\"> </a></td><td>SAN ANTONIO</td></tr><tr><td style=\"white-space:nowrap\">1114<a name=\"GeoCiudadesPYCS-1114\"> </a></td><td>SAN LORENZO</td></tr><tr><td style=\"white-space:nowrap\">1115<a name=\"GeoCiudadesPYCS-1115\"> </a></td><td>VILLA ELISA</td></tr><tr><td style=\"white-space:nowrap\">1116<a name=\"GeoCiudadesPYCS-1116\"> </a></td><td>VILLETA</td></tr><tr><td style=\"white-space:nowrap\">1117<a name=\"GeoCiudadesPYCS-1117\"> </a></td><td>YPACARAI</td></tr><tr><td style=\"white-space:nowrap\">1118<a name=\"GeoCiudadesPYCS-1118\"> </a></td><td>YPANE</td></tr><tr><td style=\"white-space:nowrap\">1119<a name=\"GeoCiudadesPYCS-1119\"> </a></td><td>J. AUGUSTO SALDIVAR</td></tr><tr><td style=\"white-space:nowrap\">1201<a name=\"GeoCiudadesPYCS-1201\"> </a></td><td>PILAR</td></tr><tr><td style=\"white-space:nowrap\">1202<a name=\"GeoCiudadesPYCS-1202\"> </a></td><td>ALBERDI</td></tr><tr><td style=\"white-space:nowrap\">1203<a name=\"GeoCiudadesPYCS-1203\"> </a></td><td>CERRITO</td></tr><tr><td style=\"white-space:nowrap\">1204<a name=\"GeoCiudadesPYCS-1204\"> </a></td><td>DESMOCHADOS</td></tr><tr><td style=\"white-space:nowrap\">1205<a name=\"GeoCiudadesPYCS-1205\"> </a></td><td>GRAL. JOSE EDUVIGIS DIAZ</td></tr><tr><td style=\"white-space:nowrap\">1206<a name=\"GeoCiudadesPYCS-1206\"> </a></td><td>GUAZU CUA</td></tr><tr><td style=\"white-space:nowrap\">1207<a name=\"GeoCiudadesPYCS-1207\"> </a></td><td>HUMAITA</td></tr><tr><td style=\"white-space:nowrap\">1208<a name=\"GeoCiudadesPYCS-1208\"> </a></td><td>ISLA UMBU</td></tr><tr><td style=\"white-space:nowrap\">1209<a name=\"GeoCiudadesPYCS-1209\"> </a></td><td>LAURELES</td></tr><tr><td style=\"white-space:nowrap\">1210<a name=\"GeoCiudadesPYCS-1210\"> </a></td><td>MAYOR JOSE DEJESUS MARTINEZ</td></tr><tr><td style=\"white-space:nowrap\">1211<a name=\"GeoCiudadesPYCS-1211\"> </a></td><td>PASO DE PATRIA</td></tr><tr><td style=\"white-space:nowrap\">1212<a name=\"GeoCiudadesPYCS-1212\"> </a></td><td>SAN JUAN BAUTISTA DE ÑEEMBUCU</td></tr><tr><td style=\"white-space:nowrap\">1213<a name=\"GeoCiudadesPYCS-1213\"> </a></td><td>TACUARAS</td></tr><tr><td style=\"white-space:nowrap\">1214<a name=\"GeoCiudadesPYCS-1214\"> </a></td><td>VILLA FRANCA</td></tr><tr><td style=\"white-space:nowrap\">1215<a name=\"GeoCiudadesPYCS-1215\"> </a></td><td>VILLA OLIVA</td></tr><tr><td style=\"white-space:nowrap\">1216<a name=\"GeoCiudadesPYCS-1216\"> </a></td><td>VILLALBIN</td></tr><tr><td style=\"white-space:nowrap\">1301<a name=\"GeoCiudadesPYCS-1301\"> </a></td><td>PEDRO JUAN CABALLERO</td></tr><tr><td style=\"white-space:nowrap\">1302<a name=\"GeoCiudadesPYCS-1302\"> </a></td><td>BELLA VISTA</td></tr><tr><td style=\"white-space:nowrap\">1303<a name=\"GeoCiudadesPYCS-1303\"> </a></td><td>CAPITAN BADO</td></tr><tr><td style=\"white-space:nowrap\">1304<a name=\"GeoCiudadesPYCS-1304\"> </a></td><td>ZANJA PYTA</td></tr><tr><td style=\"white-space:nowrap\">1305<a name=\"GeoCiudadesPYCS-1305\"> </a></td><td>KARAPAI</td></tr><tr><td style=\"white-space:nowrap\">1306<a name=\"GeoCiudadesPYCS-1306\"> </a></td><td>CERRO CORÁ</td></tr><tr><td style=\"white-space:nowrap\">1401<a name=\"GeoCiudadesPYCS-1401\"> </a></td><td>SALTO DEL GUAIRA</td></tr><tr><td style=\"white-space:nowrap\">1402<a name=\"GeoCiudadesPYCS-1402\"> </a></td><td>CORPUS CHRISTI</td></tr><tr><td style=\"white-space:nowrap\">1403<a name=\"GeoCiudadesPYCS-1403\"> </a></td><td>CURUGUATY</td></tr><tr><td style=\"white-space:nowrap\">1404<a name=\"GeoCiudadesPYCS-1404\"> </a></td><td>VILLA YGATIMI</td></tr><tr><td style=\"white-space:nowrap\">1405<a name=\"GeoCiudadesPYCS-1405\"> </a></td><td>ITANARA</td></tr><tr><td style=\"white-space:nowrap\">1406<a name=\"GeoCiudadesPYCS-1406\"> </a></td><td>YPE JHU</td></tr><tr><td style=\"white-space:nowrap\">1407<a name=\"GeoCiudadesPYCS-1407\"> </a></td><td>FRANCISCO CABALLERO</td></tr><tr><td style=\"white-space:nowrap\">1408<a name=\"GeoCiudadesPYCS-1408\"> </a></td><td>KATUETE</td></tr><tr><td style=\"white-space:nowrap\">1409<a name=\"GeoCiudadesPYCS-1409\"> </a></td><td>LA PALOMA DEL ESPIRITU SANTO</td></tr><tr><td style=\"white-space:nowrap\">1410<a name=\"GeoCiudadesPYCS-1410\"> </a></td><td>NUEVA ESPERANZA</td></tr><tr><td style=\"white-space:nowrap\">1411<a name=\"GeoCiudadesPYCS-1411\"> </a></td><td>YASY KAÑY</td></tr><tr><td style=\"white-space:nowrap\">1412<a name=\"GeoCiudadesPYCS-1412\"> </a></td><td>YBYRAROBANA</td></tr><tr><td style=\"white-space:nowrap\">1413<a name=\"GeoCiudadesPYCS-1413\"> </a></td><td>YBY PYTA</td></tr><tr><td style=\"white-space:nowrap\">1414<a name=\"GeoCiudadesPYCS-1414\"> </a></td><td>MARACANA</td></tr><tr><td style=\"white-space:nowrap\">1415<a name=\"GeoCiudadesPYCS-1415\"> </a></td><td>PUERTO ADELA</td></tr><tr><td style=\"white-space:nowrap\">1416<a name=\"GeoCiudadesPYCS-1416\"> </a></td><td>LAUREL</td></tr><tr><td style=\"white-space:nowrap\">1502<a name=\"GeoCiudadesPYCS-1502\"> </a></td><td>BENJAMIN ACEVAL</td></tr><tr><td style=\"white-space:nowrap\">1503<a name=\"GeoCiudadesPYCS-1503\"> </a></td><td>PUERTO PINASCO</td></tr><tr><td style=\"white-space:nowrap\">1504<a name=\"GeoCiudadesPYCS-1504\"> </a></td><td>VILLA HAYES</td></tr><tr><td style=\"white-space:nowrap\">1505<a name=\"GeoCiudadesPYCS-1505\"> </a></td><td>NANAWA</td></tr><tr><td style=\"white-space:nowrap\">1506<a name=\"GeoCiudadesPYCS-1506\"> </a></td><td>JOSE FALCON</td></tr><tr><td style=\"white-space:nowrap\">1507<a name=\"GeoCiudadesPYCS-1507\"> </a></td><td>TTE 1RO MANUEL IRALA FERNANDEZ</td></tr><tr><td style=\"white-space:nowrap\">1508<a name=\"GeoCiudadesPYCS-1508\"> </a></td><td>TENIENTE ESTEBAN MARTINEZ</td></tr><tr><td style=\"white-space:nowrap\">1509<a name=\"GeoCiudadesPYCS-1509\"> </a></td><td>GRAL JOSE MARIA BRUGUEZ</td></tr><tr><td style=\"white-space:nowrap\">1510<a name=\"GeoCiudadesPYCS-1510\"> </a></td><td>CAMPO ACEVAL</td></tr><tr><td style=\"white-space:nowrap\">1602<a name=\"GeoCiudadesPYCS-1602\"> </a></td><td>MARISCAL JOSE FELIX ESTIGARRIBIA</td></tr><tr><td style=\"white-space:nowrap\">1604<a name=\"GeoCiudadesPYCS-1604\"> </a></td><td>FILADELFIA</td></tr><tr><td style=\"white-space:nowrap\">1605<a name=\"GeoCiudadesPYCS-1605\"> </a></td><td>LOMA PLATA</td></tr><tr><td style=\"white-space:nowrap\">1606<a name=\"GeoCiudadesPYCS-1606\"> </a></td><td>BOQUERÓN</td></tr><tr><td style=\"white-space:nowrap\">1701<a name=\"GeoCiudadesPYCS-1701\"> </a></td><td>FUERTE OLIMPO</td></tr><tr><td style=\"white-space:nowrap\">1702<a name=\"GeoCiudadesPYCS-1702\"> </a></td><td>PUERTO CASADO</td></tr><tr><td style=\"white-space:nowrap\">1704<a name=\"GeoCiudadesPYCS-1704\"> </a></td><td>BAHIA NEGRA</td></tr><tr><td style=\"white-space:nowrap\">1705<a name=\"GeoCiudadesPYCS-1705\"> </a></td><td>CARMELO PERALTA</td></tr><tr><td style=\"white-space:nowrap\">1706<a name=\"GeoCiudadesPYCS-1706\"> </a></td><td>LA VICTORIA</td></tr><tr><td style=\"white-space:nowrap\">9999<a name=\"GeoCiudadesPYCS-9999\"> </a></td><td>NO SUMINISTRADO</td></tr><tr><td style=\"white-space:nowrap\">0<a name=\"GeoCiudadesPYCS-0\"> </a></td><td>ASUNCION</td></tr></table></div>"
+  },
+  "url" : "http://vigicanpy.mspbs.gov.py/CodeSystem/GeoCiudadesPYCS",
+  "version" : "0.9.0",
+  "name" : "GeoCiudadesPYCS",
+  "title" : "Ciudades Paraguay (codes)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-07-19T16:22:19-03:00",
+  "description" : "Ciudades Paraguay (codes)",
+  "caseSensitive" : false,
+  "content" : "complete",
+  "count" : 263,
+  "concept" : [{
+    "code" : "101",
+    "display" : "CONCEPCION"
+  },
+  {
+    "code" : "102",
+    "display" : "BELEN"
+  },
+  {
+    "code" : "103",
+    "display" : "HORQUETA"
+  },
+  {
+    "code" : "104",
+    "display" : "LORETO"
+  },
+  {
+    "code" : "105",
+    "display" : "SAN CARLOS"
+  },
+  {
+    "code" : "106",
+    "display" : "SAN LAZARO"
+  },
+  {
+    "code" : "107",
+    "display" : "YBY YAU"
+  },
+  {
+    "code" : "108",
+    "display" : "AZOTEY"
+  },
+  {
+    "code" : "109",
+    "display" : "SARGENTO JOSE FELIX LOPEZ"
+  },
+  {
+    "code" : "110",
+    "display" : "SAN ALFREDO"
+  },
+  {
+    "code" : "111",
+    "display" : "PASO BARRETO"
+  },
+  {
+    "code" : "112",
+    "display" : "ARROYITO"
+  },
+  {
+    "code" : "113",
+    "display" : "PASO HORQUETA"
+  },
+  {
+    "code" : "201",
+    "display" : "SAN PEDRO DEL YCUAMANDYYU"
+  },
+  {
+    "code" : "202",
+    "display" : "ANTEQUERA"
+  },
+  {
+    "code" : "203",
+    "display" : "CHORE"
+  },
+  {
+    "code" : "204",
+    "display" : "GENERAL ELIZARDO AQUINO"
+  },
+  {
+    "code" : "205",
+    "display" : "ITACURUBI DEL ROSARIO"
+  },
+  {
+    "code" : "206",
+    "display" : "LIMA"
+  },
+  {
+    "code" : "207",
+    "display" : "NUEVA GERMANIA"
+  },
+  {
+    "code" : "208",
+    "display" : "SAN ESTANISLAO"
+  },
+  {
+    "code" : "209",
+    "display" : "SAN PABLO"
+  },
+  {
+    "code" : "210",
+    "display" : "TACUATI"
+  },
+  {
+    "code" : "211",
+    "display" : "UNION"
+  },
+  {
+    "code" : "212",
+    "display" : "25 DE DICIEMBRE"
+  },
+  {
+    "code" : "213",
+    "display" : "VILLA DEL ROSARIO"
+  },
+  {
+    "code" : "214",
+    "display" : "GENERAL FRANCISCO ISIDORO RESQUIN"
+  },
+  {
+    "code" : "215",
+    "display" : "YATAITY DEL NORTE"
+  },
+  {
+    "code" : "216",
+    "display" : "GUAJAYVI"
+  },
+  {
+    "code" : "217",
+    "display" : "CAPIIBARY"
+  },
+  {
+    "code" : "218",
+    "display" : "SANTA ROSA DEL AGUARAY"
+  },
+  {
+    "code" : "219",
+    "display" : "YRYBUCUA"
+  },
+  {
+    "code" : "220",
+    "display" : "LIBERACION"
+  },
+  {
+    "code" : "221",
+    "display" : "SAN VICENTE PANCHOLO"
+  },
+  {
+    "code" : "222",
+    "display" : "SAN JOSÉ DEL ROSARIO"
+  },
+  {
+    "code" : "301",
+    "display" : "CAACUPE"
+  },
+  {
+    "code" : "302",
+    "display" : "ALTOS"
+  },
+  {
+    "code" : "303",
+    "display" : "ARROYOS Y ESTEROS"
+  },
+  {
+    "code" : "304",
+    "display" : "ATYRA"
+  },
+  {
+    "code" : "305",
+    "display" : "CARAGUATAY"
+  },
+  {
+    "code" : "306",
+    "display" : "EMBOSCADA"
+  },
+  {
+    "code" : "307",
+    "display" : "EUSEBIO AYALA"
+  },
+  {
+    "code" : "308",
+    "display" : "ISLA PUCU"
+  },
+  {
+    "code" : "309",
+    "display" : "ITACURUBI DE LA CORDILLERA"
+  },
+  {
+    "code" : "310",
+    "display" : "JUAN DE MENA"
+  },
+  {
+    "code" : "311",
+    "display" : "LOMA GRANDE"
+  },
+  {
+    "code" : "312",
+    "display" : "MBOCAYATY DEL YHAGUY"
+  },
+  {
+    "code" : "313",
+    "display" : "NUEVA COLOMBIA"
+  },
+  {
+    "code" : "314",
+    "display" : "PIRIBEBUY"
+  },
+  {
+    "code" : "315",
+    "display" : "PRIMERO DE MARZO"
+  },
+  {
+    "code" : "316",
+    "display" : "SAN BERNARDINO"
+  },
+  {
+    "code" : "317",
+    "display" : "SANTA ELENA"
+  },
+  {
+    "code" : "318",
+    "display" : "TOBATI"
+  },
+  {
+    "code" : "319",
+    "display" : "VALENZUELA"
+  },
+  {
+    "code" : "320",
+    "display" : "SAN JOSE OBRERO"
+  },
+  {
+    "code" : "401",
+    "display" : "VILLARRICA"
+  },
+  {
+    "code" : "402",
+    "display" : "BORJA"
+  },
+  {
+    "code" : "403",
+    "display" : "CAPITAN MAURICIO JOSE TROCHE"
+  },
+  {
+    "code" : "404",
+    "display" : "CORONEL MARTINEZ"
+  },
+  {
+    "code" : "405",
+    "display" : "FELIX PEREZ CARDOZO"
+  },
+  {
+    "code" : "406",
+    "display" : "GRAL. EUGENIO A. GARAY"
+  },
+  {
+    "code" : "407",
+    "display" : "INDEPENDENCIA"
+  },
+  {
+    "code" : "408",
+    "display" : "ITAPE"
+  },
+  {
+    "code" : "409",
+    "display" : "ITURBE"
+  },
+  {
+    "code" : "410",
+    "display" : "JOSE FASSARDI"
+  },
+  {
+    "code" : "411",
+    "display" : "MBOCAYATY"
+  },
+  {
+    "code" : "412",
+    "display" : "NATALICIO TALAVERA"
+  },
+  {
+    "code" : "413",
+    "display" : "ÑUMI"
+  },
+  {
+    "code" : "414",
+    "display" : "SAN SALVADOR"
+  },
+  {
+    "code" : "415",
+    "display" : "YATAITY"
+  },
+  {
+    "code" : "416",
+    "display" : "DOCTOR BOTTRELL"
+  },
+  {
+    "code" : "417",
+    "display" : "PASO YOBAI"
+  },
+  {
+    "code" : "418",
+    "display" : "TEBICUARY"
+  },
+  {
+    "code" : "501",
+    "display" : "CORONEL OVIEDO"
+  },
+  {
+    "code" : "502",
+    "display" : "CAAGUAZU"
+  },
+  {
+    "code" : "503",
+    "display" : "CARAYAO"
+  },
+  {
+    "code" : "504",
+    "display" : "DR. CECILIO BAEZ"
+  },
+  {
+    "code" : "505",
+    "display" : "SANTA ROSA DEL MBUTUY"
+  },
+  {
+    "code" : "506",
+    "display" : "DR. JUAN MANUEL FRUTOS"
+  },
+  {
+    "code" : "507",
+    "display" : "REPATRIACION"
+  },
+  {
+    "code" : "508",
+    "display" : "NUEVA LONDRES"
+  },
+  {
+    "code" : "509",
+    "display" : "SAN JOAQUIN"
+  },
+  {
+    "code" : "510",
+    "display" : "SAN JOSE DE LOS ARROYOS"
+  },
+  {
+    "code" : "511",
+    "display" : "YHU"
+  },
+  {
+    "code" : "512",
+    "display" : "DR. J. EULOGIO ESTIGARRIBIA"
+  },
+  {
+    "code" : "513",
+    "display" : "R.I. 3 CORRALES"
+  },
+  {
+    "code" : "514",
+    "display" : "RAUL ARSENIO OVIEDO"
+  },
+  {
+    "code" : "515",
+    "display" : "JOSE DOMINGO OCAMPOS"
+  },
+  {
+    "code" : "516",
+    "display" : "MCAL. FRANCISCO SOLANO LOPEZ"
+  },
+  {
+    "code" : "517",
+    "display" : "LA PASTORA"
+  },
+  {
+    "code" : "518",
+    "display" : "3 DE FEBRERO"
+  },
+  {
+    "code" : "519",
+    "display" : "SIMON BOLIVAR"
+  },
+  {
+    "code" : "520",
+    "display" : "VAQUERIA"
+  },
+  {
+    "code" : "521",
+    "display" : "TEMBIAPORA"
+  },
+  {
+    "code" : "522",
+    "display" : "NUEVA TOLEDO"
+  },
+  {
+    "code" : "601",
+    "display" : "CAAZAPA"
+  },
+  {
+    "code" : "602",
+    "display" : "ABAI"
+  },
+  {
+    "code" : "603",
+    "display" : "BUENA VISTA"
+  },
+  {
+    "code" : "604",
+    "display" : "MOISES BERTONI"
+  },
+  {
+    "code" : "605",
+    "display" : "GENERAL HIGINIO MORINIGO"
+  },
+  {
+    "code" : "606",
+    "display" : "MACIEL"
+  },
+  {
+    "code" : "607",
+    "display" : "SAN JUAN NEPOMUCENO"
+  },
+  {
+    "code" : "608",
+    "display" : "TAVAI"
+  },
+  {
+    "code" : "609",
+    "display" : "FULGENCIO YEGROS"
+  },
+  {
+    "code" : "610",
+    "display" : "YUTY"
+  },
+  {
+    "code" : "611",
+    "display" : "3 DE MAYO"
+  },
+  {
+    "code" : "701",
+    "display" : "ENCARNACION"
+  },
+  {
+    "code" : "702",
+    "display" : "BELLA VISTA SUR"
+  },
+  {
+    "code" : "703",
+    "display" : "CAMBYRETA"
+  },
+  {
+    "code" : "704",
+    "display" : "CAPITAN MEZA"
+  },
+  {
+    "code" : "705",
+    "display" : "CAPITAN MIRANDA"
+  },
+  {
+    "code" : "706",
+    "display" : "NUEVA ALBORADA"
+  },
+  {
+    "code" : "707",
+    "display" : "CARMEN DEL PARANA"
+  },
+  {
+    "code" : "708",
+    "display" : "CORONEL BOGADO"
+  },
+  {
+    "code" : "709",
+    "display" : "CARLOS ANTONIO LOPEZ"
+  },
+  {
+    "code" : "710",
+    "display" : "NATALIO"
+  },
+  {
+    "code" : "711",
+    "display" : "FRAM"
+  },
+  {
+    "code" : "712",
+    "display" : "GENERAL ARTIGAS"
+  },
+  {
+    "code" : "713",
+    "display" : "GENERAL DELGADO"
+  },
+  {
+    "code" : "714",
+    "display" : "HOHENAU"
+  },
+  {
+    "code" : "715",
+    "display" : "JESUS"
+  },
+  {
+    "code" : "716",
+    "display" : "LEANDRO OVIEDO"
+  },
+  {
+    "code" : "717",
+    "display" : "OBLIGADO"
+  },
+  {
+    "code" : "718",
+    "display" : "MAYOR JULIO DIONISIO OTAÑO"
+  },
+  {
+    "code" : "719",
+    "display" : "SAN COSME Y DAMIAN"
+  },
+  {
+    "code" : "720",
+    "display" : "SAN PEDRO DEL PARANA"
+  },
+  {
+    "code" : "721",
+    "display" : "SAN RAFAEL DEL PARANA"
+  },
+  {
+    "code" : "722",
+    "display" : "TRINIDAD"
+  },
+  {
+    "code" : "723",
+    "display" : "EDELIRA"
+  },
+  {
+    "code" : "724",
+    "display" : "TOMAS ROMERO PEREIRA"
+  },
+  {
+    "code" : "725",
+    "display" : "ALTO VERA"
+  },
+  {
+    "code" : "726",
+    "display" : "LA PAZ"
+  },
+  {
+    "code" : "727",
+    "display" : "YATYTAY"
+  },
+  {
+    "code" : "728",
+    "display" : "SAN JUAN DEL PARANA"
+  },
+  {
+    "code" : "729",
+    "display" : "PIRAPO"
+  },
+  {
+    "code" : "730",
+    "display" : "ITAPUA POTY"
+  },
+  {
+    "code" : "801",
+    "display" : "SAN JUAN BAUTISTA"
+  },
+  {
+    "code" : "802",
+    "display" : "AYOLAS"
+  },
+  {
+    "code" : "803",
+    "display" : "SAN IGNACIO"
+  },
+  {
+    "code" : "804",
+    "display" : "SAN MIGUEL"
+  },
+  {
+    "code" : "805",
+    "display" : "SAN PATRICIO"
+  },
+  {
+    "code" : "806",
+    "display" : "SANTA MARIA"
+  },
+  {
+    "code" : "807",
+    "display" : "SANTA ROSA"
+  },
+  {
+    "code" : "808",
+    "display" : "SANTIAGO"
+  },
+  {
+    "code" : "809",
+    "display" : "VILLA FLORIDA"
+  },
+  {
+    "code" : "810",
+    "display" : "YABEBYRY"
+  },
+  {
+    "code" : "901",
+    "display" : "PARAGUARI"
+  },
+  {
+    "code" : "902",
+    "display" : "ACAHAY"
+  },
+  {
+    "code" : "903",
+    "display" : "CAAPUCU"
+  },
+  {
+    "code" : "904",
+    "display" : "GENERAL BERNARDINO CABALLERO"
+  },
+  {
+    "code" : "905",
+    "display" : "CARAPEGUA"
+  },
+  {
+    "code" : "906",
+    "display" : "ESCOBAR"
+  },
+  {
+    "code" : "907",
+    "display" : "LA COLMENA"
+  },
+  {
+    "code" : "908",
+    "display" : "MBUYAPEY"
+  },
+  {
+    "code" : "909",
+    "display" : "PIRAYU"
+  },
+  {
+    "code" : "910",
+    "display" : "QUINDY"
+  },
+  {
+    "code" : "911",
+    "display" : "QUYQUYHO"
+  },
+  {
+    "code" : "912",
+    "display" : "SAN ROQUE GONZALEZ DE SANTACRUZ"
+  },
+  {
+    "code" : "913",
+    "display" : "SAPUCAI"
+  },
+  {
+    "code" : "914",
+    "display" : "TEBICUARY-MI"
+  },
+  {
+    "code" : "915",
+    "display" : "YAGUARON"
+  },
+  {
+    "code" : "916",
+    "display" : "YBYCUI"
+  },
+  {
+    "code" : "917",
+    "display" : "YBYTYMI"
+  },
+  {
+    "code" : "918",
+    "display" : "MARIA ANTONIA"
+  },
+  {
+    "code" : "1001",
+    "display" : "CIUDAD DEL ESTE"
+  },
+  {
+    "code" : "1002",
+    "display" : "PRESIDENTE FRANCO"
+  },
+  {
+    "code" : "1003",
+    "display" : "DOMINGO MARTINEZ DE IRALA"
+  },
+  {
+    "code" : "1004",
+    "display" : "DR. JUAN LEON MALLORQUIN"
+  },
+  {
+    "code" : "1005",
+    "display" : "HERNANDARIAS"
+  },
+  {
+    "code" : "1006",
+    "display" : "ITAKYRY"
+  },
+  {
+    "code" : "1007",
+    "display" : "JUAN E. OLEARY"
+  },
+  {
+    "code" : "1008",
+    "display" : "ÑACUNDAY"
+  },
+  {
+    "code" : "1009",
+    "display" : "YGUAZU"
+  },
+  {
+    "code" : "1010",
+    "display" : "LOS CEDRALES"
+  },
+  {
+    "code" : "1011",
+    "display" : "MINGA GUAZU"
+  },
+  {
+    "code" : "1012",
+    "display" : "SAN CRISTOBAL"
+  },
+  {
+    "code" : "1013",
+    "display" : "SANTA RITA"
+  },
+  {
+    "code" : "1014",
+    "display" : "NARANJAL"
+  },
+  {
+    "code" : "1015",
+    "display" : "SANTA ROSA DEL MONDAY"
+  },
+  {
+    "code" : "1016",
+    "display" : "MINGA PORA"
+  },
+  {
+    "code" : "1017",
+    "display" : "MBARACAYU"
+  },
+  {
+    "code" : "1018",
+    "display" : "SAN ALBERTO"
+  },
+  {
+    "code" : "1019",
+    "display" : "IRUÑA"
+  },
+  {
+    "code" : "1020",
+    "display" : "SANTA FE DEL PARANA"
+  },
+  {
+    "code" : "1021",
+    "display" : "TAVAPY"
+  },
+  {
+    "code" : "1022",
+    "display" : "DR. RAUL PEÑA"
+  },
+  {
+    "code" : "1101",
+    "display" : "AREGUA"
+  },
+  {
+    "code" : "1102",
+    "display" : "CAPIATA"
+  },
+  {
+    "code" : "1103",
+    "display" : "FERNANDO DE LA MORA"
+  },
+  {
+    "code" : "1104",
+    "display" : "GUARAMBARE"
+  },
+  {
+    "code" : "1105",
+    "display" : "ITÁ"
+  },
+  {
+    "code" : "1106",
+    "display" : "ITAUGUA"
+  },
+  {
+    "code" : "1107",
+    "display" : "LAMBARE"
+  },
+  {
+    "code" : "1108",
+    "display" : "LIMPIO"
+  },
+  {
+    "code" : "1109",
+    "display" : "LUQUE"
+  },
+  {
+    "code" : "1110",
+    "display" : "MARIANO ROQUE ALONSO"
+  },
+  {
+    "code" : "1111",
+    "display" : "NUEVA ITALIA"
+  },
+  {
+    "code" : "1112",
+    "display" : "ÑEMBY"
+  },
+  {
+    "code" : "1113",
+    "display" : "SAN ANTONIO"
+  },
+  {
+    "code" : "1114",
+    "display" : "SAN LORENZO"
+  },
+  {
+    "code" : "1115",
+    "display" : "VILLA ELISA"
+  },
+  {
+    "code" : "1116",
+    "display" : "VILLETA"
+  },
+  {
+    "code" : "1117",
+    "display" : "YPACARAI"
+  },
+  {
+    "code" : "1118",
+    "display" : "YPANE"
+  },
+  {
+    "code" : "1119",
+    "display" : "J. AUGUSTO SALDIVAR"
+  },
+  {
+    "code" : "1201",
+    "display" : "PILAR"
+  },
+  {
+    "code" : "1202",
+    "display" : "ALBERDI"
+  },
+  {
+    "code" : "1203",
+    "display" : "CERRITO"
+  },
+  {
+    "code" : "1204",
+    "display" : "DESMOCHADOS"
+  },
+  {
+    "code" : "1205",
+    "display" : "GRAL. JOSE EDUVIGIS DIAZ"
+  },
+  {
+    "code" : "1206",
+    "display" : "GUAZU CUA"
+  },
+  {
+    "code" : "1207",
+    "display" : "HUMAITA"
+  },
+  {
+    "code" : "1208",
+    "display" : "ISLA UMBU"
+  },
+  {
+    "code" : "1209",
+    "display" : "LAURELES"
+  },
+  {
+    "code" : "1210",
+    "display" : "MAYOR JOSE DEJESUS MARTINEZ"
+  },
+  {
+    "code" : "1211",
+    "display" : "PASO DE PATRIA"
+  },
+  {
+    "code" : "1212",
+    "display" : "SAN JUAN BAUTISTA DE ÑEEMBUCU"
+  },
+  {
+    "code" : "1213",
+    "display" : "TACUARAS"
+  },
+  {
+    "code" : "1214",
+    "display" : "VILLA FRANCA"
+  },
+  {
+    "code" : "1215",
+    "display" : "VILLA OLIVA"
+  },
+  {
+    "code" : "1216",
+    "display" : "VILLALBIN"
+  },
+  {
+    "code" : "1301",
+    "display" : "PEDRO JUAN CABALLERO"
+  },
+  {
+    "code" : "1302",
+    "display" : "BELLA VISTA"
+  },
+  {
+    "code" : "1303",
+    "display" : "CAPITAN BADO"
+  },
+  {
+    "code" : "1304",
+    "display" : "ZANJA PYTA"
+  },
+  {
+    "code" : "1305",
+    "display" : "KARAPAI"
+  },
+  {
+    "code" : "1306",
+    "display" : "CERRO CORÁ"
+  },
+  {
+    "code" : "1401",
+    "display" : "SALTO DEL GUAIRA"
+  },
+  {
+    "code" : "1402",
+    "display" : "CORPUS CHRISTI"
+  },
+  {
+    "code" : "1403",
+    "display" : "CURUGUATY"
+  },
+  {
+    "code" : "1404",
+    "display" : "VILLA YGATIMI"
+  },
+  {
+    "code" : "1405",
+    "display" : "ITANARA"
+  },
+  {
+    "code" : "1406",
+    "display" : "YPE JHU"
+  },
+  {
+    "code" : "1407",
+    "display" : "FRANCISCO CABALLERO"
+  },
+  {
+    "code" : "1408",
+    "display" : "KATUETE"
+  },
+  {
+    "code" : "1409",
+    "display" : "LA PALOMA DEL ESPIRITU SANTO"
+  },
+  {
+    "code" : "1410",
+    "display" : "NUEVA ESPERANZA"
+  },
+  {
+    "code" : "1411",
+    "display" : "YASY KAÑY"
+  },
+  {
+    "code" : "1412",
+    "display" : "YBYRAROBANA"
+  },
+  {
+    "code" : "1413",
+    "display" : "YBY PYTA"
+  },
+  {
+    "code" : "1414",
+    "display" : "MARACANA"
+  },
+  {
+    "code" : "1415",
+    "display" : "PUERTO ADELA"
+  },
+  {
+    "code" : "1416",
+    "display" : "LAUREL"
+  },
+  {
+    "code" : "1502",
+    "display" : "BENJAMIN ACEVAL"
+  },
+  {
+    "code" : "1503",
+    "display" : "PUERTO PINASCO"
+  },
+  {
+    "code" : "1504",
+    "display" : "VILLA HAYES"
+  },
+  {
+    "code" : "1505",
+    "display" : "NANAWA"
+  },
+  {
+    "code" : "1506",
+    "display" : "JOSE FALCON"
+  },
+  {
+    "code" : "1507",
+    "display" : "TTE 1RO MANUEL IRALA FERNANDEZ"
+  },
+  {
+    "code" : "1508",
+    "display" : "TENIENTE ESTEBAN MARTINEZ"
+  },
+  {
+    "code" : "1509",
+    "display" : "GRAL JOSE MARIA BRUGUEZ"
+  },
+  {
+    "code" : "1510",
+    "display" : "CAMPO ACEVAL"
+  },
+  {
+    "code" : "1602",
+    "display" : "MARISCAL JOSE FELIX ESTIGARRIBIA"
+  },
+  {
+    "code" : "1604",
+    "display" : "FILADELFIA"
+  },
+  {
+    "code" : "1605",
+    "display" : "LOMA PLATA"
+  },
+  {
+    "code" : "1606",
+    "display" : "BOQUERÓN"
+  },
+  {
+    "code" : "1701",
+    "display" : "FUERTE OLIMPO"
+  },
+  {
+    "code" : "1702",
+    "display" : "PUERTO CASADO"
+  },
+  {
+    "code" : "1704",
+    "display" : "BAHIA NEGRA"
+  },
+  {
+    "code" : "1705",
+    "display" : "CARMELO PERALTA"
+  },
+  {
+    "code" : "1706",
+    "display" : "LA VICTORIA"
+  },
+  {
+    "code" : "9999",
+    "display" : "NO SUMINISTRADO"
+  },
+  {
+    "code" : "0",
+    "display" : "ASUNCION"
+  }]
+}

@@ -17,7 +17,7 @@ import "jspdf-autotable";
 import api from "@/app/services/api";
 import { toast } from "react-toastify";
 import { useAdminAuth } from "../../../hooks/useAdminAuth";
-
+import autoTable from "jspdf-autotable"
 // Tipos de datos
 interface DashboardStats {
   totalRespuestas: number;
@@ -175,7 +175,7 @@ export default function DashboardPage() {
         `${p.duracion} min`
       ]);
       
-      (doc as any).autoTable({
+      autoTable(doc, {
         startY: 90,
         head: [['Usuario', 'Encuesta', 'Fecha', 'Duración']],
         body: tableData,

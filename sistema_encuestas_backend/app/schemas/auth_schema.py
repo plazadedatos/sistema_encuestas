@@ -44,3 +44,14 @@ class UsuarioResponse(BaseModel):
     
     class Config:
         from_attributes = True
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+class ResetPasswordRequest(BaseModel):
+    token: str = Field(..., description="Token de recuperación de contraseña")
+    nueva_password: str = Field(..., min_length=6, description="Nueva contraseña")
+
+class PasswordResetResponse(BaseModel):
+    mensaje: str
+    success: bool

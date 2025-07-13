@@ -93,8 +93,8 @@ async def obtener_encuestas_activas(db: AsyncSession = Depends(get_db)):
                 "id_encuesta": e.id_encuesta,
                 "titulo": e.titulo,
                 "descripcion": e.descripcion,
-                "fecha_inicio": e.fecha_inicio.strftime("%Y-%m-%d") if e.fecha_inicio else "",
-                "fecha_fin": e.fecha_fin.strftime("%Y-%m-%d") if e.fecha_fin else "",
+                "fecha_inicio": e.fecha_inicio.strftime("%Y-%m-%d") if e.fecha_inicio is not None else "",
+                "fecha_fin": e.fecha_fin.strftime("%Y-%m-%d") if e.fecha_fin is not None else "",
                 "puntos_otorga": e.puntos_otorga,
                 "imagen": e.imagen,
                 "tiempo_estimado": e.tiempo_estimado,
@@ -145,3 +145,57 @@ async def obtener_encuesta_completa(encuesta_id: int, db: AsyncSession = Depends
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
+# Endpoint para obtener TODAS las encuestas (para el administrador)
+@router.get("/")
+async def obtener_todas_encuestas(db: AsyncSession = Depends(get_db)):
+    try:
+        result = await db.execute(select(Encuesta).order_by(Encuesta.fecha_creacion.desc()))
+        encuestas = result.scalars().all()
+        return [
+            {
+                "id_encuesta": e.id_encuesta,
+                "titulo": e.titulo,
+                "descripcion": e.descripcion,
+                "fecha_inicio": e.fecha_inicio.strftime("%Y-%m-%d") if e.fecha_inicio is not None else "",
+                "fecha_fin": e.fecha_fin.strftime("%Y-%m-%d") if e.fecha_fin is not None else "",
+                "puntos_otorga": e.puntos_otorga,
+                "imagen": e.imagen,
+                "tiempo_estimado": e.tiempo_estimado,
+                "estado": e.estado,
+                "fecha_creacion": e.fecha_creacion.strftime("%Y-%m-%d %H:%M:%S") if e.fecha_creacion is not None else "",
+                "visible_para": e.visible_para
+            }
+            for e in encuestas
+        ]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error obteniendo encuestas: {str(e)}")
+
+# Endpoint para cambiar el estado de una encuesta
+@router.patch("/{encuesta_id}/estado")
+async def cambiar_estado_encuesta(
+    encuesta_id: int, 
+    data: dict,  # Cambiado para recibir un objeto con el estado
+    db: AsyncSession = Depends(get_db)
+):
+    try:
+        query = await db.execute(
+            select(Encuesta).where(Encuesta.id_encuesta == encuesta_id)
+        )
+        encuesta = query.scalar_one_or_none()
+        
+        if not encuesta:
+            raise HTTPException(status_code=404, detail="Encuesta no encontrada")
+        
+        nuevo_estado = data.get("estado", encuesta.estado)
+        encuesta.estado = nuevo_estado
+        await db.commit()
+        
+        return {
+            "mensaje": f"Estado de la encuesta actualizado a {'activo' if nuevo_estado else 'inactivo'}",
+            "id_encuesta": encuesta_id,
+            "nuevo_estado": nuevo_estado
+        }
+    except SQLAlchemyError as e:
+        await db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error al actualizar estado: {str(e)}")

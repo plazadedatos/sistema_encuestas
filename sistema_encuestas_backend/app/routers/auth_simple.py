@@ -1,3 +1,4 @@
+# app/routers/auth_simple.py
 """
 Router de autenticación simplificado compatible con la BD actual
 """

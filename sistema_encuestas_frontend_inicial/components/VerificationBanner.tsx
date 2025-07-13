@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/authContext';
 import { FaEnvelope, FaTimes, FaCheckCircle } from 'react-icons/fa';
 import api from '@/app/services/api';
@@ -11,8 +11,24 @@ export default function VerificationBanner() {
   const [isVisible, setIsVisible] = useState(true);
   const [isResending, setIsResending] = useState(false);
 
-  // No mostrar el banner si el usuario está verificado o si se ocultó
-  if (!user || user.email_verificado || !isVisible) {
+  // Debug: Log del estado del usuario
+  useEffect(() => {
+    if (user) {
+      console.log('🔍 VerificationBanner - Estado del usuario:', {
+        email: user.email,
+        email_verificado: user.email_verificado,
+        tipo_valor: typeof user.email_verificado
+      });
+    }
+  }, [user]);
+
+  // No mostrar el banner si:
+  // 1. No hay usuario
+  // 2. El email está verificado (true o 'true' como string)
+  // 3. El usuario lo ocultó manualmente
+  const emailVerificado = user?.email_verificado === true || String(user?.email_verificado) === 'true';
+  
+  if (!user || emailVerificado || !isVisible) {
     return null;
   }
 

@@ -42,7 +42,7 @@ export default function Sidebar() {
                 <span className="text-blue-800 font-bold text-xl">SE</span>
               </div>
               <div>
-                <h2 className="text-xl font-bold">Sistema Encuestas</h2>
+                <h2 className="text-xl font-bold">Plaza de Datos</h2>
                 <p className="text-xs text-blue-200">Panel de Control</p>
               </div>
             </div>
@@ -164,6 +164,22 @@ export default function Sidebar() {
                   >
                     <FaGift className="text-blue-300" />
                     <span className="text-sm">Gestión Premios</span>
+                  </Link>
+                  <Link 
+                    href="/administracion/resultados-agregados" 
+                    className="flex items-center gap-3 hover:bg-blue-800/30 p-2 pl-4 rounded-lg transition-all duration-200 hover:translate-x-1"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <FaChartBar className="text-blue-300" />
+                    <span className="text-sm">Resultados Encuestas</span>
+                  </Link>
+                  <Link 
+                    href="/administracion/respuestas-detalladas" 
+                    className="flex items-center gap-3 hover:bg-blue-800/30 p-2 pl-4 rounded-lg transition-all duration-200 hover:translate-x-1"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <FaHistory className="text-blue-300" />
+                    <span className="text-sm">Respuestas Detalladas</span>
                   </Link>
                 </div>
               )}

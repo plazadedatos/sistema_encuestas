@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaClipboardList, FaGift, FaHistory, FaUser, FaChartLine, FaTrophy, FaClock, FaLock } from "react-icons/fa";
 import Link from "next/link";
+import WelcomeScreen from "@/components/WelcomeScreen";
 
 export default function PanelPage() {
-  const { user, loading } = useAuth();
+  const { user, loading, showWelcome, setShowWelcome } = useAuth();
   const router = useRouter();
   const [greeting, setGreeting] = useState("");
 
@@ -34,6 +35,15 @@ export default function PanelPage() {
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
+  }
+
+  if (!user) {
+    return null;
+  }
+
+  // Mostrar pantalla de bienvenida si está activa
+  if (showWelcome) {
+    return <WelcomeScreen onClose={() => setShowWelcome(false)} />;
   }
 
   const menuItems = [

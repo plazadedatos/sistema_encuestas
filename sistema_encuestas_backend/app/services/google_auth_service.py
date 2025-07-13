@@ -1,94 +1,45 @@
-# app/services/google_auth_service.py
-import os
-from typing import Optional, Dict
-from google.oauth2 import id_token
-from google.auth.transport import requests
+import httpx
 import logging
+from typing import Optional, Dict, Any
+from app.config import settings
 
 logger = logging.getLogger(__name__)
 
 class GoogleAuthService:
     def __init__(self):
-        self.client_id = os.getenv("GOOGLE_CLIENT_ID", "")
-        self.client_secret = os.getenv("GOOGLE_CLIENT_SECRET", "")
+        self.client_id = settings.google_client_id
+        self.client_secret = settings.google_client_secret
+        self.verify_url = "https://oauth2.googleapis.com/tokeninfo"
         
-        if not self.client_id:
-            logger.warning("GOOGLE_CLIENT_ID no está configurado")
-    
-    async def verificar_token(self, token: str) -> Optional[Dict]:
-        """
-        Verifica un ID token de Google y retorna la información del usuario
-        
-        Returns:
-            Dict con los datos del usuario o None si el token es inválido
-        """
+    async def verificar_token(self, id_token: str) -> Optional[Dict[str, Any]]:
         try:
-            # Verificar el token con Google
-            idinfo = id_token.verify_oauth2_token(
-                token, 
-                requests.Request(), 
-                self.client_id
-            )
-            
-            # Verificar que el token fue emitido para nuestra aplicación
-            if idinfo['aud'] != self.client_id:
-                logger.error("Token de Google inválido: audiencia incorrecta")
-                return None
-            
-            # Verificar el emisor
-            if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-                logger.error("Token de Google inválido: emisor incorrecto")
-                return None
-            
-            # Extraer información del usuario
-            user_info = {
-                'google_id': idinfo.get('sub'),
-                'email': idinfo.get('email'),
-                'email_verified': idinfo.get('email_verified', False),
-                'name': idinfo.get('name', ''),
-                'given_name': idinfo.get('given_name', ''),
-                'family_name': idinfo.get('family_name', ''),
-                'picture': idinfo.get('picture', ''),
-                'locale': idinfo.get('locale', 'es')
-            }
-            
-            logger.info(f"Token de Google verificado exitosamente para: {user_info['email']}")
-            return user_info
-            
-        except ValueError as e:
-            logger.error(f"Error al verificar token de Google: {str(e)}")
-            return None
+            async with httpx.AsyncClient() as client:
+                response = await client.get(self.verify_url, params={"id_token": id_token})
+                if response.status_code != 200:
+                    logger.error(f"Error verificando token: {response.status_code} - {response.text}")
+                    return None
+                token_data = response.json()
+                if token_data.get('aud') != self.client_id:
+                    logger.error(f"Token no es para nuestra app. Esperado: {self.client_id}, Recibido: {token_data.get('aud')}")
+                    return None
+                import time
+                if int(token_data.get('exp', 0)) < time.time():
+                    logger.error("Token expirado")
+                    return None
+                user_info = {
+                    'google_id': token_data.get('sub'),
+                    'email': token_data.get('email'),
+                    'email_verified': token_data.get('email_verified', False),
+                    'name': token_data.get('name'),
+                    'given_name': token_data.get('given_name'),
+                    'family_name': token_data.get('family_name'),
+                    'picture': token_data.get('picture'),
+                    'locale': token_data.get('locale')
+                }
+                return user_info
         except Exception as e:
-            logger.error(f"Error inesperado al verificar token de Google: {str(e)}")
+            logger.error(f"Error verificando token de Google: {e}")
             return None
-    
-    def obtener_url_autorizacion(self, redirect_uri: str, state: Optional[str] = None) -> str:
-        """
-        Genera la URL de autorización de Google OAuth2
-        
-        Args:
-            redirect_uri: URL a la que Google redirigirá después del login
-            state: Estado opcional para prevenir CSRF
-            
-        Returns:
-            URL de autorización de Google
-        """
-        base_url = "https://accounts.google.com/o/oauth2/v2/auth"
-        params = {
-            'client_id': self.client_id,
-            'redirect_uri': redirect_uri,
-            'response_type': 'id_token',
-            'scope': 'openid email profile',
-            'nonce': os.urandom(16).hex(),  # Para prevenir ataques de replay
-            'prompt': 'select_account'  # Permitir al usuario elegir cuenta
-        }
-        
-        if state:
-            params['state'] = state
-        
-        # Construir la URL con los parámetros
-        param_string = '&'.join([f"{k}={v}" for k, v in params.items()])
-        return f"{base_url}?{param_string}"
 
-# Instancia global del servicio
-google_auth_service = GoogleAuthService() 
+# Instancia global
+google_auth_service = GoogleAuthService()

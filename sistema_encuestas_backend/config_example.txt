@@ -1,0 +1,39 @@
+# CONFIGURACIÓN DE EMAIL PARA SISTEMA DE ENCUESTAS
+# Copiar este contenido a tu archivo .env en sistema_encuestas_backend
+
+# Base de datos
+DATABASE_URL=postgresql://postgres:password@localhost:5432/encuestas_db
+
+# JWT y autenticación
+SECRET_KEY=tu_clave_secreta_super_segura_aqui_cambiar_en_produccion_2024
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=1440
+
+# Google OAuth
+GOOGLE_CLIENT_ID=428967384216-t0gs6tqdbtvuvk3e61e0dofqloq63f60.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=tu_client_secret_aqui
+
+# Email Configuration (Gmail)
+# Para Gmail, necesitas generar una "App Password":
+# 1. Ve a tu cuenta de Google: https://myaccount.google.com/
+# 2. Seguridad > Verificación en 2 pasos (debe estar activada)
+# 3. Seguridad > Contraseñas de aplicaciones
+# 4. Genera una contraseña para "Mail"
+SMTP_SERVER=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=tu_email@gmail.com
+SMTP_PASSWORD=tu_app_password_aqui  # NO tu contraseña normal de Gmail
+SMTP_USE_TLS=true
+
+# Para Hotmail/Outlook:
+# SMTP_SERVER=smtp-mail.outlook.com
+# SMTP_PORT=587
+# SMTP_USERNAME=tu_email@hotmail.com
+# SMTP_PASSWORD=tu_contraseña
+# SMTP_USE_TLS=true
+
+# Frontend URL
+FRONTEND_URL=http://localhost:3000
+
+# CORS
+CORS_ORIGINS=http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001 

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaTimesCircle, FaInfoCircle } from 'react-icons/fa';
 
 export default function VerificarCorreoPage() {
   const searchParams = useSearchParams();
@@ -12,6 +12,7 @@ export default function VerificarCorreoPage() {
   const [mensaje, setMensaje] = useState('');
   const [exitoso, setExitoso] = useState(false);
   const [email, setEmail] = useState('');
+  const [esEmailYaVerificado, setEsEmailYaVerificado] = useState(false);
 
   useEffect(() => {
     const token = searchParams.get('token');
@@ -28,21 +29,43 @@ export default function VerificarCorreoPage() {
 
   const verificarEmail = async (token: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/verificar-correo?token=${token}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/verificar-correo?token=${token}`, {
         method: 'GET',
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setExitoso(true);
-        setMensaje(data.mensaje || 'Email verificado exitosamente');
-        setEmail(data.email || '');
-        
-        // Redirigir al login después de 3 segundos
-        setTimeout(() => {
-          router.push('/login');
-        }, 3000);
+        // Verificar el estado específico de la respuesta
+        if (data.estado === 'verificado_exitosamente') {
+          setExitoso(true);
+          setMensaje('¡Email verificado exitosamente!');
+          setEmail(data.email || '');
+          
+          // Redirigir al panel después de 3 segundos
+          setTimeout(() => {
+            router.push('/panel');
+          }, 3000);
+        } else if (data.estado === 'ya_verificado') {
+          setExitoso(true);
+          setEsEmailYaVerificado(true);
+          setMensaje(data.mensaje || 'Este email ya fue verificado anteriormente');
+          setEmail(data.email || '');
+          
+          // Redirigir al panel después de 2 segundos
+          setTimeout(() => {
+            router.push('/panel');
+          }, 2000);
+        } else {
+          // Caso genérico de éxito
+          setExitoso(true);
+          setMensaje(data.mensaje || 'Email verificado');
+          setEmail(data.email || '');
+          
+          setTimeout(() => {
+            router.push('/panel');
+          }, 3000);
+        }
       } else {
         setExitoso(false);
         setMensaje(data.detail || 'Error al verificar el email');
@@ -73,27 +96,57 @@ export default function VerificarCorreoPage() {
           <div className="text-center">
             {exitoso ? (
               <>
-                <FaCheckCircle className="h-16 w-16 text-green-500 mx-auto" />
-                <h1 className="mt-4 text-2xl font-bold text-gray-900">
-                  ¡Email Verificado!
-                </h1>
-                <p className="mt-2 text-gray-600">
-                  {mensaje}
-                </p>
-                {email && (
-                  <p className="mt-1 text-sm text-gray-500">
-                    {email}
-                  </p>
+                {esEmailYaVerificado ? (
+                  // Caso especial: Email ya verificado anteriormente
+                  <>
+                    <FaInfoCircle className="h-16 w-16 text-blue-500 mx-auto" />
+                    <h1 className="mt-4 text-2xl font-bold text-gray-900">
+                      Email Ya Verificado
+                    </h1>
+                    <p className="mt-2 text-gray-600">
+                      {mensaje}
+                    </p>
+                    {email && (
+                      <p className="mt-1 text-sm text-gray-500">
+                        {email}
+                      </p>
+                    )}
+                    <p className="mt-4 text-sm text-gray-600">
+                      Redirigiendo al panel...
+                    </p>
+                    <Link
+                      href="/panel"
+                      className="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      Ir al Panel Ahora
+                    </Link>
+                  </>
+                ) : (
+                  // Verificación exitosa por primera vez
+                  <>
+                    <FaCheckCircle className="h-16 w-16 text-green-500 mx-auto" />
+                    <h1 className="mt-4 text-2xl font-bold text-gray-900">
+                      ¡Email Verificado!
+                    </h1>
+                    <p className="mt-2 text-gray-600">
+                      {mensaje}
+                    </p>
+                    {email && (
+                      <p className="mt-1 text-sm text-gray-500">
+                        {email}
+                      </p>
+                    )}
+                    <p className="mt-4 text-sm text-gray-600">
+                      Serás redirigido al panel en unos segundos...
+                    </p>
+                    <Link
+                      href="/panel"
+                      className="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      Ir al Panel Ahora
+                    </Link>
+                  </>
                 )}
-                <p className="mt-4 text-sm text-gray-600">
-                  Serás redirigido al inicio de sesión en unos segundos...
-                </p>
-                <Link
-                  href="/login"
-                  className="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  Ir al Login Ahora
-                </Link>
               </>
             ) : (
               <>
@@ -112,10 +165,10 @@ export default function VerificarCorreoPage() {
                     Volver al Registro
                   </Link>
                   <Link
-                    href="/reenviar-verificacion"
+                    href="/panel"
                     className="block bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors"
                   >
-                    Reenviar Email de Verificación
+                    Ir al Panel
                   </Link>
                 </div>
               </>

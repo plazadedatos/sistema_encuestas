@@ -123,14 +123,14 @@ async def get_participaciones_recientes(
     stmt = (
         select(
             Participacion.id_participacion.label("id"),
-            (Usuario.nombre + " " + Usuario.apellido).label("usuario"),
+            Usuario.nombre.label("nombre_usuario"),
+            Usuario.apellido.label("apellido_usuario"),
             Encuesta.titulo.label("encuesta"),
             Participacion.fecha_participacion.label("fecha"),
             literal(5).label("duracion"),
         )
         .join(Usuario, Usuario.id_usuario == Participacion.id_usuario)
         .join(Encuesta, Encuesta.id_encuesta == Participacion.id_encuesta)
-        .where(Participacion.estado == "completada")
         .order_by(desc(Participacion.fecha_participacion))
         .limit(limit)
     )
@@ -139,7 +139,7 @@ async def get_participaciones_recientes(
     return [
         {
             "id": p.id,
-            "usuario": p.usuario,
+            "usuario": f"{p.nombre_usuario} {p.apellido_usuario}",
             "encuesta": p.encuesta,
             "fecha": p.fecha.strftime("%Y-%m-%d %H:%M"),
             "duracion": p.duracion,

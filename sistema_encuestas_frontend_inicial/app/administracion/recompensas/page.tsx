@@ -31,7 +31,7 @@ export default function AdminRecompensasPage() {
 
   const cargarPremios = async () => {
     try {
-      const res = await api.get("/premios", {
+      const res = await api.get("/premios/admin", {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPremios(res.data);

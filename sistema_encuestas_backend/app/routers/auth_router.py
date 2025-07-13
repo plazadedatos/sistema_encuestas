@@ -1,10 +1,14 @@
 # app/routers/auth_router.py
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Form
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from passlib.context import CryptContext
 from app.utils.jwt_manager import crear_token
-from app.schemas.auth_schema import LoginRequest, LoginResponse, RegistroRequest, GoogleAuthRequest, VerifyEmailRequest
+from app.schemas.auth_schema import (
+    LoginRequest, LoginResponse, RegistroRequest, GoogleAuthRequest, 
+    VerifyEmailRequest, ForgotPasswordRequest, ResetPasswordRequest, 
+    PasswordResetResponse
+)
 from fastapi.responses import JSONResponse
 from datetime import datetime, timedelta
 import logging
@@ -49,7 +53,7 @@ async def login(datos: LoginRequest, db: AsyncSession = Depends(get_db)):
         "sub": usuario.email,
         "usuario_id": usuario.id_usuario,
         "rol_id": usuario.rol_id,
-        "email_verificado": usuario.email_verificado
+        "email_verificado": getattr(usuario, 'email_verificado', False)
     }
 
     access_token = crear_token(token_data)
@@ -63,8 +67,8 @@ async def login(datos: LoginRequest, db: AsyncSession = Depends(get_db)):
             "apellido": usuario.apellido,
             "email": usuario.email,
             "rol_id": usuario.rol_id,
-            "email_verificado": usuario.email_verificado,
-            "puntos_disponibles": usuario.puntos_disponibles
+            "email_verificado": getattr(usuario, 'email_verificado', False),
+            "puntos_disponibles": getattr(usuario, 'puntos_disponibles', 0)
         }
     })
 
@@ -140,21 +144,14 @@ async def verificar_correo(
         select(TokenVerificacion)
         .where(TokenVerificacion.token == token)
         .where(TokenVerificacion.tipo == "email_verification")
-        .where(TokenVerificacion.usado == False)
     )
     token_obj = query.scalars().first()
     
+    # Si no existe el token
     if not token_obj:
         raise HTTPException(
             status_code=400, 
-            detail="Token inválido o ya utilizado"
-        )
-    
-    # Verificar si expiró
-    if token_obj.esta_expirado():
-        raise HTTPException(
-            status_code=400, 
-            detail="El token ha expirado. Solicita un nuevo correo de verificación."
+            detail="Token inválido o no encontrado"
         )
     
     # Obtener el usuario
@@ -166,7 +163,46 @@ async def verificar_correo(
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     
-    # Marcar email como verificado
+    # Verificar si el email ya está verificado
+    if getattr(usuario, 'email_verificado', False):
+        # Si el token ya fue usado
+        if getattr(token_obj, 'usado', False):
+            return JSONResponse(
+                status_code=200,
+                content={
+                    "mensaje": "Este email ya fue verificado anteriormente",
+                    "email": usuario.email,
+                    "estado": "ya_verificado"
+                }
+            )
+        else:
+            # Email ya verificado pero token no usado (caso raro)
+            token_obj.marcar_usado()
+            await db.commit()
+            return JSONResponse(
+                status_code=200,
+                content={
+                    "mensaje": "Tu email ya estaba verificado",
+                    "email": usuario.email,
+                    "estado": "ya_verificado"
+                }
+            )
+    
+    # Verificar si el token expiró
+    if token_obj.esta_expirado():
+        raise HTTPException(
+            status_code=400, 
+            detail="El token ha expirado. Solicita un nuevo correo de verificación."
+        )
+    
+    # Verificar si el token ya fue usado (pero email no verificado - caso raro)
+    if getattr(token_obj, 'usado', False):
+        raise HTTPException(
+            status_code=400,
+            detail="Este token ya fue utilizado. Solicita un nuevo correo de verificación."
+        )
+    
+    # Todo OK - Verificar el email
     usuario.email_verificado = True
     usuario.fecha_verificacion = datetime.utcnow()
     
@@ -175,21 +211,25 @@ async def verificar_correo(
     
     await db.commit()
     
-    return JSONResponse(content={
-        "mensaje": "Email verificado exitosamente. Ya puedes iniciar sesión.",
-        "email": usuario.email
-    })
+    return JSONResponse(
+        status_code=200,
+        content={
+            "mensaje": "¡Email verificado exitosamente!",
+            "email": usuario.email,
+            "estado": "verificado_exitosamente"
+        }
+    )
 
 
 @router.post("/reenviar-verificacion")
 async def reenviar_verificacion(
-    email: str,
+    datos: VerifyEmailRequest,
     db: AsyncSession = Depends(get_db)
 ):
     """Reenvía el correo de verificación al usuario"""
     
     # Buscar usuario
-    query = await db.execute(select(Usuario).where(Usuario.email == email))
+    query = await db.execute(select(Usuario).where(Usuario.email == datos.email))
     usuario = query.scalars().first()
     
     if not usuario:
@@ -352,3 +392,118 @@ async def refresh_token(authorization: str = Depends(lambda: None)):
     except Exception:
         raise HTTPException(status_code=401, detail="Token inválido")
     return {"access_token": payload, "token_type": "bearer"}
+
+
+@router.post("/forgot-password")
+async def forgot_password(
+    datos: ForgotPasswordRequest,
+    db: AsyncSession = Depends(get_db)
+):
+    """Solicita recuperación de contraseña por email"""
+    logger.info(f"Solicitud de recuperación de contraseña para: {datos.email}")
+    
+    # Buscar usuario por email
+    query = await db.execute(
+        select(Usuario).where(Usuario.email == datos.email)
+    )
+    usuario = query.scalars().first()
+    
+    # Por seguridad, siempre retornar el mismo mensaje
+    mensaje_respuesta = "Si el email existe en nuestro sistema, recibirás un correo con instrucciones para restablecer tu contraseña."
+    
+    if usuario:
+        # Invalidar tokens anteriores de recuperación para este usuario
+        tokens_anteriores = await db.execute(
+            select(TokenVerificacion)
+            .where(TokenVerificacion.id_usuario == usuario.id_usuario)
+            .where(TokenVerificacion.tipo == "password_reset")
+            .where(TokenVerificacion.usado == False)
+        )
+        for token in tokens_anteriores.scalars():
+            token.usado = True
+        
+        # Crear nuevo token de recuperación (expira en 15 minutos)
+        token_recuperacion = TokenVerificacion(
+            id_usuario=usuario.id_usuario,
+            tipo="password_reset",
+            expira_en=datetime.utcnow() + timedelta(minutes=15)
+        )
+        
+        db.add(token_recuperacion)
+        await db.commit()
+        await db.refresh(token_recuperacion)
+        
+        # Enviar correo con el token
+        try:
+            await email_service.enviar_correo_recuperacion(
+                email=usuario.email,
+                nombre=usuario.nombre,
+                token=token_recuperacion.token
+            )
+            logger.info(f"Correo de recuperación enviado a: {usuario.email}")
+        except Exception as e:
+            logger.error(f"Error enviando correo de recuperación: {e}")
+    
+    return JSONResponse(content={
+        "mensaje": mensaje_respuesta,
+        "success": True
+    })
+
+
+@router.post("/reset-password", response_model=PasswordResetResponse)
+async def reset_password(
+    datos: ResetPasswordRequest,
+    db: AsyncSession = Depends(get_db)
+):
+    """Restablece la contraseña usando el token de recuperación"""
+    logger.info(f"Intento de restablecimiento de contraseña con token")
+    
+    # Buscar el token de recuperación
+    query = await db.execute(
+        select(TokenVerificacion)
+        .where(TokenVerificacion.token == datos.token)
+        .where(TokenVerificacion.tipo == "password_reset")
+        .where(TokenVerificacion.usado == False)
+    )
+    token_verificacion = query.scalars().first()
+    
+    if not token_verificacion:
+        raise HTTPException(
+            status_code=400,
+            detail="Token inválido o expirado"
+        )
+    
+    # Verificar si el token ha expirado
+    if token_verificacion.esta_expirado():
+        raise HTTPException(
+            status_code=400,
+            detail="El token ha expirado. Por favor solicita uno nuevo."
+        )
+    
+    # Obtener el usuario
+    query = await db.execute(
+        select(Usuario).where(Usuario.id_usuario == token_verificacion.id_usuario)
+    )
+    usuario = query.scalars().first()
+    
+    if not usuario:
+        raise HTTPException(
+            status_code=404,
+            detail="Usuario no encontrado"
+        )
+    
+    # Actualizar la contraseña
+    usuario.password_hash = pwd_context.hash(datos.nueva_password)
+    
+    # Marcar el token como usado
+    token_verificacion.marcar_usado()
+    
+    # Guardar cambios
+    await db.commit()
+    
+    logger.info(f"Contraseña actualizada exitosamente para usuario: {usuario.email}")
+    
+    return PasswordResetResponse(
+        mensaje="Tu contraseña ha sido actualizada exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.",
+        success=True
+    )

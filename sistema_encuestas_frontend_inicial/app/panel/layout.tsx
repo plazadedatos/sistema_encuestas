@@ -4,12 +4,14 @@ import AuthGuard from "../../components/AuthGuard";
 import Sidebar from "../../components/Sidebar";
 import TopbarInterno from "../../components/TopbarInterno";
 import VerificationBanner from "../../components/VerificationBanner";
+import ProfileChecker from "../../components/ProfileChecker";
 
 export default function PanelLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
       <body className="bg-gray-50 min-h-screen">
         <AuthGuard>
+          <ProfileChecker />
           <div className="flex min-h-screen">
             {/* Sidebar fijo */}
             <Sidebar />

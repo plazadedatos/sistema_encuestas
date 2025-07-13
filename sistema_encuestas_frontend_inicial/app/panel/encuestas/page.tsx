@@ -45,36 +45,38 @@ export default function EncuestasPage() {
         {encuestas.map((encuesta) => (
           <Card
             key={encuesta.id_encuesta}
-            className="rounded-2xl shadow-md hover:shadow-lg transition duration-300 bg-white flex flex-col justify-between h-[400px]"
+            className="rounded-2xl shadow-md hover:shadow-lg transition duration-300 bg-white flex flex-col overflow-hidden"
           >
-            <Image
-              src={encuesta.imagen || "/img/default.jpg"}
-              alt="imagen encuesta"
-              width={400}
-              height={200}
-              className="rounded-t-2xl w-full h-[200px] object-cover"
-            />
+            <div className="relative h-48 sm:h-56 lg:h-48">
+              <Image
+                src={encuesta.imagen || "/img/default.jpg"}
+                alt="imagen encuesta"
+                width={400}
+                height={200}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
 
-            <CardContent className="p-5 space-y-3">
-              <h2 className="text-xl font-semibold text-blue-700">
+            <CardContent className="p-5 space-y-3 flex-1 flex flex-col">
+              <h2 className="text-lg sm:text-xl font-semibold text-blue-700 line-clamp-2">
                 {encuesta.titulo}
               </h2>
-              <p className="text-gray-600 text-sm leading-tight">
+              <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 flex-1">
                 {encuesta.descripcion}
               </p>
-              <div className="text-sm text-gray-500">
-                <p>
-                  <strong>Disponible:</strong> {encuesta.fecha_inicio} al {encuesta.fecha_fin}
+              <div className="text-xs sm:text-sm text-gray-500 space-y-1 pt-2 border-t border-gray-100">
+                <p className="truncate">
+                  <strong>Disponible:</strong> {new Date(encuesta.fecha_inicio).toLocaleDateString()} al {new Date(encuesta.fecha_fin).toLocaleDateString()}
                 </p>
                 <p>
-                  <strong>Puntos:</strong> {encuesta.puntos_otorga}
+                  <strong>Puntos:</strong> <span className="text-green-600 font-semibold">{encuesta.puntos_otorga}</span>
                 </p>
                 <p>
-                  <strong>Tiempo estimado:</strong> {encuesta.tiempo_estimado}
+                  <strong>Tiempo estimado:</strong> <span className="text-blue-600">{encuesta.tiempo_estimado}</span>
                 </p>
               </div>
-              <Link href={`/panel/encuestas/${encuesta.id_encuesta}`} className="block">
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 transition text-white">
+              <Link href={`/panel/encuestas/${encuesta.id_encuesta}`} className="block mt-auto pt-3">
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 transition text-white py-2.5">
                   Responder Encuesta
                 </Button>
               </Link>

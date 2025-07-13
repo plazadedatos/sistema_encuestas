@@ -12,7 +12,6 @@ from app.models.pregunta import Pregunta
 from app.models.usuario import Usuario
 from app.models.encuesta import Encuesta
 from app.middleware.auth_middleware import get_current_user
-from app.middleware.verification_middleware import get_current_user_verified
 from sqlalchemy import select
 
 router = APIRouter(prefix="/respuestas", tags=["Respuestas"])
@@ -32,20 +31,19 @@ class RespuestasEnvio(BaseModel):
 async def guardar_respuestas(
     data: RespuestasEnvio, 
     db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(get_current_user_verified)  # 🔐 Requiere usuario verificado
+    current_user: Usuario = Depends(get_current_user)  # ✅ Cambiado a Usuario
 ):
     """
     Guarda las respuestas de una encuesta.
     
-    ⚠️ Requiere que el usuario tenga el email verificado.
+    ✅ No requiere verificación de email.
     """
     try:
-        usuario_id = current_user.get("usuario_id")
+        # ✅ current_user ya es un objeto Usuario, no un diccionario
+        usuario_id = current_user.id_usuario
         
-        # Obtener el usuario
-        usuario = await db.get(Usuario, usuario_id)
-        if not usuario:
-            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        # Obtener el usuario (ya lo tenemos, pero verificamos)
+        usuario = current_user
         
         # Verificar que la encuesta existe
         encuesta = await db.get(Encuesta, data.id_encuesta)
@@ -72,12 +70,14 @@ async def guardar_respuestas(
             tiempo_respuesta_segundos=data.tiempo_total or 0
         )
         db.add(nueva_participacion)
+        await db.flush()  # Para obtener el ID de la participación
 
-        # Guardar cada respuesta
+        # Guardar cada respuesta con el id_participacion
         for r in data.respuestas:
             nueva_respuesta = Respuesta(
                 id_pregunta=r.id_pregunta,
                 id_usuario=usuario.id_usuario,
+                id_participacion=nueva_participacion.id_participacion,  # ✅ Agregar id_participacion
                 id_opcion=r.id_opcion,
                 respuesta_texto=r.respuesta_texto,
                 fecha_respuesta=datetime.now()
@@ -108,15 +108,16 @@ async def guardar_respuestas(
 async def obtener_historial(
     id_usuario: int, 
     db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(get_current_user_verified)  # 🔐 Requiere usuario verificado
+    current_user: Usuario = Depends(get_current_user)  # ✅ Cambiado a Usuario
 ):
     """
     Obtiene el historial de respuestas del usuario.
     
-    ⚠️ Requiere que el usuario tenga el email verificado.
+    ✅ No requiere verificación de email.
     """
     # Verificar que el usuario solo puede ver su propio historial
-    if current_user.get("usuario_id") != id_usuario and current_user.get("rol_id") != 1:
+    user_rol = getattr(current_user, 'rol_id', 0)
+    if current_user.id_usuario != id_usuario and user_rol != 1:
         raise HTTPException(status_code=403, detail="No tienes permiso para ver este historial")
     
     from sqlalchemy import select, func
@@ -155,15 +156,16 @@ async def obtener_historial(
 async def obtener_participaciones_detalladas(
     id_usuario: int, 
     db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(get_current_user_verified)  # 🔐 Requiere usuario verificado
+    current_user: Usuario = Depends(get_current_user)  # ✅ Cambiado a Usuario
 ):
     """
     Obtiene las participaciones detalladas del usuario.
     
-    ⚠️ Requiere que el usuario tenga el email verificado.
+    ✅ No requiere verificación de email.
     """
     # Verificar que el usuario solo puede ver sus propias participaciones
-    if current_user.get("usuario_id") != id_usuario and current_user.get("rol_id") != 1:
+    user_rol = getattr(current_user, 'rol_id', 0)
+    if current_user.id_usuario != id_usuario and user_rol != 1:
         raise HTTPException(status_code=403, detail="No tienes permiso para ver estas participaciones")
     
     from sqlalchemy import select

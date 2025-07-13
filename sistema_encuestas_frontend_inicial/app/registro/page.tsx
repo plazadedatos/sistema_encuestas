@@ -47,11 +47,17 @@ export default function RegistroPage() {
         rol_id: 3,
       });
 
-      if (res.status === 200) {
+      console.log("Respuesta del registro:", res);
+
+      if (res.status === 200 || res.status === 201) {
         toast.success("¡Registro exitoso! Revisa tu correo para verificar tu cuenta.");
-        router.push("/login");
+        // Pequeño delay para que el usuario vea el mensaje
+        setTimeout(() => {
+          router.push("/login");
+        }, 1500);
       }
     } catch (err: any) {
+      console.error("Error en registro:", err);
       const errorMessage = err?.response?.data?.detail || "Error en el registro. Intenta nuevamente.";
       toast.error(errorMessage);
     } finally {

@@ -225,4 +225,14 @@ export async function getMisDatos(token: string) {
 
 export async function actualizarMisDatos(data: any, token: string) {
   return api.put('/usuario/me', data, { headers: { Authorization: `Bearer ${token}` } });
-} 
+}
+
+export async function cambiarContrasena(data: {
+  contrasena_actual: string;
+  nueva_contrasena: string;
+  confirmar_contrasena: string;
+}, token: string) {
+  return api.post('/usuario/cambiar-contrasena', data, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+}

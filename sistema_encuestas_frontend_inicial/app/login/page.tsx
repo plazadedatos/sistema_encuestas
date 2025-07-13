@@ -119,7 +119,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Recordar contraseña */}
+            {/* Recordar y olvidé contraseña */}
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <input
@@ -134,9 +134,9 @@ export default function LoginPage() {
               </div>
 
               <div className="text-sm">
-                <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                <Link href="/forgot-password" className="font-medium text-blue-600 hover:text-blue-500">
                   ¿Olvidaste tu contraseña?
-                </a>
+                </Link>
               </div>
             </div>
 
@@ -168,14 +168,15 @@ export default function LoginPage() {
               </div>
             </div>
             
-            <div  className="w-full" style={{ maxWidth: "384px" }}>
+            <div className="w-full" style={{ maxWidth: "384px" }}>
               <div className="w-full max-w-sm">
                 <GoogleLoginButton />
               </div>
             </div>
 
-            {/* Link de registro */}
-            <div className="text-center">
+            {/* Links adicionales */}
+            <div className="flex flex-col space-y-3 text-center">
+              
               <span className="text-sm text-gray-600">
                 ¿No tienes una cuenta?{' '}
                 <Link href="/registro" className="font-medium text-blue-600 hover:text-blue-500">

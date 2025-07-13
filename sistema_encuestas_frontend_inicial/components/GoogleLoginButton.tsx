@@ -4,61 +4,71 @@
 import { GoogleLogin } from '@react-oauth/google';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/authContext';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FaGoogle } from 'react-icons/fa';
 
 export default function GoogleLoginButton() {
-  const router = useRouter();
-  const { login } = useAuth();
+  const { loginWithGoogle } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isGoogleConfigured, setIsGoogleConfigured] = useState(false);
+  const [showSlowMessage, setShowSlowMessage] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const slowRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    // Verificar si Google OAuth está configurado
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
     setIsGoogleConfigured(!!clientId);
   }, []);
 
   const handleGoogleSuccess = async (credentialResponse: any) => {
-    try {
-      setLoading(true);
-      setError('');
+    setLoading(true);
+    setError('');
+    setShowSlowMessage(false);
 
-      // Enviar el token al backend
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
+    // Mensaje si tarda más de 5 segundos
+    slowRef.current = setTimeout(() => setShowSlowMessage(true), 5000);
+
+    // Timeout total de 8 segundos
+    timeoutRef.current = setTimeout(() => {
+      setLoading(false);
+      setShowSlowMessage(false);
+      setError('La validación con Google está tardando demasiado. Por favor, inténtalo de nuevo.');
+    }, 8000);
+
+    try {
+      const controller = new AbortController();
+      const idTimeout = setTimeout(() => controller.abort(), 8000);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id_token: credentialResponse.credential,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id_token: credentialResponse.credential }),
+        signal: controller.signal,
       });
+      clearTimeout(idTimeout);
+      clearTimeout(timeoutRef.current!);
+      clearTimeout(slowRef.current!);
+      setShowSlowMessage(false);
 
       const data = await response.json();
-
       if (!response.ok) {
         throw new Error(data.detail || 'Error al iniciar sesión con Google');
       }
-
-      // Guardar el token y la información del usuario
-      localStorage.setItem('token', data.access_token);
-      
-      // Actualizar el contexto de autenticación
-      login(data.access_token, data.usuario);
-
-      // Redirigir según si es nuevo usuario o no
-      if (data.usuario.es_nuevo) {
-        router.push('/panel/bienvenida');
-      } else {
-        router.push('/panel');
+      const success = await loginWithGoogle(data.access_token, data.usuario);
+      if (!success) {
+        throw new Error('Error al procesar el login con Google');
       }
-    } catch (error) {
-      console.error('Error en login con Google:', error);
-      setError(error instanceof Error ? error.message : 'Error al iniciar sesión');
+    } catch (error: any) {
+      if (error.name === 'AbortError') {
+        setError('La validación con Google está tardando demasiado. Por favor, inténtalo de nuevo.');
+      } else {
+        setError(error instanceof Error ? error.message : 'Error al iniciar sesión');
+      }
     } finally {
       setLoading(false);
+      setShowSlowMessage(false);
+      clearTimeout(timeoutRef.current!);
+      clearTimeout(slowRef.current!);
     }
   };
 
@@ -66,7 +76,6 @@ export default function GoogleLoginButton() {
     setError('Error al conectar con Google');
   };
 
-  // Si Google OAuth no está configurado, mostrar botón deshabilitado con mensaje
   if (!isGoogleConfigured) {
     return (
       <div className="w-full">
@@ -86,7 +95,6 @@ export default function GoogleLoginButton() {
 
   return (
     <div className="w-full">
-      {/* Contenedor personalizado para el botón de Google */}
       <div className="google-login-wrapper">
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
@@ -99,45 +107,41 @@ export default function GoogleLoginButton() {
           width={400}
         />
       </div>
-      
       {loading && (
         <div className="mt-3 text-center">
           <div className="inline-flex items-center text-sm text-gray-600">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900 mr-2"></div>
             <span>Conectando con Google...</span>
           </div>
-        </div>
-      )}
-      
-      {error && (
-        <div className="mt-3 bg-red-50 border border-red-200 rounded-lg p-3">
-          <p className="text-sm text-red-600 text-center">{error}</p>
-          {error.includes("origin is not allowed") && (
-            <p className="text-xs text-red-500 text-center mt-1">
-              Configura http://localhost:3000 en Google Cloud Console
-            </p>
+          {showSlowMessage && (
+            <div className="mt-2 text-xs text-yellow-600">La validación está tardando más de lo normal, por favor espera o reintenta.</div>
           )}
         </div>
       )}
-
+      {error && (
+        <div className="mt-3 bg-red-50 border border-red-200 rounded-lg p-3">
+          <p className="text-sm text-red-600 text-center">{error}</p>
+          <button
+            className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 mx-auto block"
+            onClick={() => { setError(''); setLoading(false); setShowSlowMessage(false); }}
+          >
+            Reintentar
+          </button>
+        </div>
+      )}
       <style jsx global>{`
-        /* Estilos personalizados para el botón de Google */
         .google-login-wrapper {
           display: flex;
           justify-content: center;
           width: 100%;
         }
-
         .google-login-wrapper > div {
           width: 100% !important;
         }
-
         .google-login-wrapper iframe {
           width: 100% !important;
           max-width: 100% !important;
         }
-
-        /* Mejorar la apariencia del botón */
         .google-login-wrapper > div > div {
           width: 100% !important;
           display: flex !important;

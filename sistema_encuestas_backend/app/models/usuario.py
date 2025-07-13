@@ -34,6 +34,11 @@ class Usuario(Base):
     puntos_disponibles = Column(Integer, default=0)
     puntos_canjeados = Column(Integer, default=0)
     
+    # Campos de perfil
+    fecha_nacimiento = Column(DateTime, nullable=True)
+    sexo = Column(String(20), nullable=True)
+    localizacion = Column(String(255), nullable=True)
+    
     # Relaciones
     rol = relationship("Rol", back_populates="usuarios")
     participaciones = relationship("Participacion", back_populates="usuario")
