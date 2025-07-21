@@ -24,6 +24,8 @@ services:
     environment:
       - PYTHONPATH=/app
       - PYTHONUNBUFFERED=1
+      - DATABASE_URL=postgresql://postgres:123@localhost:5432/Encuestas_py
+
     networks:
       - app-network
 
