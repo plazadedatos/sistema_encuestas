@@ -40,7 +40,7 @@ export default function LoginPage() {
           {/* Logo y título */}
           <div className="text-center">
             <div className="flex justify-center mb-6">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 rounded-2xl shadow-lg">
+              <div className="bg-gradient-to-r from-brand-vibrant to-brand-medium p-4 rounded-2xl shadow-lg">
                 <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                 </svg>
@@ -74,7 +74,7 @@ export default function LoginPage() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="appearance-none relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-colors"
+                    className="appearance-none relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-vibrant focus:border-brand-vibrant focus:z-10 sm:text-sm transition-colors"
                     placeholder="tu@ejemplo.com"
                     disabled={isLoading}
                   />
@@ -98,7 +98,7 @@ export default function LoginPage() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="appearance-none relative block w-full pl-10 pr-10 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-colors"
+                    className="appearance-none relative block w-full pl-10 pr-10 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-vibrant focus:border-brand-vibrant focus:z-10 sm:text-sm transition-colors"
                     placeholder="••••••••"
                     disabled={isLoading}
                   />
@@ -126,7 +126,7 @@ export default function LoginPage() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-brand-vibrant focus:ring-brand-vibrant border-gray-300 rounded"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
                   Recordarme
@@ -134,7 +134,7 @@ export default function LoginPage() {
               </div>
 
               <div className="text-sm">
-                <Link href="/forgot-password" className="font-medium text-blue-600 hover:text-blue-500">
+                <Link href="/forgot-password" className="font-medium text-brand-vibrant hover:text-brand-medium">
                   ¿Olvidaste tu contraseña?
                 </Link>
               </div>
@@ -145,7 +145,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-brand-vibrant to-brand-medium hover:from-brand-dark hover:to-brand-vibrant focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-vibrant transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <>
@@ -179,7 +179,7 @@ export default function LoginPage() {
               
               <span className="text-sm text-gray-600">
                 ¿No tienes una cuenta?{' '}
-                <Link href="/registro" className="font-medium text-blue-600 hover:text-blue-500">
+                <Link href="/registro" className="font-medium text-brand-vibrant hover:text-brand-medium">
                   Regístrate aquí
                 </Link>
               </span>
@@ -190,7 +190,7 @@ export default function LoginPage() {
 
       {/* Panel derecho - Imagen/Info */}
       <div className="hidden lg:block relative w-0 flex-1">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500">
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-dark via-brand-vibrant to-brand-light">
           <div className="absolute inset-0 bg-black opacity-20"></div>
           <div className="absolute inset-0 flex items-center justify-center p-12">
             <div className="max-w-md text-center">

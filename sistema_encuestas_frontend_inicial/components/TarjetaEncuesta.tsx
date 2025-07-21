@@ -10,6 +10,7 @@ interface Encuesta {
   puntos_otorga: number;
   imagen?: string | null;
   tiempo_estimado?: string;
+  preguntas?: any[]; // Agregar propiedad opcional
 }
 
 interface TarjetaEncuestaProps {

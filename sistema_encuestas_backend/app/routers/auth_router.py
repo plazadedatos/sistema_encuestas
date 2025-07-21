@@ -115,20 +115,29 @@ async def registro(datos: RegistroRequest, db: AsyncSession = Depends(get_db)):
     await db.commit()
     await db.refresh(token_verificacion)
     
-    # Enviar correo de verificación
-    email_enviado = await email_service.enviar_correo_verificacion(
-        email=nuevo_usuario.email,
-        nombre=nuevo_usuario.nombre,
-        token=token_verificacion.token
-    )
+    # 🔧 NO BLOQUEAR EL REGISTRO CON EL EMAIL
+    # El email se enviará en segundo plano sin bloquear la respuesta
+    email_enviado = False
+    import asyncio
     
-    if not email_enviado:
-        logger.warning(f"No se pudo enviar el correo de verificación a {nuevo_usuario.email}")
+    async def enviar_email_async():
+        try:
+            await email_service.enviar_correo_verificacion(
+                email=nuevo_usuario.email,
+                nombre=nuevo_usuario.nombre,
+                token=token_verificacion.token
+            )
+            logger.info(f"Email enviado a {nuevo_usuario.email}")
+        except Exception as e:
+            logger.error(f"Error enviando email: {str(e)}")
+    
+    # Programar el envío del email sin esperar
+    asyncio.create_task(enviar_email_async())
 
     return JSONResponse(content={
-        "mensaje": "Usuario registrado exitosamente. Por favor verifica tu correo electrónico.",
+        "mensaje": "Usuario registrado exitosamente. Te enviaremos un correo de verificación.",
         "usuario_id": nuevo_usuario.id_usuario,
-        "email_verificacion_enviado": email_enviado
+        "email": nuevo_usuario.email
     })
 
 

@@ -7,6 +7,7 @@ import { useAuth } from "../../context/authContext";
 import { Encuesta, encuestasService } from "@/app/services/encuestas";
 import { SkeletonCard } from "../../components/ui/loading";
 import { toast } from "react-toastify";
+import Image from "next/image";
 export default function HomePage() {
   const { isAuthenticated, loading } = useAuth();
   const router = useRouter();
@@ -57,7 +58,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center text-slate-800">
             {/* Paso 1 */}
             <div className="flex flex-col items-center">
-              <img src="/img/paso1.png" alt="Paso 1" className="w-20 h-20 mb-3" />
+              <Image src="/img/paso1.png" alt="Paso 1" width={80} height={80} className="mb-3" />
               <h3 className="text-primary font-bold text-lg mb-1">Paso 1</h3>
               <p className="text-sm">
                 Regístrate y <span className="font-semibold">confirma tu email</span>
@@ -66,7 +67,7 @@ export default function HomePage() {
 
             {/* Paso 2 */}
             <div className="flex flex-col items-center">
-              <img src="/img/paso2.png" alt="Paso 2" className="w-20 h-20 mb-3" />
+              <Image src="/img/paso2.png" alt="Paso 2" width={80} height={80} className="mb-3" />
               <h3 className="text-primary font-bold text-lg mb-1">Paso 2</h3>
               <p className="text-sm">
                 Inicia sesión desde tu <span className="font-semibold">computadora o celular</span>
@@ -75,7 +76,7 @@ export default function HomePage() {
 
             {/* Paso 3 */}
             <div className="flex flex-col items-center">
-              <img src="/img/paso3.png" alt="Paso 3" className="w-20 h-20 mb-3" />
+              <Image src="/img/paso3.png" alt="Paso 3" width={80} height={80} className="mb-3" />
               <h3 className="text-primary font-bold text-lg mb-1">Paso 3</h3>
               <p className="text-sm">
                 Responde encuestas online y <span className="font-semibold">gana puntos</span>
@@ -84,7 +85,7 @@ export default function HomePage() {
 
             {/* Paso 4 */}
             <div className="flex flex-col items-center">
-              <img src="/img/paso4.png" alt="Paso 4" className="w-20 h-20 mb-3" />
+              <Image src="/img/paso4.png" alt="Paso 4" width={80} height={80} className="mb-3" />
               <h3 className="text-primary font-bold text-lg mb-1">Paso 4</h3>
               <p className="text-sm">
                 Cambia tus puntos por <span className="font-semibold">premios reales</span>
@@ -111,7 +112,12 @@ export default function HomePage() {
             {encuestas.map((encuesta) => (
               <TarjetaEncuesta 
                 key={encuesta.id_encuesta} 
-                encuesta={encuesta}
+                encuesta={{
+                  ...encuesta,
+                  descripcion: encuesta.descripcion ?? "Sin descripción",
+                  fecha_inicio: encuesta.fecha_inicio ?? "",
+                  fecha_fin: encuesta.fecha_fin ?? ""
+                }}
                 mostrarEstado={false}
                 onParticipate={() => {
                   if (!isAuthenticated) {
@@ -240,9 +246,11 @@ export default function HomePage() {
 
     {/* Imagen */}
     <div className="flex justify-center">
-      <img
-        src="/img/nosotros.png"     // ← pon tu imagen aquí
+      <Image
+        src="/img/nosotros.png"
         alt="Equipo de Plaza de Datos"
+        width={400}
+        height={300}
         className="w-full max-w-md rounded-[2rem] shadow-xl"
       />
     </div>

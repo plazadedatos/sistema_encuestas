@@ -11,6 +11,7 @@ from app.routers.usuario_actual_router import router as usuario_actual_router
 from app.routers.dashboard_router import router as dashboard_router
 from app.routers.admin_analytics_router import router as admin_analytics_router
 from app.routers.perfil_router import router as perfil_router
+from app.routers.configuracion_inicial_router import router as configuracion_inicial_router
 
 from app.middleware.security_headers import SecurityHeadersMiddleware
 from app.middleware.rate_limiter import RateLimiter
@@ -54,6 +55,7 @@ app.include_router(usuario_actual_router, prefix=api_prefix)
 app.include_router(dashboard_router, prefix=api_prefix)
 app.include_router(admin_analytics_router, prefix=api_prefix)
 app.include_router(perfil_router, prefix=api_prefix)
+app.include_router(configuracion_inicial_router, prefix=api_prefix)
 
 # Ruta de prueba pública para verificar CORS
 @app.get("/api/ping")

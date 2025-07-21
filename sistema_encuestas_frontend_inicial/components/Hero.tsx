@@ -2,14 +2,92 @@
 
 import { FaGift, FaClock, FaTrophy } from "react-icons/fa";
 import { useEffect, useState, useRef } from "react";
-
+import { useRouter } from "next/navigation";
 import { Link as ScrollLink } from "react-scroll";
 import Image from "next/image";
+import api from "@/app/services/api";
+import { toast } from "react-toastify";
+
 const fotos = ["/img/encuesta1.webp", "/img/encuesta2.webp", "/img/encuesta3.webp"];
 
 
 export default function Hero() {
+    const router = useRouter();
     const heroRef = useRef<HTMLDivElement>(null); // 👈 crea la referencia
+    const [isLoading, setIsLoading] = useState(false);
+    const [form, setForm] = useState({
+      nombre: "",
+      apellido: "",
+      documento_numero: "",
+      email: "",
+      password: "",
+      password_confirm: ""
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      console.log("🔐 Iniciando registro express...");
+
+      // Validaciones
+      if (!form.nombre || !form.apellido || !form.documento_numero || !form.email || !form.password) {
+        toast.error("Por favor completa todos los campos");
+        return;
+      }
+
+      if (form.password !== form.password_confirm) {
+        toast.error("Las contraseñas no coinciden");
+        return;
+      }
+
+      if (form.password.length < 6) {
+        toast.error("La contraseña debe tener al menos 6 caracteres");
+        return;
+      }
+
+      setIsLoading(true);
+      console.log("📤 Enviando datos:", { ...form, rol_id: 3 });
+
+      try {
+        const res = await api.post("/auth/registro", {
+          nombre: form.nombre,
+          apellido: form.apellido,
+          documento_numero: form.documento_numero,
+          email: form.email,
+          password: form.password,
+          celular_numero: "", // Campo opcional
+          rol_id: 3
+        });
+
+        console.log("✅ Respuesta del registro:", res);
+
+        if (res.status === 200 || res.status === 201) {
+          toast.success("¡Registro exitoso! Revisa tu correo para verificar tu cuenta.");
+          // Limpiar formulario
+          setForm({
+            nombre: "",
+            apellido: "",
+            documento_numero: "",
+            email: "",
+            password: "",
+            password_confirm: ""
+          });
+          // Redirigir después de 2 segundos
+          setTimeout(() => {
+            router.push("/login");
+          }, 2000);
+        }
+      } catch (err: any) {
+        console.error("❌ Error en registro:", err);
+        const errorMessage = err?.response?.data?.detail || "Error en el registro. Intenta nuevamente.";
+        toast.error(errorMessage);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
   const [i, setI] = useState(0);
  useEffect(() => {
@@ -88,36 +166,79 @@ export default function Hero() {
   <div className="bg-white/90 p-8 rounded-2xl shadow-lg w-full max-w-md mx-auto text-primary">
     <h3 className="text-xl font-bold text-center mb-6">Crea tu Cuenta</h3>
 
-    <form className="space-y-4 text-sm">
-      <input type="text" placeholder="Nombre"
-        className="w-full px-4 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-primary-light transition"
+    <form className="space-y-4 text-sm" onSubmit={handleSubmit}>
+      <input 
+        type="text" 
+        name="nombre"
+        placeholder="Nombre"
+        value={form.nombre}
+        onChange={handleChange}
+        required
+        disabled={isLoading}
+        className="w-full px-4 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-brand-vibrant transition"
       />
-      <input type="text" placeholder="Apellido"
-        className="w-full px-4 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-primary-light transition"
+      <input 
+        type="text" 
+        name="apellido"
+        placeholder="Apellido"
+        value={form.apellido}
+        onChange={handleChange}
+        required
+        disabled={isLoading}
+        className="w-full px-4 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-brand-vibrant transition"
       />
-      <input type="text" placeholder="N° Cédula"
-        className="w-full px-4 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-primary-light transition"
+      <input 
+        type="text" 
+        name="documento_numero"
+        placeholder="N° Cédula"
+        value={form.documento_numero}
+        onChange={handleChange}
+        required
+        disabled={isLoading}
+        className="w-full px-4 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-brand-vibrant transition"
       />
-      <input type="email" placeholder="Correo Electrónico"
-        className="w-full px-4 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-primary-light transition"
+      <input 
+        type="email" 
+        name="email"
+        placeholder="Correo Electrónico"
+        value={form.email}
+        onChange={handleChange}
+        required
+        disabled={isLoading}
+        className="w-full px-4 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-brand-vibrant transition"
       />
-      <input type="password" placeholder="Contraseña"
-        className="w-full px-4 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-primary-light transition"
+      <input 
+        type="password" 
+        name="password"
+        placeholder="Contraseña"
+        value={form.password}
+        onChange={handleChange}
+        required
+        disabled={isLoading}
+        className="w-full px-4 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-brand-vibrant transition"
       />
-      <input type="password" placeholder="Repetir Contraseña"
-        className="w-full px-4 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-primary-light transition"
+      <input 
+        type="password" 
+        name="password_confirm"
+        placeholder="Repetir Contraseña"
+        value={form.password_confirm}
+        onChange={handleChange}
+        required
+        disabled={isLoading}
+        className="w-full px-4 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-brand-vibrant transition"
       />
 
       <button
         type="submit"
-        className="w-full bg-primary text-white py-2 rounded-full font-semibold hover:bg-primary-dark transition"
+        disabled={isLoading}
+        className="w-full bg-gradient-to-r from-brand-vibrant to-brand-medium text-white py-2 rounded-full font-semibold hover:from-brand-dark hover:to-brand-vibrant transition disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Regístrate
+        {isLoading ? "Registrando..." : "Regístrate"}
       </button>
     </form>
     
   </div>
-   <h1 className="text-xl font-bold text-center mb-6"> Tu opinion Tiene Recompensas en Plaza de Datos</h1>
+   <h1 className="text-xl font-bold text-center mb-6 mt-4">Tu opinión Tiene Recompensas en Plaza de Datos</h1>
 </div>
 
 

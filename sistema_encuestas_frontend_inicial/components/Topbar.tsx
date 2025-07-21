@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
+import Image from "next/image";
 import { Link as ScrollLink } from "react-scroll";   // 👈 IMPORTA AQUÍ
 export default function Topbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -25,15 +25,22 @@ export default function Topbar() {
     >
       <nav className="max-w-7xl mx-auto flex justify-between items-center h-16 px-4">
         <div className="flex gap-6 items-center font-semibold">
-          <Link href="/" className="text-xl font-bold">
-            Plaza de Datos<span className={scrolled ? "text-primary" : "text-white"}></span>
+          <Link href="/" className="flex items-center gap-2 text-xl font-bold">
+            <Image 
+              src="/img/plazadedatos.jpg" 
+              alt="Plaza de Datos Logo" 
+              width={40} 
+              height={40} 
+              className="rounded-lg object-contain"
+            />
+            <span>Plaza de Datos</span>
           </Link>
           <ul className="hidden md:flex gap-4 text-sm">
-            <li><ScrollLink to="hero" smooth duration={100} offset={-80} className="cursor-pointer">Inicio</ScrollLink></li>
-            <li><ScrollLink to="encuestas" smooth duration={100} offset={-80} className="cursor-pointer">Encuestas</ScrollLink></li>
-            <li><ScrollLink to="faq" smooth duration={100} offset={-80} className="cursor-pointer">Preguntas frecuentes</ScrollLink></li> {/* ← NUEVO */}
-            <li><ScrollLink to="nosotros" smooth duration={100} offset={-80} className="cursor-pointer">Nosotros</ScrollLink></li>
-            <li><Link href="/noticias">Noticias</Link></li>
+            <li><ScrollLink to="hero" smooth duration={100} offset={-80} className="cursor-pointer hover:text-brand-light transition-colors">Inicio</ScrollLink></li>
+            <li><ScrollLink to="encuestas" smooth duration={100} offset={-80} className="cursor-pointer hover:text-brand-light transition-colors">Encuestas</ScrollLink></li>
+            <li><ScrollLink to="faq" smooth duration={100} offset={-80} className="cursor-pointer hover:text-brand-light transition-colors">Preguntas frecuentes</ScrollLink></li>
+            <li><ScrollLink to="nosotros" smooth duration={100} offset={-80} className="cursor-pointer hover:text-brand-light transition-colors">Nosotros</ScrollLink></li>
+            <li><Link href="/noticias" className="hover:text-brand-light transition-colors">Noticias</Link></li>
           </ul>
         </div>
         <div className="flex gap-2 text-sm">
@@ -41,17 +48,19 @@ export default function Topbar() {
             href="/login"
             className={`px-3 py-1 rounded border ${
               scrolled
-                ? "border-primary text-primary hover:bg-primary hover:text-white"
-                : "border-white text-white hover:bg-white hover:text-primary"
-            } transition`}
+                ? "border-brand-vibrant text-brand-vibrant hover:bg-brand-vibrant hover:text-white"
+                : "border-white text-white hover:bg-white hover:text-brand-vibrant"
+            } transition-all duration-200`}
           >
             Iniciar sesión
           </Link>
           <Link
             href="/registro"
-            className={`px-3 py-1 rounded bg-white text-primary font-semibold hover:bg-primary-light hover:text-white transition ${
-              scrolled ? "border border-primary" : ""
-            }`}
+            className={`px-3 py-1 rounded ${
+              scrolled 
+                ? "bg-brand-vibrant text-white border border-brand-vibrant hover:bg-brand-dark" 
+                : "bg-white text-brand-vibrant hover:bg-brand-light hover:text-white"
+            } transition-all duration-200 font-semibold`}
           >
             Registrarse
           </Link>

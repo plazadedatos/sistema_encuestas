@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FaCheckCircle, FaTimesCircle, FaInfoCircle } from 'react-icons/fa';
@@ -14,20 +14,7 @@ export default function VerificarCorreoPage() {
   const [email, setEmail] = useState('');
   const [esEmailYaVerificado, setEsEmailYaVerificado] = useState(false);
 
-  useEffect(() => {
-    const token = searchParams.get('token');
-    
-    if (!token) {
-      setVerificando(false);
-      setMensaje('Token de verificación no encontrado');
-      setExitoso(false);
-      return;
-    }
-
-    verificarEmail(token);
-  }, [searchParams]);
-
-  const verificarEmail = async (token: string) => {
+  const verificarEmail = useCallback(async (token: string) => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/verificar-correo?token=${token}`, {
         method: 'GET',
@@ -76,7 +63,20 @@ export default function VerificarCorreoPage() {
     } finally {
       setVerificando(false);
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    const token = searchParams.get('token');
+    
+    if (!token) {
+      setVerificando(false);
+      setMensaje('Token de verificación no encontrado');
+      setExitoso(false);
+      return;
+    }
+
+    verificarEmail(token);
+  }, [searchParams, verificarEmail]);
 
   if (verificando) {
     return (

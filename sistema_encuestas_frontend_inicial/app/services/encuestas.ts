@@ -30,7 +30,7 @@ export interface Opcion {
 
 export interface CrearEncuestaData {
   titulo: string;
-  descripcion?: string;
+  descripcion?: string; // ← marcar como opcional si es válido
   fecha_inicio?: string;
   fecha_fin?: string;
   estado: boolean;

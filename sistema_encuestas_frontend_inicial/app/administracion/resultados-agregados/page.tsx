@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/context/authContext";
 import api from "@/app/services/api";
 import {
@@ -55,13 +55,7 @@ export default function ResultadosAgregadosPage() {
     }
   };
 
-  useEffect(() => {
-    if (selectedEncuesta) {
-      cargarResultados();
-    }
-  }, [selectedEncuesta]);
-
-  const cargarResultados = async () => {
+  const cargarResultados = useCallback(async () => {
     if (!selectedEncuesta) return;
     
     setLoading(true);
@@ -73,7 +67,13 @@ export default function ResultadosAgregadosPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedEncuesta]);
+
+  useEffect(() => {
+    if (selectedEncuesta) {
+      cargarResultados();
+    }
+  }, [cargarResultados, selectedEncuesta]);
 
   const prepararDatosParaGrafico = (estadisticas: Record<string, number>) => {
     return Object.entries(estadisticas).map(([opcion, cantidad]) => ({

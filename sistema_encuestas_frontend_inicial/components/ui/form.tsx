@@ -52,17 +52,17 @@ export const useFormValidation = (initialValues: any, validationRules: any) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setValues(prev => ({ ...prev, [name]: value }));
+    setValues((prev: any) => ({ ...prev, [name]: value }));
     
     // Validar campo individual si ya fue tocado
-    if (touched[name]) {
+    if ((touched as any)[name]) {
       setTimeout(() => validate(name), 100);
     }
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name } = e.target;
-    setTouched(prev => ({ ...prev, [name]: true }));
+    setTouched((prev: any) => ({ ...prev, [name]: true }));
     validate(name);
   };
 

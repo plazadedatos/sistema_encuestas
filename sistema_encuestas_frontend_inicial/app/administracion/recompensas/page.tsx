@@ -1,11 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "../../../context/authContext";
 import api from "../../services/api";
 
 export default function AdminRecompensasPage() {
   const { token } = useAuth();
-  const [premios, setPremios] = useState([]);
+  const [premios, setPremios] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editando, setEditando] = useState(null);
@@ -17,7 +17,7 @@ export default function AdminRecompensasPage() {
     descripcion: "",
     imagen_url: "",
     costo_puntos: 0,
-    stock_disponible: null,
+    stock_disponible: null as number | null,
     tipo: "fisico",
     categoria: "",
     requiere_aprobacion: false,
@@ -25,11 +25,7 @@ export default function AdminRecompensasPage() {
     terminos_condiciones: ""
   });
 
-  useEffect(() => {
-    cargarPremios();
-  }, [token]);
-
-  const cargarPremios = async () => {
+  const cargarPremios = useCallback(async () => {
     try {
       const res = await api.get("/premios/admin", {
         headers: { Authorization: `Bearer ${token}` }
@@ -40,9 +36,13 @@ export default function AdminRecompensasPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
-  const handleSubmit = async (e) => {
+  useEffect(() => {
+    cargarPremios();
+  }, [cargarPremios]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setMensaje("");
@@ -62,12 +62,12 @@ export default function AdminRecompensasPage() {
       
       cargarPremios();
       resetForm();
-    } catch (e) {
+    } catch (e: any) {
       setError(e?.response?.data?.detail || "Error al guardar premio");
     }
   };
 
-  const handleEliminar = async (id) => {
+  const handleEliminar = async (id: number) => {
     if (!confirm("¿Estás seguro de eliminar este premio?")) return;
     
     try {
@@ -81,13 +81,13 @@ export default function AdminRecompensasPage() {
     }
   };
 
-  const handleEditar = (premio) => {
+  const handleEditar = (premio: any) => {
     setForm({
       nombre: premio.nombre,
       descripcion: premio.descripcion || "",
       imagen_url: premio.imagen_url || "",
-      costo_puntos: premio.costo_puntos,
-      stock_disponible: premio.stock_disponible,
+      costo_puntos: Number(premio.costo_puntos) || 0,
+      stock_disponible: premio.stock_disponible ? Number(premio.stock_disponible) : null,
       tipo: premio.tipo,
       categoria: premio.categoria || "",
       requiere_aprobacion: premio.requiere_aprobacion,
@@ -104,7 +104,7 @@ export default function AdminRecompensasPage() {
       descripcion: "",
       imagen_url: "",
       costo_puntos: 0,
-      stock_disponible: null,
+      stock_disponible: null as number | null,
       tipo: "fisico",
       categoria: "",
       requiere_aprobacion: false,
@@ -151,7 +151,7 @@ export default function AdminRecompensasPage() {
               <input
                 type="number"
                 value={form.costo_puntos}
-                onChange={(e) => setForm({...form, costo_puntos: parseInt(e.target.value)})}
+                onChange={(e) => setForm({...form, costo_puntos: parseInt(e.target.value) || 0})}
                 className="w-full border rounded px-3 py-2"
                 min="1"
                 required
@@ -176,8 +176,8 @@ export default function AdminRecompensasPage() {
               <label className="block font-semibold mb-1">Stock (vacío = ilimitado)</label>
               <input
                 type="number"
-                value={form.stock_disponible || ""}
-                onChange={(e) => setForm({...form, stock_disponible: e.target.value ? parseInt(e.target.value) : null})}
+                value={form.stock_disponible?.toString() || ""}
+                onChange={(e) => setForm({...form, stock_disponible: e.target.value ? parseInt(e.target.value) || null : null})}
                 className="w-full border rounded px-3 py-2"
                 min="0"
               />
@@ -189,7 +189,7 @@ export default function AdminRecompensasPage() {
                 value={form.descripcion}
                 onChange={(e) => setForm({...form, descripcion: e.target.value})}
                 className="w-full border rounded px-3 py-2"
-                rows="3"
+                rows={3}
               />
             </div>
 

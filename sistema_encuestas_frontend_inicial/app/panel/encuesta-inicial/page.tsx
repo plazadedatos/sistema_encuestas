@@ -3,13 +3,22 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
-import { FaUser, FaGift, FaCheckCircle } from "react-icons/fa";
+import { FaUser, FaGift, FaCheckCircle, FaSpinner } from "react-icons/fa";
 import api from "@/app/services/api";
 import ciudadesParaguay from "@/data/ciudades-paraguay.json";
 
 interface Ciudad {
   code: string;
   display: string;
+}
+
+interface ConfiguracionInicial {
+  campos_activos: {
+    fecha_nacimiento: boolean;
+    sexo: boolean;
+    localizacion: boolean;
+  };
+  puntos_completar_perfil: number;
 }
 
 export default function EncuestaInicialPage() {
@@ -21,11 +30,23 @@ export default function EncuestaInicialPage() {
     localizacion: ""
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingConfig, setIsLoadingConfig] = useState(true);
   const [error, setError] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [ciudades, setCiudades] = useState<Ciudad[]>([]);
+  const [configuracion, setConfiguracion] = useState<ConfiguracionInicial>({
+    campos_activos: {
+      fecha_nacimiento: true,
+      sexo: true,
+      localizacion: true
+    },
+    puntos_completar_perfil: 5
+  });
 
   useEffect(() => {
+    // Cargar configuración del administrador
+    cargarConfiguracion();
+    
     // Cargar ciudades del JSON
     if (ciudadesParaguay && ciudadesParaguay.concept) {
       const ciudadesFormateadas = ciudadesParaguay.concept.map((ciudad: any) => ({
@@ -35,6 +56,18 @@ export default function EncuestaInicialPage() {
       setCiudades(ciudadesFormateadas);
     }
   }, []);
+
+  const cargarConfiguracion = async () => {
+    try {
+      const response = await api.get("/perfil/configuracion-inicial");
+      setConfiguracion(response.data);
+    } catch (error) {
+      console.error("Error al cargar configuración:", error);
+      // Usar valores por defecto si hay error
+    } finally {
+      setIsLoadingConfig(false);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -49,8 +82,20 @@ export default function EncuestaInicialPage() {
     setError("");
     setIsLoading(true);
 
+    // Filtrar solo los campos activos
+    const datosEnviar: any = {};
+    if (configuracion.campos_activos.fecha_nacimiento && formData.fecha_nacimiento) {
+      datosEnviar.fecha_nacimiento = formData.fecha_nacimiento;
+    }
+    if (configuracion.campos_activos.sexo && formData.sexo) {
+      datosEnviar.sexo = formData.sexo;
+    }
+    if (configuracion.campos_activos.localizacion && formData.localizacion) {
+      datosEnviar.localizacion = formData.localizacion;
+    }
+
     try {
-      const response = await api.post("/perfil/completar", formData);
+      const response = await api.post("/perfil/completar", datosEnviar);
       setIsSuccess(true);
       
       // Redirigir al panel principal después de 3 segundos
@@ -70,6 +115,17 @@ export default function EncuestaInicialPage() {
     }
   };
 
+  if (isLoadingConfig) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-brand-light/10 to-brand-medium/10 flex items-center justify-center p-4">
+        <div className="flex items-center gap-3">
+          <FaSpinner className="animate-spin text-brand-vibrant text-2xl" />
+          <span className="text-gray-600">Cargando configuración...</span>
+        </div>
+      </div>
+    );
+  }
+
   if (isSuccess) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
@@ -86,7 +142,7 @@ export default function EncuestaInicialPage() {
             <div className="flex items-center justify-center mb-2">
               <FaGift className="h-6 w-6 text-green-600 mr-2" />
               <span className="text-lg font-semibold text-green-800">
-                ¡Has ganado 5 puntos!
+                ¡Has ganado {configuracion.puntos_completar_perfil} puntos!
               </span>
             </div>
             <p className="text-sm text-green-700">
@@ -99,25 +155,34 @@ export default function EncuestaInicialPage() {
           </p>
           
           <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-vibrant"></div>
           </div>
         </div>
       </div>
     );
   }
 
+  // Verificar si hay al menos un campo activo
+  const hayAlgunCampoActivo = Object.values(configuracion.campos_activos).some(activo => activo);
+
+  if (!hayAlgunCampoActivo) {
+    // Si no hay campos activos, redirigir directamente al panel
+    router.push("/panel");
+    return null;
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-brand-light/10 to-brand-medium/10 flex items-center justify-center p-4">
       <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6 text-white">
+        <div className="bg-gradient-to-r from-brand-vibrant to-brand-medium px-8 py-6 text-white">
           <div className="flex items-center">
             <div className="h-12 w-12 bg-white/20 rounded-full flex items-center justify-center mr-4">
               <FaUser className="h-6 w-6" />
             </div>
             <div>
               <h1 className="text-2xl font-bold">¡Bienvenido, {user?.nombre}!</h1>
-              <p className="text-blue-100">Completa tu perfil para comenzar</p>
+              <p className="text-brand-light/80">Completa tu perfil para comenzar</p>
             </div>
           </div>
         </div>
@@ -131,7 +196,7 @@ export default function EncuestaInicialPage() {
               </div>
             </div>
             <h2 className="text-xl font-semibold text-center text-gray-900 mb-2">
-              Completa tu perfil y gana 5 puntos
+              Completa tu perfil y gana {configuracion.puntos_completar_perfil} puntos
             </h2>
             <p className="text-center text-gray-600">
               Necesitamos algunos datos adicionales para personalizar tu experiencia
@@ -140,64 +205,70 @@ export default function EncuestaInicialPage() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Fecha de nacimiento */}
-            <div>
-              <label htmlFor="fecha_nacimiento" className="block text-sm font-medium text-gray-700 mb-2">
-                Fecha de nacimiento *
-              </label>
-              <input
-                type="date"
-                id="fecha_nacimiento"
-                name="fecha_nacimiento"
-                required
-                max={new Date().toISOString().split('T')[0]}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                value={formData.fecha_nacimiento}
-                onChange={handleInputChange}
-              />
-            </div>
+            {configuracion.campos_activos.fecha_nacimiento && (
+              <div>
+                <label htmlFor="fecha_nacimiento" className="block text-sm font-medium text-gray-700 mb-2">
+                  Fecha de nacimiento *
+                </label>
+                <input
+                  type="date"
+                  id="fecha_nacimiento"
+                  name="fecha_nacimiento"
+                  required
+                  max={new Date().toISOString().split('T')[0]}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-vibrant focus:border-brand-vibrant"
+                  value={formData.fecha_nacimiento}
+                  onChange={handleInputChange}
+                />
+              </div>
+            )}
 
             {/* Sexo */}
-            <div>
-              <label htmlFor="sexo" className="block text-sm font-medium text-gray-700 mb-2">
-                Sexo *
-              </label>
-              <select
-                id="sexo"
-                name="sexo"
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                value={formData.sexo}
-                onChange={handleInputChange}
-              >
-                <option value="">Selecciona una opción</option>
-                <option value="M">Masculino</option>
-                <option value="F">Femenino</option>
-                <option value="Otro">Otro</option>
-                <option value="Prefiero no decir">Prefiero no decir</option>
-              </select>
-            </div>
+            {configuracion.campos_activos.sexo && (
+              <div>
+                <label htmlFor="sexo" className="block text-sm font-medium text-gray-700 mb-2">
+                  Sexo *
+                </label>
+                <select
+                  id="sexo"
+                  name="sexo"
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-vibrant focus:border-brand-vibrant"
+                  value={formData.sexo}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Selecciona una opción</option>
+                  <option value="M">Masculino</option>
+                  <option value="F">Femenino</option>
+                  <option value="Otro">Otro</option>
+                  <option value="Prefiero no decir">Prefiero no decir</option>
+                </select>
+              </div>
+            )}
 
             {/* Localización */}
-            <div>
-              <label htmlFor="localizacion" className="block text-sm font-medium text-gray-700 mb-2">
-                Ciudad o región *
-              </label>
-              <select
-                id="localizacion"
-                name="localizacion"
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                value={formData.localizacion}
-                onChange={handleInputChange}
-              >
-                <option value="">Selecciona una ciudad</option>
-                {ciudades.map((ciudad) => (
-                  <option key={ciudad.code} value={ciudad.code}>
-                    {ciudad.display}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {configuracion.campos_activos.localizacion && (
+              <div>
+                <label htmlFor="localizacion" className="block text-sm font-medium text-gray-700 mb-2">
+                  Ciudad o región *
+                </label>
+                <select
+                  id="localizacion"
+                  name="localizacion"
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-vibrant focus:border-brand-vibrant"
+                  value={formData.localizacion}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Selecciona una ciudad</option>
+                  {ciudades.map((ciudad) => (
+                    <option key={ciudad.code} value={ciudad.code}>
+                      {ciudad.display}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg text-sm">
@@ -206,15 +277,15 @@ export default function EncuestaInicialPage() {
             )}
 
             {/* Información sobre los puntos */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="bg-brand-light/10 border border-brand-light/30 rounded-lg p-4">
               <div className="flex items-start">
-                <FaGift className="h-5 w-5 text-blue-600 mr-3 mt-0.5" />
+                <FaGift className="h-5 w-5 text-brand-vibrant mr-3 mt-0.5" />
                 <div>
-                  <h4 className="text-sm font-medium text-blue-900">
+                  <h4 className="text-sm font-medium text-brand-dark">
                     Sobre tus puntos de bienvenida
                   </h4>
-                  <p className="text-sm text-blue-700 mt-1">
-                    Al completar tu perfil recibirás 5 puntos que podrás usar para canjear premios. 
+                  <p className="text-sm text-gray-700 mt-1">
+                    Al completar tu perfil recibirás {configuracion.puntos_completar_perfil} puntos que podrás usar para canjear premios. 
                     Solo se otorgan una vez por usuario.
                   </p>
                 </div>
@@ -225,7 +296,7 @@ export default function EncuestaInicialPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              className="w-full bg-gradient-to-r from-brand-vibrant to-brand-medium text-white py-3 px-4 rounded-lg font-medium hover:from-brand-dark hover:to-brand-vibrant focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-vibrant disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center">
@@ -236,7 +307,7 @@ export default function EncuestaInicialPage() {
                   Completando perfil...
                 </span>
               ) : (
-                "Completar perfil y ganar 5 puntos"
+                `Completar perfil y ganar ${configuracion.puntos_completar_perfil} puntos`
               )}
             </button>
 

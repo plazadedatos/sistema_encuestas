@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/context/authContext";
 import api from "@/app/services/api";
 import { FaDownload, FaTable } from "react-icons/fa";
@@ -30,10 +30,6 @@ export default function RespuestasDetalladasPage() {
   const [respuestas, setRespuestas] = useState<RespuestaDetallada[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    cargarEncuestas();
-  }, []);
-
   const cargarEncuestas = async () => {
     try {
       const response = await api.get("/admin/encuestas-resumen");
@@ -43,13 +39,7 @@ export default function RespuestasDetalladasPage() {
     }
   };
 
-  useEffect(() => {
-    if (selectedEncuesta) {
-      cargarRespuestas();
-    }
-  }, [selectedEncuesta]);
-
-  const cargarRespuestas = async () => {
+  const cargarRespuestas = useCallback(async () => {
     if (!selectedEncuesta) return;
     
     setLoading(true);
@@ -62,7 +52,17 @@ export default function RespuestasDetalladasPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedEncuesta]);
+
+  useEffect(() => {
+    cargarEncuestas();
+  }, []);
+
+  useEffect(() => {
+    if (selectedEncuesta) {
+      cargarRespuestas();
+    }
+  }, [cargarRespuestas, selectedEncuesta]);
 
   const obtenerColumnas = () => {
     if (respuestas.length === 0) return [];

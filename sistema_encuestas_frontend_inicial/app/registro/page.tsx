@@ -28,6 +28,7 @@ export default function RegistroPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("🔐 Iniciando proceso de registro...");
 
     // Validaciones
     if (!form.nombre || !form.apellido || !form.email || !form.password || !form.documento_numero) {
@@ -41,13 +42,15 @@ export default function RegistroPage() {
     }
 
     setIsLoading(true);
+    console.log("📤 Enviando datos de registro:", { ...form, rol_id: 3 });
+    
     try {
       const res = await api.post("/auth/registro", {
         ...form,
         rol_id: 3,
       });
 
-      console.log("Respuesta del registro:", res);
+      console.log("✅ Respuesta del registro:", res);
 
       if (res.status === 200 || res.status === 201) {
         toast.success("¡Registro exitoso! Revisa tu correo para verificar tu cuenta.");
@@ -57,7 +60,14 @@ export default function RegistroPage() {
         }, 1500);
       }
     } catch (err: any) {
-      console.error("Error en registro:", err);
+      console.error("❌ Error en registro:", err);
+      console.error("❌ Detalles del error:", {
+        message: err.message,
+        status: err.response?.status,
+        data: err.response?.data,
+        config: err.config
+      });
+      
       const errorMessage = err?.response?.data?.detail || "Error en el registro. Intenta nuevamente.";
       toast.error(errorMessage);
     } finally {
@@ -69,7 +79,7 @@ export default function RegistroPage() {
     <div className="min-h-screen flex">
       {/* Panel izquierdo - Imagen/Info */}
       <div className="hidden lg:block relative w-0 flex-1">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500">
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-dark via-brand-vibrant to-brand-light">
           <div className="absolute inset-0 bg-black opacity-20"></div>
           <div className="absolute inset-0 flex items-center justify-center p-12">
             <div className="max-w-md text-center">
@@ -110,7 +120,7 @@ export default function RegistroPage() {
           {/* Logo y título */}
           <div className="text-center">
             <div className="flex justify-center mb-6">
-              <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-4 rounded-2xl shadow-lg">
+              <div className="bg-gradient-to-r from-brand-vibrant to-brand-medium p-4 rounded-2xl shadow-lg">
                 <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                 </svg>
@@ -144,7 +154,7 @@ export default function RegistroPage() {
                       required
                       value={form.nombre}
                       onChange={handleChange}
-                      className="appearance-none relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm transition-colors"
+                      className="appearance-none relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-vibrant focus:border-brand-vibrant focus:z-10 sm:text-sm transition-colors"
                       placeholder="Juan"
                       disabled={isLoading}
                     />
@@ -166,7 +176,7 @@ export default function RegistroPage() {
                       required
                       value={form.apellido}
                       onChange={handleChange}
-                      className="appearance-none relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm transition-colors"
+                      className="appearance-none relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-vibrant focus:border-brand-vibrant focus:z-10 sm:text-sm transition-colors"
                       placeholder="Pérez"
                       disabled={isLoading}
                     />
@@ -191,7 +201,7 @@ export default function RegistroPage() {
                       required
                       value={form.documento_numero}
                       onChange={handleChange}
-                      className="appearance-none relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm transition-colors"
+                      className="appearance-none relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-vibrant focus:border-brand-vibrant focus:z-10 sm:text-sm transition-colors"
                       placeholder="12345678"
                       disabled={isLoading}
                     />
@@ -212,7 +222,7 @@ export default function RegistroPage() {
                       type="tel"
                       value={form.celular_numero}
                       onChange={handleChange}
-                      className="appearance-none relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm transition-colors"
+                      className="appearance-none relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-vibrant focus:border-brand-vibrant focus:z-10 sm:text-sm transition-colors"
                       placeholder="0981234567"
                       disabled={isLoading}
                     />
@@ -237,7 +247,7 @@ export default function RegistroPage() {
                     required
                     value={form.email}
                     onChange={handleChange}
-                    className="appearance-none relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm transition-colors"
+                    className="appearance-none relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-vibrant focus:border-brand-vibrant focus:z-10 sm:text-sm transition-colors"
                     placeholder="tu@ejemplo.com"
                     disabled={isLoading}
                   />
@@ -260,7 +270,7 @@ export default function RegistroPage() {
                     required
                     value={form.password}
                     onChange={handleChange}
-                    className="appearance-none relative block w-full pl-10 pr-10 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm transition-colors"
+                    className="appearance-none relative block w-full pl-10 pr-10 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-vibrant focus:border-brand-vibrant focus:z-10 sm:text-sm transition-colors"
                     placeholder="Mínimo 6 caracteres"
                     disabled={isLoading}
                   />
@@ -288,7 +298,7 @@ export default function RegistroPage() {
                 name="terms"
                 type="checkbox"
                 required
-                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                className="h-4 w-4 text-brand-vibrant focus:ring-brand-vibrant border-gray-300 rounded"
               />
               <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
                 Acepto los términos y condiciones y la política de privacidad
@@ -300,7 +310,7 @@ export default function RegistroPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-brand-vibrant to-brand-medium hover:from-brand-dark hover:to-brand-vibrant focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-vibrant transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <>
@@ -332,7 +342,7 @@ export default function RegistroPage() {
             <div className="text-center">
               <span className="text-sm text-gray-600">
                 ¿Ya tienes una cuenta?{' '}
-                <Link href="/login" className="font-medium text-purple-600 hover:text-purple-500">
+                <Link href="/login" className="font-medium text-brand-vibrant hover:text-brand-medium">
                   Inicia sesión
                 </Link>
               </span>

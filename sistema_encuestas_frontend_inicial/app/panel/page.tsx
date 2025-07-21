@@ -203,7 +203,7 @@ export default function PanelPage() {
         {/* Mensaje motivacional */}
         <div className="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-100">
           <p className="text-center text-gray-700 italic">
-            "Tu opinión es valiosa. Cada encuesta que completas nos ayuda a mejorar y te acerca a increíbles recompensas."
+          &quot;Tu opinión es valiosa. Cada encuesta que completas nos ayuda a mejorar y te acerca a increíbles recompensas.&quot;
           </p>
         </div>
       </div>

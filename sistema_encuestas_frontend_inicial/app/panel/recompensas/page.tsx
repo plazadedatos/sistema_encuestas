@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
 
 import { getPremios, canjearPremio, getHistorialCanjes } from "../../services/encuestas";
 import { useAuth } from "../../../context/authContext";
@@ -19,13 +20,7 @@ export default function RecompensasPage() {
   const [mostrarHistorial, setMostrarHistorial] = useState(false);
   const [emailVerificado, setEmailVerificado] = useState<boolean>(true);
 
-  useEffect(() => {
-    if (token) {
-      cargarDatos();
-    }
-  }, [token]);
-
-  const cargarDatos = async () => {
+  const cargarDatos = useCallback(async () => {
     if (!token) {
       setError("No se encontró token de autenticación");
       setLoading(false);
@@ -56,7 +51,13 @@ export default function RecompensasPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token, user]);
+
+  useEffect(() => {
+    if (token) {
+      cargarDatos();
+    }
+  }, [cargarDatos, token]);
 
   const handleCanjear = async (premio: Premio) => {
     if (!token) {
@@ -178,9 +179,11 @@ export default function RecompensasPage() {
           {premios.filter(p => p.esta_disponible).map((premio) => (
             <div key={premio.id_premio} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
               {premio.imagen_url && (
-                <img 
+                <Image 
                   src={premio.imagen_url} 
                   alt={premio.nombre} 
+                  width={400}
+                  height={200}
                   className="w-full h-48 object-cover" 
                 />
               )}

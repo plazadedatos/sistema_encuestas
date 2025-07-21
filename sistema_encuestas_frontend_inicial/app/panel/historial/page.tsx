@@ -24,14 +24,14 @@ export default function HistorialPage() {
     if (!loading && !isAuthenticated) {
       router.push("/login");
     }
-  }, [loading, isAuthenticated]);
+  }, [loading, isAuthenticated, router]);
 
   useEffect(() => {
     const fetchHistorial = async () => {
       if (!user) return;
       try {
         const res = await api.get(
-          `/respuestas/participaciones/${(user as any).id || user.id}`
+          `/respuestas/participaciones/${(user as any).id_usuario || user.id_usuario}`
         );
         setHistorial(res.data);
       } catch (error) {
@@ -74,12 +74,7 @@ export default function HistorialPage() {
                     <p>⏱️ Tiempo de respuesta: {Math.round(item.tiempo_respuesta_segundos / 60)} minutos</p>
                   </div>
                 </div>
-                <Link
-                  href={`/panel/historial/${item.id_participacion}`}
-                  className="ml-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm"
-                >
-                  Ver detalle →
-                </Link>
+
               </div>
             </div>
           ))}
