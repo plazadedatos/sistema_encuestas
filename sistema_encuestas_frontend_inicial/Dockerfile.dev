@@ -1,0 +1,26 @@
+# Dockerfile para Frontend Next.js - Desarrollo
+FROM node:18-alpine
+
+# Establecer directorio de trabajo
+WORKDIR /app
+
+# Copiar archivos de dependencias
+COPY package.json package-lock.json* ./
+
+# Instalar dependencias
+RUN npm ci
+
+# Copiar todo el código fuente
+COPY . .
+
+# Exponer puerto
+EXPOSE 3000
+
+# Variables de entorno para desarrollo
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_PUBLIC_API_URL=http://host.docker.internal:8000
+ENV NODE_OPTIONS=--openssl-legacy-provider
+
+# Comando para desarrollo
+CMD ["npm", "run", "dev"] 

@@ -1,25 +1,25 @@
+version: '3.8'
+
 services:
   frontend:
     build:
       context: ./sistema_encuestas_frontend_inicial
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - "3000:3000"
     volumes:
       - ./sistema_encuestas_frontend_inicial:/app
+      - /app/node_modules
     restart: always
-    command: sh -c "npm install && npm run build && npm start"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - NEXT_TELEMETRY_DISABLED=1
       - NEXT_PUBLIC_API_URL=http://host.docker.internal:8000
       - NODE_OPTIONS=--openssl-legacy-provider
     networks:
       - app-network
     depends_on:
-    - backend
-    
-    
+      - backend
 
   backend:
     build:
