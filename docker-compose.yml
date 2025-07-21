@@ -23,7 +23,7 @@ services:
     environment:
       - PYTHONPATH=/app
       - PYTHONUNBUFFERED=1
-      - DATABASE_URL=postgresql://postgres:123@host.docker.internal:5432/Encuestas_py
+      - DATABASE_URL=postgresql://postgres:123@postgres:5432/Encuestas_py
     networks:
       - app-network
 
