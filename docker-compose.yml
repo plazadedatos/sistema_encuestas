@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   frontend:
     build:
@@ -11,6 +9,7 @@ services:
     environment:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
+      - NEXT_PUBLIC_API_URL=http://host.docker.internal:8000
     networks:
       - app-network
 
@@ -24,11 +23,10 @@ services:
     environment:
       - PYTHONPATH=/app
       - PYTHONUNBUFFERED=1
-      - DATABASE_URL=postgresql://postgres:123@localhost:5432/Encuestas_py
-
+      - DATABASE_URL=postgresql://postgres:123@host.docker.internal:5432/Encuestas_py
     networks:
       - app-network
 
 networks:
   app-network:
-    driver: bridge 
+    driver: bridge
