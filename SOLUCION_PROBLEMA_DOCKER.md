@@ -15,6 +15,9 @@ El Dockerfile del backend estaba intentando copiar un archivo `REQUIREMENTS_BACK
 ### **Problema 2: Permisos de Script**
 El Dockerfile intentaba cambiar los permisos del script `docker-entrypoint.sh` después de cambiar al usuario no-root (`appuser`), lo cual no está permitido porque el usuario no-root no tiene permisos para cambiar permisos de archivos.
 
+### **Problema 3: Sincronización de Dependencias del Frontend**
+El `package-lock.json` no estaba sincronizado con el `package.json` después de agregar nuevas dependencias, causando que `npm ci` fallara porque requiere que ambos archivos estén sincronizados.
+
 ## ✅ **Solución Aplicada**
 
 ### **1. Corregido el Dockerfile del Backend**
@@ -73,12 +76,21 @@ Se agregaron las dependencias de desarrollo faltantes:
 }
 ```
 
+### **5. Corregido el Dockerfile del Frontend**
+```dockerfile
+# ANTES (INCORRECTO)
+RUN npm ci --only=production && npm cache clean --force
+
+# DESPUÉS (CORRECTO)
+RUN npm install --only=production && npm cache clean --force
+```
+
 ## 🚀 **Cómo Aplicar la Solución**
 
 ### **Opción 1: Script Automático (Recomendado)**
 ```bash
-# Ejecutar el script de corrección de permisos
-bash fix-docker-permissions.sh
+# Ejecutar el script de corrección de dependencias del frontend
+bash fix-frontend-dependencies.sh
 ```
 
 ### **Opción 2: Manual**
@@ -122,6 +134,12 @@ docker-compose logs -f
 - ✅ Script automático para corregir el problema de permisos
 - ✅ Verificación de archivos
 - ✅ Corrección de permisos automática
+- ✅ Limpieza y reconstrucción automática
+
+### **6. `fix-frontend-dependencies.sh`** (NUEVO)
+- ✅ Script automático para corregir dependencias del frontend
+- ✅ Regeneración de package-lock.json
+- ✅ Sincronización de dependencias
 - ✅ Limpieza y reconstrucción automática
 
 ## 🧪 **Verificación de la Solución**

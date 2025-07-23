@@ -19,7 +19,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Instalar dependencias
-RUN npm ci --only=production && npm cache clean --force
+RUN npm install --only=production && npm cache clean --force
 
 # =====================================================
 # ETAPA 2: CONSTRUCCIÓN
@@ -32,11 +32,11 @@ RUN apk add --no-cache libc6-compat
 # Establecer directorio de trabajo
 WORKDIR /app
 
-# Copiar dependencias de la etapa anterior
-COPY --from=dependencies /app/node_modules ./node_modules
-
 # Copiar código fuente
 COPY . .
+
+# Instalar todas las dependencias (incluyendo devDependencies para el build)
+RUN npm install
 
 # Variables de entorno para build
 ENV NEXT_TELEMETRY_DISABLED=1
