@@ -10,6 +10,9 @@ const api = axios.create({
   baseURL: `${API_BASE_URL}/api`,
 });
 
+// Log base URL for easier debugging
+console.log("🌐 API base URL:", `${API_BASE_URL}/api`);
+
 // Función para limpiar datos de autenticación
 const clearAuthData = () => {
   localStorage.removeItem("token");
@@ -24,11 +27,14 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    // Log full request URL for debugging
+    const url = `${config.baseURL || ""}${config.url}`;
+    console.log(`➡️  ${config.method?.toUpperCase()} ${url}`);
     return config;
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Interceptor para responses - manejo global de errores
@@ -38,15 +44,20 @@ api.interceptors.response.use(
   },
   (error: AxiosError) => {
     // Manejo de errores globales
+    console.error("❌ API error:", {
+      message: error.message,
+      status: error.response?.status,
+      url: error.config?.url,
+    });
     const status = error.response?.status;
-    
+
     if (status === 401) {
       // Token expirado o inválido
       clearAuthData();
       toast.error("Sesión expirada. Por favor, inicia sesión nuevamente.");
-      
+
       // Redirigir a login solo si no estamos ya en login
-      if (!window.location.pathname.includes('/login')) {
+      if (!window.location.pathname.includes("/login")) {
         window.location.href = "/login";
       }
     } else if (status === 403) {
@@ -60,7 +71,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;
