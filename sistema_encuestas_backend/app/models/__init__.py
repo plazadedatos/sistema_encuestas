@@ -9,9 +9,10 @@ from .sesion_usuario import SesionUsuario
 from .asignacion_encuestador import AsignacionEncuestador
 from .premio import Premio
 from .canje import Canje
+from .configuracion import Configuracion
 
 __all__ = [
     "Usuario", "Rol", "Encuesta", "Pregunta", "Opcion", 
     "Respuesta", "Participacion", "SesionUsuario", 
-    "AsignacionEncuestador", "Premio", "Canje"
+    "AsignacionEncuestador", "Premio", "Canje", "Configuracion"
 ]

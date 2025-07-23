@@ -1,0 +1,146 @@
+# =====================================================
+# REQUIREMENTS COMPLETO - BACKEND SISTEMA DE ENCUESTAS
+# =====================================================
+# Instalar con: pip install -r REQUIREMENTS_BACKEND_COMPLETO.txt
+# =====================================================
+
+# =====================================================
+# FRAMEWORK PRINCIPAL
+# =====================================================
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# =====================================================
+# BASE DE DATOS
+# =====================================================
+sqlalchemy==2.0.23
+asyncpg==0.29.0
+alembic==1.13.1
+psycopg2-binary==2.9.9  # Para scripts de migración
+
+# =====================================================
+# AUTENTICACIÓN Y SEGURIDAD
+# =====================================================
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.3.0
+python-multipart==0.0.6
+
+# =====================================================
+# VALIDACIÓN DE DATOS
+# =====================================================
+pydantic==2.5.0
+email-validator==2.1.0
+
+# =====================================================
+# CORS Y MIDDLEWARE
+# =====================================================
+fastapi-cors==0.0.6
+
+# =====================================================
+# FECHA Y TIEMPO
+# =====================================================
+python-dateutil==2.8.2
+
+# =====================================================
+# ARCHIVOS Y UPLOADS
+# =====================================================
+aiofiles==23.2.1
+pillow==10.0.1
+
+# =====================================================
+# HTTP CLIENT (PARA GOOGLE OAUTH)
+# =====================================================
+httpx==0.25.2
+
+# =====================================================
+# LOGGING Y MONITOREO
+# =====================================================
+structlog==23.2.0
+
+# =====================================================
+# VARIABLES DE ENTORNO
+# =====================================================
+python-dotenv==1.0.0
+
+# =====================================================
+# RATE LIMITING
+# =====================================================
+slowapi==0.1.9
+
+# =====================================================
+# CACHING
+# =====================================================
+redis==5.0.1
+
+# =====================================================
+# EMAIL
+# =====================================================
+fastapi-mail==1.4.1
+aiosmtplib==2.0.2
+jinja2==3.1.2
+
+# =====================================================
+# GOOGLE OAUTH
+# =====================================================
+google-auth==2.23.4
+google-auth-oauthlib==1.1.0
+google-auth-httplib2==0.1.1
+
+# =====================================================
+# TESTING
+# =====================================================
+pytest==7.4.3
+pytest-asyncio==0.21.1
+
+# =====================================================
+# DESARROLLO Y CALIDAD DE CÓDIGO
+# =====================================================
+black==23.11.0
+isort==5.12.0
+flake8==6.1.0
+
+# =====================================================
+# SCRIPTS DE PRUEBA Y AUTOMATIZACIÓN
+# =====================================================
+requests==2.31.0
+selenium==4.15.2
+webdriver-manager==4.0.1
+
+# =====================================================
+# UTILIDADES ADICIONALES
+# =====================================================
+# Para scripts de migración y utilidades
+psycopg2-binary==2.9.9
+
+# =====================================================
+# DEPENDENCIAS OPCIONALES (DESARROLLO)
+# =====================================================
+# Descomenta si necesitas estas herramientas adicionales
+# ipython==8.17.2  # Para debugging interactivo
+# jupyter==1.0.0   # Para notebooks de desarrollo
+# pytest-cov==4.1.0  # Para cobertura de tests
+# mypy==1.7.1      # Para type checking
+
+# =====================================================
+# INSTRUCCIONES DE INSTALACIÓN
+# =====================================================
+# 1. Crear entorno virtual:
+#    python -m venv venv
+#    source venv/bin/activate  # Linux/Mac
+#    venv\Scripts\activate     # Windows
+#
+# 2. Actualizar pip:
+#    pip install --upgrade pip
+#
+# 3. Instalar dependencias:
+#    pip install -r REQUIREMENTS_BACKEND_COMPLETO.txt
+#
+# 4. Para desarrollo (opcional):
+#    pip install -r REQUIREMENTS_BACKEND_COMPLETO.txt[dev]
+#
+# =====================================================
+# VERIFICACIÓN DE INSTALACIÓN
+# =====================================================
+# python -c "import fastapi, sqlalchemy, passlib, pydantic; print('✅ Todas las dependencias instaladas correctamente')"
+#
+# ===================================================== 

@@ -28,6 +28,7 @@ export default function RegistroPage() {
     email: "",
     password: "",
   });
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -36,8 +37,16 @@ export default function RegistroPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("🔐 Iniciando proceso de registro...");
+    console.log("📋 Estado del formulario:", form);
 
     // Validaciones
+    console.log("🔍 Verificando validaciones...");
+    console.log("  - Nombre:", form.nombre, "✅" + (form.nombre ? "" : "❌"));
+    console.log("  - Apellido:", form.apellido, "✅" + (form.apellido ? "" : "❌"));
+    console.log("  - Email:", form.email, "✅" + (form.email ? "" : "❌"));
+    console.log("  - Password:", form.password, "✅" + (form.password ? "" : "❌"));
+    console.log("  - Documento:", form.documento_numero, "✅" + (form.documento_numero ? "" : "❌"));
+
     if (
       !form.nombre ||
       !form.apellido ||
@@ -45,19 +54,39 @@ export default function RegistroPage() {
       !form.password ||
       !form.documento_numero
     ) {
+      console.log("❌ Validación falló - campos obligatorios vacíos");
       toast.error("Por favor completa todos los campos obligatorios");
       return;
     }
 
+    console.log("✅ Validación de campos obligatorios pasó");
+
     if (form.password.length < 6) {
-      toast.error("La contraseña debe tener al menos 6 caracteres");
+      console.log("❌ Validación falló - password muy corta");
+      toast.error("🔒 La contraseña debe tener al menos 6 caracteres. Por favor, usa una contraseña más segura.");
       return;
     }
 
+    console.log("✅ Validación de password pasó");
+
+    // Validar términos y condiciones
+    console.log("🔍 Verificando términos y condiciones...");
+    console.log("  - Terms accepted:", termsAccepted, "✅" + (termsAccepted ? "" : "❌"));
+    
+    if (!termsAccepted) {
+      console.log("❌ Validación falló - términos no aceptados");
+      toast.error("Debes aceptar los términos y condiciones");
+      return;
+    }
+
+    console.log("✅ Validación de términos pasó");
+
     setIsLoading(true);
     console.log("📤 Enviando datos de registro:", form);
+    console.log("🌐 URL de la API:", `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/auth/registro`);
 
     try {
+      console.log("🚀 Ejecutando api.post...");
       const res = await api.post("/auth/registro", form);
 
       console.log("✅ Respuesta del registro:", res);
@@ -78,6 +107,8 @@ export default function RegistroPage() {
         status: err.response?.status,
         data: err.response?.data,
         config: err.config,
+        url: err.config?.url,
+        method: err.config?.method,
       });
 
       const errorMessage =
@@ -85,6 +116,7 @@ export default function RegistroPage() {
         "Error en el registro. Intenta nuevamente.";
       toast.error(errorMessage);
     } finally {
+      console.log("🏁 Finalizando handleSubmit");
       setIsLoading(false);
     }
   };
@@ -342,10 +374,29 @@ export default function RegistroPage() {
                     required
                     value={form.password}
                     onChange={handleChange}
-                    className="appearance-none relative block w-full pl-10 pr-10 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-vibrant focus:border-brand-vibrant focus:z-10 sm:text-sm transition-colors"
+                    className={`appearance-none relative block w-full pl-10 pr-10 py-3 border placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:z-10 sm:text-sm transition-colors ${
+                      form.password.length > 0 && form.password.length < 6
+                        ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+                        : "border-gray-300 focus:ring-brand-vibrant focus:border-brand-vibrant"
+                    }`}
                     placeholder="Mínimo 6 caracteres"
                     disabled={isLoading}
                   />
+                  {form.password.length > 0 && (
+                    <div className="mt-1">
+                      {form.password.length < 6 ? (
+                        <p className="text-sm text-red-600 flex items-center">
+                          <span className="mr-1">🔒</span>
+                          La contraseña debe tener al menos 6 caracteres
+                        </p>
+                      ) : (
+                        <p className="text-sm text-green-600 flex items-center">
+                          <span className="mr-1">✅</span>
+                          Contraseña válida ({form.password.length} caracteres)
+                        </p>
+                      )}
+                    </div>
+                  )}
                   <button
                     type="button"
                     className="absolute inset-y-0 right-0 pr-3 flex items-center"
@@ -384,7 +435,8 @@ export default function RegistroPage() {
                 id="terms"
                 name="terms"
                 type="checkbox"
-                required
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
                 className="h-4 w-4 text-brand-vibrant focus:ring-brand-vibrant border-gray-300 rounded"
               />
               <label

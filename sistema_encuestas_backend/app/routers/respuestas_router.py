@@ -39,6 +39,10 @@ async def guardar_respuestas(
     ✅ No requiere verificación de email.
     """
     try:
+        print(f"📝 Recibiendo respuestas para encuesta {data.id_encuesta}")
+        print(f"👤 Usuario: {current_user.email}")
+        print(f"📊 Datos recibidos: {data}")
+        
         # ✅ current_user ya es un objeto Usuario, no un diccionario
         usuario_id = current_user.id_usuario
         

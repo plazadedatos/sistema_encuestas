@@ -1,0 +1,97 @@
+{
+  "name": "sistema_encuestas_frontend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sistema de Encuestas y Recompensas - Frontend",
+  "author": "Tu Nombre",
+  "license": "MIT",
+  
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  
+  "dependencies": {
+    "@heroicons/react": "^2.0.16",
+    "@react-oauth/google": "^0.12.2",
+    "axios": "^1.10.0",
+    "framer-motion": "^12.23.3",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
+    "jwt-decode": "^4.0.0",
+    "next": "13.5.11",
+    "react": "^18",
+    "react-confetti": "^6.4.0",
+    "react-dom": "^18",
+    "react-hook-form": "^7.42.1",
+    "react-icons": "^4.12.0",
+    "react-scroll": "^1.9.3",
+    "react-toastify": "^11.0.5",
+    "recharts": "^3.0.2",
+    "uuid": "^11.1.0",
+    "xlsx": "^0.18.5"
+  },
+  
+  "devDependencies": {
+    "@types/jwt-decode": "^2.2.1",
+    "@types/node": "^20",
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
+    "@types/react-scroll": "^1.8.10",
+    "@types/uuid": "^10.0.0",
+    "autoprefixer": "^10.4.17",
+    "eslint": "^8",
+    "eslint-config-next": "13.5.11",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5",
+    "prettier": "^3.1.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1"
+  },
+  
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  
+  "keywords": [
+    "nextjs",
+    "react",
+    "typescript",
+    "tailwindcss",
+    "encuestas",
+    "recompensas",
+    "frontend"
+  ],
+  
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tu-usuario/sistema-encuestas-frontend.git"
+  },
+  
+  "bugs": {
+    "url": "https://github.com/tu-usuario/sistema-encuestas-frontend/issues"
+  },
+  
+  "homepage": "https://github.com/tu-usuario/sistema-encuestas-frontend#readme"
+} 

@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import TopbarInterno from "@/components/TopbarInterno";
 import Image from "next/image";
-import axios from "axios";
 import api from "@/app/services/api";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -131,7 +130,7 @@ export default function CrearEncuestaPage() {
       const formData = new FormData();
       if (imagen) formData.append("imagen", imagen);
       const uploadRes = imagen
-        ? await axios.post("/api/imagenes", formData)
+        ? await api.post("/imagenes", formData)
         : { data: { url: null } };
         const payload = {
           titulo,

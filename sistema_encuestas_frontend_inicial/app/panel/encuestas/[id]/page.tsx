@@ -62,10 +62,15 @@ export default function ResponderEncuestaPage() {
         respuesta_texto: typeof valor === "string" ? valor : undefined,
       }));
 
-      await api.post("/respuestas/", {
+      const requestData = {
         id_encuesta: Number(id),
         respuestas: payload,
-      });
+        tiempo_total: 0 // Agregar tiempo total requerido por el backend
+      };
+
+      console.log("📤 Enviando respuestas:", requestData);
+
+      await api.post("/respuestas/", requestData);
 
       alert("¡Respuestas enviadas exitosamente! ✅ Has ganado puntos por completar esta encuesta.");
       
@@ -74,8 +79,13 @@ export default function ResponderEncuestaPage() {
         router.push("/panel");
       }, 1500);
       
-    } catch (err) {
-      console.error("Error al enviar respuestas", err);
+    } catch (err: any) {
+      console.error("❌ Error al enviar respuestas:", err);
+      console.error("❌ Detalles del error:", {
+        message: err.message,
+        status: err.response?.status,
+        data: err.response?.data,
+      });
       alert("Ocurrió un error al enviar respuestas ❌");
       setEnviando(false);
     }

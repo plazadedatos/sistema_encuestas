@@ -7,6 +7,7 @@ from app.models.usuario import Usuario
 from app.models.participacion import Participacion
 from app.models.encuesta import Encuesta
 from app.middleware.auth_middleware import get_current_user
+from app.services.configuracion_service import configuracion_service
 from pydantic import BaseModel
 from datetime import datetime, date
 from typing import Optional
@@ -121,9 +122,10 @@ async def completar_perfil(
         
         puntos_otorgados = 0
         
-        # Si es la primera vez, otorgar puntos
+        # Si es la primera vez, otorgar puntos según configuración
         if es_primera_vez:
-            puntos_otorgados = 5
+            puntos_otorgados = await configuracion_service.obtener_puntos_completar_perfil(db)
+            print(f"🎁 Otorgando {puntos_otorgados} puntos por completar perfil")
             current_user.puntos_totales += puntos_otorgados
             current_user.puntos_disponibles += puntos_otorgados
             
@@ -139,7 +141,7 @@ async def completar_perfil(
                 encuesta_perfil = Encuesta(
                     titulo="Encuesta de Perfil Inicial",
                     descripcion="Complete su perfil para obtener puntos de bienvenida",
-                    puntos_otorga=5,
+                    puntos_otorga=puntos_otorgados,  # Usar puntos de configuración
                     estado=True,
                     visible_para="usuarios",
                     tiempo_estimado="1 minuto",

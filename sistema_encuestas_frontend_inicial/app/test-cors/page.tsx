@@ -12,11 +12,9 @@ export default function TestCorsPage() {
     setResult('Probando endpoint público...');
     
     try {
-      const response = await fetch('http://localhost:8000/api/ping');
-      const data = await response.json();
-      
-      setResult(`✅ CORS funciona correctamente: ${JSON.stringify(data, null, 2)}`);
-      console.log("✅ Respuesta del servidor:", data);
+      const response = await api.get('/ping');
+      setResult(`✅ CORS funciona correctamente: ${JSON.stringify(response.data, null, 2)}`);
+      console.log("✅ Respuesta del servidor:", response.data);
     } catch (error: any) {
       setResult(`❌ Error CORS: ${error.message}`);
       console.error("❌ Error:", error);

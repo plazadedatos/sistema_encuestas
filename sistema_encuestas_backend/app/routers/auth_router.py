@@ -18,6 +18,7 @@ from app.models.usuario import Usuario
 from app.models.token_verificacion import TokenVerificacion
 from app.services.email_service import email_service
 from app.services.google_auth_service import google_auth_service
+from app.services.configuracion_service import configuracion_service
 
 router = APIRouter(prefix="/auth", tags=["Autenticación"])
 logger = logging.getLogger(__name__)
@@ -85,6 +86,10 @@ async def registro(datos: RegistroRequest, db: AsyncSession = Depends(get_db)):
     if existe_doc.scalars().first():
         raise HTTPException(status_code=400, detail="El documento ya está registrado.")
 
+    # Obtener puntos iniciales de la configuración
+    puntos_iniciales = await configuracion_service.obtener_puntos_registro_inicial(db)
+    print(f"🎁 Asignando {puntos_iniciales} puntos iniciales al nuevo usuario")
+    
     # Crear nuevo usuario
     nuevo_usuario = Usuario(
         nombre=datos.nombre,
@@ -97,7 +102,9 @@ async def registro(datos: RegistroRequest, db: AsyncSession = Depends(get_db)):
         estado=True,
         rol_id=3,  # Usuario normal
         email_verificado=False,  # No verificado por defecto
-        proveedor_auth="local"
+        proveedor_auth="local",
+        puntos_totales=puntos_iniciales,
+        puntos_disponibles=puntos_iniciales
     )
 
     db.add(nuevo_usuario)

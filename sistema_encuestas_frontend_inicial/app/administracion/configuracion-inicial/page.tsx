@@ -12,6 +12,7 @@ interface ConfiguracionInicial {
     localizacion: boolean;
   };
   puntos_completar_perfil: number;
+  puntos_registro_inicial: number;
   valores_defecto: {
     opciones_sexo: string[];
   };
@@ -26,6 +27,7 @@ export default function ConfiguracionInicialPage() {
       localizacion: true
     },
     puntos_completar_perfil: 5,
+    puntos_registro_inicial: 0,
     valores_defecto: {
       opciones_sexo: ["M", "F", "Otro", "Prefiero no decir"]
     }
@@ -65,6 +67,14 @@ export default function ConfiguracionInicialPage() {
     setConfiguracion(prev => ({
       ...prev,
       puntos_completar_perfil: valor
+    }));
+  };
+
+  const handlePuntosRegistroChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const valor = parseInt(e.target.value) || 0;
+    setConfiguracion(prev => ({
+      ...prev,
+      puntos_registro_inicial: valor
     }));
   };
 
@@ -174,29 +184,52 @@ export default function ConfiguracionInicialPage() {
         {/* Configuración de puntos */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Sistema de Puntos</h2>
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <label htmlFor="puntos" className="block text-sm font-medium text-gray-700 mb-2">
-                Puntos por completar el perfil
-              </label>
-              <div className="flex items-center gap-3">
-                <input
-                  id="puntos"
-                  type="number"
-                  min="0"
-                  max="100"
-                  value={configuracion.puntos_completar_perfil}
-                  onChange={handlePuntosChange}
-                  className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-vibrant focus:border-transparent"
-                />
-                <FaGift className="text-yellow-500 text-xl" />
-                <span className="text-sm text-gray-600">puntos de recompensa</span>
-              </div>
+          
+          {/* Puntos por completar perfil */}
+          <div className="mb-6">
+            <label htmlFor="puntos-perfil" className="block text-sm font-medium text-gray-700 mb-2">
+              Puntos por completar el perfil
+            </label>
+            <div className="flex items-center gap-3">
+              <input
+                id="puntos-perfil"
+                type="number"
+                min="0"
+                max="100"
+                value={configuracion.puntos_completar_perfil}
+                onChange={handlePuntosChange}
+                className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-vibrant focus:border-transparent"
+              />
+              <FaGift className="text-yellow-500 text-xl" />
+              <span className="text-sm text-gray-600">puntos de recompensa</span>
             </div>
+            <p className="text-xs text-gray-500 mt-2">
+              Estos puntos se otorgarán automáticamente cuando el usuario complete su perfil inicial
+            </p>
           </div>
-          <p className="text-xs text-gray-500 mt-2">
-            Estos puntos se otorgarán automáticamente cuando el usuario complete su perfil inicial
-          </p>
+
+          {/* Puntos de registro inicial */}
+          <div>
+            <label htmlFor="puntos-registro" className="block text-sm font-medium text-gray-700 mb-2">
+              Puntos de registro inicial
+            </label>
+            <div className="flex items-center gap-3">
+              <input
+                id="puntos-registro"
+                type="number"
+                min="0"
+                max="100"
+                value={configuracion.puntos_registro_inicial}
+                onChange={handlePuntosRegistroChange}
+                className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-vibrant focus:border-transparent"
+              />
+              <FaGift className="text-yellow-500 text-xl" />
+              <span className="text-sm text-gray-600">puntos de bienvenida</span>
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              Estos puntos se otorgarán automáticamente cuando un nuevo usuario se registre
+            </p>
+          </div>
         </div>
 
         {/* Mensaje de estado */}

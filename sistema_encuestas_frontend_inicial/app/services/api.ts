@@ -30,9 +30,12 @@ api.interceptors.request.use(
     // Log full request URL for debugging
     const url = `${config.baseURL || ""}${config.url}`;
     console.log(`➡️  ${config.method?.toUpperCase()} ${url}`);
+    console.log(`📦 Request data:`, config.data);
+    console.log(`🔧 Request headers:`, config.headers);
     return config;
   },
   (error) => {
+    console.error("❌ Request interceptor error:", error);
     return Promise.reject(error);
   },
 );

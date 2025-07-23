@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FaCheckCircle, FaTimesCircle, FaInfoCircle } from 'react-icons/fa';
+import api from '@/app/services/api';
 
 export default function VerificarCorreoPage() {
   const searchParams = useSearchParams();
@@ -16,13 +17,10 @@ export default function VerificarCorreoPage() {
 
   const verificarEmail = useCallback(async (token: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/verificar-correo?token=${token}`, {
-        method: 'GET',
-      });
+      const response = await api.get(`/auth/verificar-correo?token=${token}`);
+      const data = response.data;
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (response.status === 200) {
         // Verificar el estado específico de la respuesta
         if (data.estado === 'verificado_exitosamente') {
           setExitoso(true);
@@ -57,9 +55,9 @@ export default function VerificarCorreoPage() {
         setExitoso(false);
         setMensaje(data.detail || 'Error al verificar el email');
       }
-    } catch (error) {
+    } catch (error: any) {
       setExitoso(false);
-      setMensaje('Error de conexión. Por favor intenta nuevamente.');
+      setMensaje(error.response?.data?.detail || 'Error de conexión. Por favor intenta nuevamente.');
     } finally {
       setVerificando(false);
     }

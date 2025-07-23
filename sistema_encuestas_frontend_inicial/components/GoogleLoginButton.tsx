@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/authContext';
 import { useState, useEffect, useRef } from 'react';
 import { FaGoogle } from 'react-icons/fa';
+import api from '@/app/services/api';
 
 export default function GoogleLoginButton() {
   const { loginWithGoogle } = useAuth();
@@ -39,10 +40,9 @@ export default function GoogleLoginButton() {
     try {
       const controller = new AbortController();
       const idTimeout = setTimeout(() => controller.abort(), 8000);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id_token: credentialResponse.credential }),
+      const response = await api.post('/auth/google', { 
+        id_token: credentialResponse.credential 
+      }, {
         signal: controller.signal,
       });
       clearTimeout(idTimeout);
@@ -50,10 +50,7 @@ export default function GoogleLoginButton() {
       clearTimeout(slowRef.current!);
       setShowSlowMessage(false);
 
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.detail || 'Error al iniciar sesión con Google');
-      }
+      const data = response.data;
       const success = await loginWithGoogle(data.access_token, data.usuario);
       if (!success) {
         throw new Error('Error al procesar el login con Google');
@@ -94,8 +91,8 @@ export default function GoogleLoginButton() {
   }
 
   return (
-    <div className="w-full">
-      <div className="google-login-wrapper">
+    <div className="w-full flex justify-center">
+      <div className="google-login-wrapper w-full max-w-sm">
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
           onError={handleGoogleError}
@@ -104,7 +101,7 @@ export default function GoogleLoginButton() {
           text="continue_with"
           shape="rectangular"
           locale="es"
-          width={400}
+          width="100%"
         />
       </div>
       {loading && (
@@ -137,12 +134,20 @@ export default function GoogleLoginButton() {
         }
         .google-login-wrapper > div {
           width: 100% !important;
+          display: flex !important;
+          justify-content: center !important;
         }
         .google-login-wrapper iframe {
           width: 100% !important;
           max-width: 100% !important;
+          border-radius: 8px !important;
         }
         .google-login-wrapper > div > div {
+          width: 100% !important;
+          display: flex !important;
+          justify-content: center !important;
+        }
+        .google-login-wrapper > div > div > div {
           width: 100% !important;
           display: flex !important;
           justify-content: center !important;

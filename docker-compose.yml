@@ -1,40 +1,202 @@
 version: '3.8'
 
 services:
-  frontend:
-    build:
-      context: ./sistema_encuestas_frontend_inicial
-      dockerfile: Dockerfile.dev
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./sistema_encuestas_frontend_inicial:/app
-      - /app/node_modules
-    restart: always
+  # =====================================================
+  # BASE DE DATOS POSTGRESQL
+  # =====================================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: encuestas_postgres
+    restart: unless-stopped
     environment:
-      - NODE_ENV=development
-      - NEXT_TELEMETRY_DISABLED=1
-      - NEXT_PUBLIC_API_URL=http://host.docker.internal:8000
-      - NODE_OPTIONS=--openssl-legacy-provider
+      POSTGRES_DB: sistema_encuestas
+      POSTGRES_USER: encuestas_user
+      POSTGRES_PASSWORD: encuestas123
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sistema_encuestas_backend/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    ports:
+      - "5432:5432"
     networks:
-      - app-network
-    depends_on:
-      - backend
+      - encuestas_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U encuestas_user -d sistema_encuestas"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
+  # =====================================================
+  # REDIS (CACHING)
+  # =====================================================
+  redis:
+    image: redis:7-alpine
+    container_name: encuestas_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass redis123
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - encuestas_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # =====================================================
+  # BACKEND FASTAPI
+  # =====================================================
   backend:
     build:
       context: ./sistema_encuestas_backend
       dockerfile: Dockerfile
+    container_name: encuestas_backend
+    restart: unless-stopped
+    environment:
+      # Base de datos
+      DATABASE_URL: postgresql+asyncpg://encuestas_user:encuestas123@postgres:5432/sistema_encuestas
+      
+      # JWT
+      SECRET_KEY: tu_clave_secreta_muy_larga_y_segura_aqui_cambiar_en_produccion
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      
+      # Email (Gmail) - CONFIGURAR DESPUÉS
+      EMAIL_HOST: smtp.gmail.com
+      EMAIL_PORT: 587
+      EMAIL_USER: tu_email@gmail.com
+      EMAIL_PASSWORD: tu_app_password_de_gmail
+      
+      # Google OAuth - CONFIGURAR DESPUÉS
+      GOOGLE_CLIENT_ID: tu_google_client_id
+      GOOGLE_CLIENT_SECRET: tu_google_client_secret
+      
+      # Configuración del servidor
+      API_HOST: 0.0.0.0
+      API_PORT: 8000
+      DEBUG: "False"
+      
+      # Redis
+      REDIS_URL: redis://:redis123@redis:6379
+      
+      # Configuración adicional
+      PYTHONPATH: /app
+      PYTHONUNBUFFERED: 1
+    volumes:
+      - ./sistema_encuestas_backend:/app
+      - backend_uploads:/app/uploads
     ports:
       - "8000:8000"
-    restart: always
-    environment:
-      - PYTHONPATH=/app
-      - PYTHONUNBUFFERED=1
-      - DATABASE_URL=postgresql://postgres:123@postgres:5432/Encuestas_py
     networks:
-      - app-network
+      - encuestas_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
+  # =====================================================
+  # FRONTEND NEXT.JS
+  # =====================================================
+  frontend:
+    build:
+      context: ./sistema_encuestas_frontend_inicial
+      dockerfile: Dockerfile
+    container_name: encuestas_frontend
+    restart: unless-stopped
+    environment:
+      # API Backend
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      
+      # Google OAuth - CONFIGURAR DESPUÉS
+      NEXT_PUBLIC_GOOGLE_CLIENT_ID: tu_google_client_id
+      
+      # Configuración de Next.js
+      NEXT_PUBLIC_APP_NAME: Sistema de Encuestas
+      NEXT_PUBLIC_APP_VERSION: 1.0.0
+      
+      # Configuración adicional
+      NODE_ENV: production
+    volumes:
+      - ./sistema_encuestas_frontend_inicial:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3000:3000"
+    networks:
+      - encuestas_network
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  # =====================================================
+  # PORTAINER (GESTIÓN DE CONTENEDORES)
+  # =====================================================
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: encuestas_portainer
+    restart: unless-stopped
+    environment:
+      - PORTAINER_TLS=false
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    ports:
+      - "9000:9000"
+    networks:
+      - encuestas_network
+    command: -H unix:///var/run/docker.sock
+
+  # =====================================================
+  # NGINX (PROXY REVERSO - OPCIONAL)
+  # =====================================================
+  nginx:
+    image: nginx:alpine
+    container_name: encuestas_nginx
+    restart: unless-stopped
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - encuestas_network
+    depends_on:
+      - frontend
+      - backend
+    profiles:
+      - production
+
+# =====================================================
+# VOLÚMENES
+# =====================================================
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  backend_uploads:
+    driver: local
+  portainer_data:
+    driver: local
+
+# =====================================================
+# REDES
+# =====================================================
 networks:
-  app-network:
+  encuestas_network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

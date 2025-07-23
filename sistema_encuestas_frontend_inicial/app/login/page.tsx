@@ -168,10 +168,8 @@ export default function LoginPage() {
               </div>
             </div>
             
-            <div className="w-full" style={{ maxWidth: "384px" }}>
-              <div className="w-full max-w-sm">
-                <GoogleLoginButton />
-              </div>
+            <div className="w-full">
+              <GoogleLoginButton />
             </div>
 
             {/* Links adicionales */}
