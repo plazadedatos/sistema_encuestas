@@ -17,7 +17,6 @@ WORKDIR /app
 
 # Copiar archivos de dependencias
 COPY package*.json ./
-COPY PACKAGE_JSON_FRONTEND_COMPLETO.json ./package.json
 
 # Instalar dependencias
 RUN npm ci --only=production && npm cache clean --force

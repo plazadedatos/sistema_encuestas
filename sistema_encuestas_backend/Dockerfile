@@ -22,11 +22,10 @@ WORKDIR /app
 
 # Copiar archivos de dependencias
 COPY requirements.txt .
-COPY REQUIREMENTS_BACKEND_COMPLETO.txt .
 
 # Instalar dependencias de Python
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r REQUIREMENTS_BACKEND_COMPLETO.txt
+    pip install --no-cache-dir -r requirements.txt
 
 # =====================================================
 # ETAPA 2: DESARROLLO
