@@ -9,7 +9,11 @@ ERROR: failed to build: failed to solve: failed to compute cache key: failed to 
 
 ## 🔍 **Causa del Problema**
 
+### **Problema 1: Archivos Faltantes**
 El Dockerfile del backend estaba intentando copiar un archivo `REQUIREMENTS_BACKEND_COMPLETO.txt` que no existía en el directorio del backend. Este archivo estaba en el directorio raíz del proyecto, pero el Dockerfile lo buscaba en el contexto del backend.
+
+### **Problema 2: Permisos de Script**
+El Dockerfile intentaba cambiar los permisos del script `docker-entrypoint.sh` después de cambiar al usuario no-root (`appuser`), lo cual no está permitido porque el usuario no-root no tiene permisos para cambiar permisos de archivos.
 
 ## ✅ **Solución Aplicada**
 
@@ -21,6 +25,17 @@ COPY REQUIREMENTS_BACKEND_COMPLETO.txt .
 
 # DESPUÉS (CORRECTO)
 COPY requirements.txt .
+
+# CORRECCIÓN DE PERMISOS
+# ANTES (INCORRECTO)
+USER appuser
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# DESPUÉS (CORRECTO)
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+USER appuser
 ```
 
 ### **2. Actualizado el requirements.txt del Backend**
@@ -62,8 +77,8 @@ Se agregaron las dependencias de desarrollo faltantes:
 
 ### **Opción 1: Script Automático (Recomendado)**
 ```bash
-# Ejecutar el script de corrección
-bash fix-docker-build.sh
+# Ejecutar el script de corrección de permisos
+bash fix-docker-permissions.sh
 ```
 
 ### **Opción 2: Manual**
@@ -103,9 +118,10 @@ docker-compose logs -f
 ### **4. `sistema_encuestas_frontend_inicial/package.json`**
 - ✅ Agregadas dependencias de desarrollo (prettier, eslint-config-prettier)
 
-### **5. `fix-docker-build.sh`** (NUEVO)
-- ✅ Script automático para corregir el problema
+### **5. `fix-docker-permissions.sh`** (NUEVO)
+- ✅ Script automático para corregir el problema de permisos
 - ✅ Verificación de archivos
+- ✅ Corrección de permisos automática
 - ✅ Limpieza y reconstrucción automática
 
 ## 🧪 **Verificación de la Solución**

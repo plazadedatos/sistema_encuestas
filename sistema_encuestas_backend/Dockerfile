@@ -7,7 +7,7 @@
 # =====================================================
 # ETAPA 1: DEPENDENCIAS
 # =====================================================
-FROM python:3.11-slim as dependencies
+FROM python:3.11-slim AS dependencies
 
 # Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
@@ -30,7 +30,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # =====================================================
 # ETAPA 2: DESARROLLO
 # =====================================================
-FROM python:3.11-slim as development
+FROM python:3.11-slim AS development
 
 # Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
@@ -65,7 +65,7 @@ CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload
 # =====================================================
 # ETAPA 3: PRODUCCIÓN
 # =====================================================
-FROM python:3.11-slim as production
+FROM python:3.11-slim AS production
 
 # Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
@@ -86,6 +86,10 @@ COPY . .
 # Crear directorio para uploads
 RUN mkdir -p /app/uploads && chmod 755 /app/uploads
 
+# Script de inicio
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # Crear usuario no-root para seguridad
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 RUN chown -R appuser:appuser /app
@@ -93,10 +97,6 @@ USER appuser
 
 # Exponer puerto
 EXPOSE 8000
-
-# Script de inicio
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Comando para producción
 CMD ["docker-entrypoint.sh"] 
