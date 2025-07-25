@@ -3,7 +3,7 @@ import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 
 // Configuración de la API
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
 
 // Crear instancia de Axios
 const api = axios.create({
