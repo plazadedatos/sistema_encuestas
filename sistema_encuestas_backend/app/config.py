@@ -55,8 +55,8 @@ class Settings:
     version: str = os.getenv("VERSION", "1.0.0")
     debug: bool = os.getenv("DEBUG", "true").lower() == "true"
     
-    # CORS
-    cors_origins: list = os.getenv("CORS_ORIGINS", "https://encuestas.plazadedatos.com,http://168.231.97.52:3001").split(",")
+    # CORS (corregido para limpiar espacios)
+    cors_origins: list = [origin.strip() for origin in os.getenv("CORS_ORIGINS", "https://encuestas.plazadedatos.com,http://168.231.97.52:3001").split(",")]
     
     # Roles del sistema (estructura actual de BD)
     ROL_ADMINISTRADOR: int = 1  # Cambiado para coincidir con BD actual
@@ -104,4 +104,4 @@ LOGGING_CONFIG = {
             "handlers": ["default", "file"],
         },
     },
-} 
+}
