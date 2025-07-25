@@ -16,6 +16,7 @@ from app.routers.configuracion_inicial_router import router as configuracion_ini
 from app.middleware.security_headers import SecurityHeadersMiddleware
 from app.middleware.rate_limiter import RateLimiter
 from app.middleware.cors_middleware import CORSErrorMiddleware
+from app.config import settings  # <-- Importa la configuración
 
 # Configurar logging
 logging.basicConfig(
@@ -25,11 +26,8 @@ logging.basicConfig(
 
 app = FastAPI()
 
-# CORS
-origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+# CORS: Usar los orígenes definidos en settings.cors_origins
+origins = settings.cors_origins
 
 # Middleware personalizado para CORS con manejo de errores
 app.add_middleware(CORSErrorMiddleware, allowed_origins=origins)
