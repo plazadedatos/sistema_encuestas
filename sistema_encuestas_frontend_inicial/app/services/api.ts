@@ -5,12 +5,15 @@ import { toast } from "react-toastify";
 // Configuración de la API
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
 
-// Crear instancia de Axios
+// Crear instancia de Axios con headers obligatorios
 const api = axios.create({
   baseURL: `${API_BASE_URL}/api`,
+  headers: {
+    'Content-Type': 'application/json', // 👈 Corrección obligatoria para evitar error 500
+  },
 });
 
-// Log base URL for easier debugging
+// Log base URL para depuración
 console.log("🌐 API base URL:", `${API_BASE_URL}/api`);
 
 // Función para limpiar datos de autenticación
@@ -20,14 +23,14 @@ const clearAuthData = () => {
   console.log("🔒 Datos de autenticación eliminados");
 };
 
-// Interceptor para requests - agregar token automáticamente
+// Interceptor para requests - agrega token automáticamente
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    // Log full request URL for debugging
+    // Log de la solicitud
     const url = `${config.baseURL || ""}${config.url}`;
     console.log(`➡️  ${config.method?.toUpperCase()} ${url}`);
     console.log(`📦 Request data:`, config.data);
@@ -35,31 +38,26 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.error("❌ Request interceptor error:", error);
+    console.error("❌ Error en interceptor de request:", error);
     return Promise.reject(error);
   },
 );
 
 // Interceptor para responses - manejo global de errores
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error: AxiosError) => {
-    // Manejo de errores globales
     console.error("❌ API error:", {
       message: error.message,
       status: error.response?.status,
       url: error.config?.url,
     });
+
     const status = error.response?.status;
 
     if (status === 401) {
-      // Token expirado o inválido
       clearAuthData();
       toast.error("Sesión expirada. Por favor, inicia sesión nuevamente.");
-
-      // Redirigir a login solo si no estamos ya en login
       if (!window.location.pathname.includes("/login")) {
         window.location.href = "/login";
       }
