@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  backend:
+    image: ghcr.io/plazadedatos/sistema_encuestas_backend:latest  # <-- o reemplazá por tu imagen local si no usás GitHub Container Registry
+    container_name: sistema_encuestas_backend
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://sc_admin_user_42:NuevaClave123!@encuestas_encuestas_db:5432/sistema_encuestas
+      - SECRET_KEY=clave-secreta-muy-larga-y-segura-para-backend-123456789
+      - GOOGLE_CLIENT_ID=617282847971-2kt8l6roqivui6t5u28kbc8qebucn3vb.apps.googleusercontent.com
+      - GOOGLE_CLIENT_SECRET=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
+      - EMAIL_USER=plazadedatoscom@gmail.com
+      - EMAIL_PASSWORD=Plazadedatos226118*/  # 👈 asegurate que esté en tu .env en vez de hardcodeado
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "8000:8000"
+    networks:
+      - encuesta-net
+
+  db:
+    image: postgres:15
+    container_name: sistema_encuestas_db
+    restart: always
+    environment:
+      - POSTGRES_DB=sistema_encuestas
+      - POSTGRES_USER=sc_admin_user_42
+      - POSTGRES_PASSWORD=NuevaClave123!
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - encuesta-net
+
+  redis:
+    image: redis:7
+    container_name: sistema_encuestas_redis
+    restart: always
+    command: ["redis-server", "--requirepass", "redis123"]
+    ports:
+      - "6379:6379"
+    networks:
+      - encuesta-net
+
+networks:
+  encuesta-net:
+
+volumes:
+  db-data:
