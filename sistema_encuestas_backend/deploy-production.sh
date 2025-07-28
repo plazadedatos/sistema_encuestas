@@ -51,14 +51,17 @@ check_system() {
         DISTRO="Debian"
         VERSION=$(cat /etc/debian_version)
         print_status "Sistema detectado: $DISTRO $VERSION"
+        export IS_DEBIAN=true
     elif [ -f /etc/lsb-release ]; then
         DISTRO="Ubuntu"
         VERSION=$(lsb_release -rs)
         print_status "Sistema detectado: $DISTRO $VERSION"
+        export IS_DEBIAN=false
     else
         print_warning "No se pudo detectar la versión exacta"
         DISTRO="Debian/Ubuntu"
         VERSION="Desconocida"
+        export IS_DEBIAN=true
     fi
     
     print_success "Sistema operativo compatible detectado: $DISTRO $VERSION"
@@ -92,12 +95,14 @@ install_requirements() {
         print_status "Instalando Docker..."
         
         # Detectar distribución para el repositorio correcto
-        if [ -f /etc/debian_version ]; then
+        if [ "$IS_DEBIAN" = "true" ]; then
             # Debian
+            print_status "Configurando repositorio Docker para Debian..."
             curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
             echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
         else
             # Ubuntu
+            print_status "Configurando repositorio Docker para Ubuntu..."
             curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
             echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
         fi
