@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sistema_encuestas_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - NEXT_TELEMETRY_DISABLED=1
+      # Variables para conectar con el backend
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+    volumes:
+      # Volumen para logs
+      - ./logs:/app/logs
+      # Volumen para uploads
+      - ./public/uploads:/app/public/uploads
+    restart: unless-stopped
+    networks:
+      - encuestas_network
+
+  # Servicio de desarrollo (opcional)
+  frontend-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: sistema_encuestas_frontend_dev
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - NEXT_TELEMETRY_DISABLED=1
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    restart: unless-stopped
+    networks:
+      - encuestas_network
+    profiles:
+      - dev
+
+networks:
+  encuestas_network:
+    driver: bridge
+
+volumes:
+  logs:
+  uploads: 

@@ -1,44 +1,50 @@
-# Dependencies
+# Dependencias
 node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Next.js
-.next/
-out/
+# Archivos de build
+.next
+out
+dist
 
-# Production
-build
+# Archivos de entorno
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Misc
+# Archivos de sistema
 .DS_Store
-*.tgz
-*.tar.gz
+Thumbs.db
 
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Local env files
-.env*.local
-
-# Vercel
-.vercel
-
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
-
-# IDE
+# Archivos de IDE
 .vscode
 .idea
+*.swp
+*.swo
 
-# Git
+# Archivos de Git
 .git
 .gitignore
 
-# Docker
-Dockerfile
-.dockerignore 
+# Archivos de Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Archivos de logs
+*.log
+
+# Archivos temporales
+.tmp
+.temp
+
+# Archivos de coverage
+coverage
+
+# Archivos de cache
+.cache
+.parcel-cache 

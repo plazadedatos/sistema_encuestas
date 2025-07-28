@@ -19,7 +19,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Instalar dependencias
-RUN npm install --only=production && npm cache clean --force
+RUN npm ci --only=production && npm cache clean --force
 
 # =====================================================
 # ETAPA 2: CONSTRUCCIÓN
@@ -36,7 +36,7 @@ WORKDIR /app
 COPY . .
 
 # Instalar todas las dependencias (incluyendo devDependencies para el build)
-RUN npm install
+RUN npm ci
 
 # Variables de entorno para build
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -65,6 +65,10 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
+# Copiar script de inicio
+COPY start.sh ./
+RUN chmod +x start.sh
+
 # Cambiar propietario de los archivos
 RUN chown -R nextjs:nodejs /app
 
@@ -81,4 +85,4 @@ ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Comando para iniciar la aplicación
-CMD ["node", "server.js"] 
+CMD ["./start.sh"] 
