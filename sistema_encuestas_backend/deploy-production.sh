@@ -37,28 +37,107 @@ print_error() {
 # VERIFICACIONES INICIALES
 # =====================================================
 
-check_requirements() {
-    print_status "Verificando requisitos del sistema..."
+check_system() {
+    print_status "Verificando sistema operativo..."
     
-    # Verificar Docker
-    if ! command -v docker &> /dev/null; then
-        print_error "Docker no está instalado. Por favor instala Docker primero."
+    # Verificar que es Ubuntu/Debian
+    if ! command -v apt-get &> /dev/null; then
+        print_error "Este script está diseñado para Ubuntu/Debian. Tu sistema no es compatible."
         exit 1
     fi
     
-    # Verificar Docker Compose
+    # Verificar versión mínima
+    UBUNTU_VERSION=$(lsb_release -rs)
+    if [ "$UBUNTU_VERSION" != "20.04" ] && [ "$UBUNTU_VERSION" != "22.04" ] && [ "$UBUNTU_VERSION" != "18.04" ]; then
+        print_warning "Versión de Ubuntu detectada: $UBUNTU_VERSION"
+        print_warning "Este script fue probado en Ubuntu 18.04, 20.04 y 22.04"
+        read -p "¿Deseas continuar? (y/N): " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            exit 1
+        fi
+    fi
+    
+    print_success "Sistema operativo compatible detectado"
+}
+
+install_requirements() {
+    print_status "Instalando requisitos del sistema..."
+    
+    # Actualizar paquetes del sistema
+    print_status "Actualizando paquetes del sistema..."
+    apt-get update -y
+    
+    # Instalar paquetes básicos necesarios
+    print_status "Instalando paquetes básicos..."
+    apt-get install -y \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        gnupg \
+        lsb-release \
+        software-properties-common \
+        wget \
+        git \
+        unzip \
+        nano \
+        htop \
+        ufw
+    
+    # Instalar Docker
+    if ! command -v docker &> /dev/null; then
+        print_status "Instalando Docker..."
+        
+        # Agregar repositorio oficial de Docker
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+        
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+        
+        apt-get update -y
+        apt-get install -y docker-ce docker-ce-cli containerd.io
+        
+        # Iniciar y habilitar Docker
+        systemctl start docker
+        systemctl enable docker
+        
+        print_success "Docker instalado correctamente"
+    else
+        print_success "Docker ya está instalado"
+    fi
+    
+    # Instalar Docker Compose
     if ! command -v docker-compose &> /dev/null; then
-        print_error "Docker Compose no está instalado. Por favor instala Docker Compose primero."
-        exit 1
+        print_status "Instalando Docker Compose..."
+        
+        # Descargar Docker Compose
+        curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        chmod +x /usr/local/bin/docker-compose
+        
+        # Crear enlace simbólico
+        ln -sf /usr/local/bin/docker-compose /usr/bin/docker-compose
+        
+        print_success "Docker Compose instalado correctamente"
+    else
+        print_success "Docker Compose ya está instalado"
     fi
     
     # Verificar Git
     if ! command -v git &> /dev/null; then
-        print_error "Git no está instalado. Por favor instala Git primero."
+        print_error "Error al instalar Git"
         exit 1
     fi
     
-    print_success "Todos los requisitos están instalados"
+    # Configurar firewall básico
+    print_status "Configurando firewall..."
+    ufw --force enable
+    ufw default deny incoming
+    ufw default allow outgoing
+    ufw allow ssh
+    ufw allow 80
+    ufw allow 443
+    ufw allow 22
+    
+    print_success "Todos los requisitos están instalados y configurados"
 }
 
 check_directories() {
@@ -204,7 +283,14 @@ verify_deployment() {
 main() {
     print_status "Iniciando despliegue completo del Sistema de Encuestas..."
     
-    check_requirements
+    # Verificar que se ejecute como root
+    if [ "$EUID" -ne 0 ]; then
+        print_error "Este script debe ejecutarse como root (sudo)"
+        exit 1
+    fi
+    
+    check_system
+    install_requirements
     check_directories
     setup_nginx
     setup_environment
@@ -223,6 +309,7 @@ main() {
     echo "🔒 Certificados SSL se renuevan automáticamente"
     echo "📧 Email configurado: plazadedatoscom@gmail.com"
     echo "🗄️ Base de datos: PostgreSQL en puerto interno 5432"
+    echo "🛡️ Firewall configurado (puertos 22, 80, 443 abiertos)"
 }
 
 # Ejecutar función principal
