@@ -40,25 +40,28 @@ print_error() {
 check_system() {
     print_status "Verificando sistema operativo..."
     
-    # Verificar que es Ubuntu/Debian
+    # Verificar que es Debian/Ubuntu
     if ! command -v apt-get &> /dev/null; then
-        print_error "Este script está diseñado para Ubuntu/Debian. Tu sistema no es compatible."
+        print_error "Este script está diseñado para Debian/Ubuntu. Tu sistema no es compatible."
         exit 1
     fi
     
-    # Verificar versión mínima
-    UBUNTU_VERSION=$(lsb_release -rs)
-    if [ "$UBUNTU_VERSION" != "20.04" ] && [ "$UBUNTU_VERSION" != "22.04" ] && [ "$UBUNTU_VERSION" != "18.04" ]; then
-        print_warning "Versión de Ubuntu detectada: $UBUNTU_VERSION"
-        print_warning "Este script fue probado en Ubuntu 18.04, 20.04 y 22.04"
-        read -p "¿Deseas continuar? (y/N): " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            exit 1
-        fi
+    # Detectar distribución
+    if [ -f /etc/debian_version ]; then
+        DISTRO="Debian"
+        VERSION=$(cat /etc/debian_version)
+        print_status "Sistema detectado: $DISTRO $VERSION"
+    elif [ -f /etc/lsb-release ]; then
+        DISTRO="Ubuntu"
+        VERSION=$(lsb_release -rs)
+        print_status "Sistema detectado: $DISTRO $VERSION"
+    else
+        print_warning "No se pudo detectar la versión exacta"
+        DISTRO="Debian/Ubuntu"
+        VERSION="Desconocida"
     fi
     
-    print_success "Sistema operativo compatible detectado"
+    print_success "Sistema operativo compatible detectado: $DISTRO $VERSION"
 }
 
 install_requirements() {
@@ -88,10 +91,16 @@ install_requirements() {
     if ! command -v docker &> /dev/null; then
         print_status "Instalando Docker..."
         
-        # Agregar repositorio oficial de Docker
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-        
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+        # Detectar distribución para el repositorio correcto
+        if [ -f /etc/debian_version ]; then
+            # Debian
+            curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+        else
+            # Ubuntu
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+        fi
         
         apt-get update -y
         apt-get install -y docker-ce docker-ce-cli containerd.io
