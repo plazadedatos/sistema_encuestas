@@ -1,0 +1,161 @@
+version: '3.8'
+
+services:
+  # =====================================================
+  # BASE DE DATOS - POSTGRESQL
+  # =====================================================
+  db:
+    image: postgres:15-alpine
+    container_name: encuestas_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sistema_encuestas
+      POSTGRES_USER: sc_admin_user_42
+      POSTGRES_PASSWORD: NuevaClave123!
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    ports:
+      - "127.0.0.1:5432:5432"  # Solo accesible desde localhost
+    networks:
+      - encuestas_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sc_admin_user_42 -d sistema_encuestas"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # =====================================================
+  # BACKEND - FASTAPI
+  # =====================================================
+  backend:
+    build:
+      context: ./sistema_encuestas_backend
+      dockerfile: Dockerfile
+    container_name: encuestas_backend
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=postgresql://sc_admin_user_42:NuevaClave123!@db:5432/sistema_encuestas
+      - SECRET_KEY=clave-secreta-muy-larga-y-segura-para-backend-123456789
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=1440
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - EMAIL_HOST=smtp.gmail.com
+      - EMAIL_PORT=587
+      - EMAIL_HOST_USER=plazadedatoscom@gmail.com
+      - EMAIL_HOST_PASSWORD=Plazadedatos226118*/
+      - DEFAULT_FROM_EMAIL=plazadedatoscom@gmail.com
+      - CORS_ORIGINS=https://encuestas.plazadedatos.com,https://api.encuestas.plazadedatos.com
+      - NOMBRE_SISTEMA=Sistema de Encuestas con Recompensas
+      - VERSION=1.0.0
+      - DEBUG=false
+      - NODE_ENV=production
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    ports:
+      - "127.0.0.1:8000:8000"  # Solo accesible desde localhost
+    networks:
+      - encuestas_net
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # =====================================================
+  # FRONTEND - NEXT.JS
+  # =====================================================
+  frontend:
+    build:
+      context: ./sistema_encuestas_frontend_inicial
+      dockerfile: Dockerfile
+    container_name: encuestas_frontend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - HOSTNAME=0.0.0.0
+      - NEXT_TELEMETRY_DISABLED=1
+      - NEXT_PUBLIC_API_URL=https://api.encuestas.plazadedatos.com
+      - NEXT_PUBLIC_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - NEXT_PUBLIC_APP_NAME=Sistema de Encuestas
+      - NEXT_PUBLIC_APP_VERSION=1.0.0
+    volumes:
+      - ./frontend_logs:/app/logs
+      - ./frontend_uploads:/app/public/uploads
+    ports:
+      - "127.0.0.1:3001:3001"  # Solo accesible desde localhost
+    networks:
+      - encuestas_net
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # =====================================================
+  # NGINX - REVERSE PROXY
+  # =====================================================
+  nginx:
+    image: nginx:alpine
+    container_name: encuestas_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/sites-available:/etc/nginx/sites-available:ro
+      - ./nginx/sites-enabled:/etc/nginx/sites-enabled:ro
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    networks:
+      - encuestas_net
+    depends_on:
+      - frontend
+      - backend
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  # =====================================================
+  # CERTBOT - SSL CERTIFICATES
+  # =====================================================
+  certbot:
+    image: certbot/certbot
+    container_name: encuestas_certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: certonly --webroot --webroot-path=/var/www/certbot --force-renewal --email admin@plazadedatos.com --agree-tos --no-eff-email -d encuestas.plazadedatos.com -d api.encuestas.plazadedatos.com
+
+# =====================================================
+# VOLUMENES
+# =====================================================
+volumes:
+  postgres_data:
+    driver: local
+  uploads:
+    driver: local
+  logs:
+    driver: local
+  frontend_logs:
+    driver: local
+  frontend_uploads:
+    driver: local
+
+# =====================================================
+# REDES
+# =====================================================
+networks:
+  encuestas_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16 
