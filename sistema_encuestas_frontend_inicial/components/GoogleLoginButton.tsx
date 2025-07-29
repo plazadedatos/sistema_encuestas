@@ -34,17 +34,23 @@ export default function GoogleLoginButton() {
     timeoutRef.current = setTimeout(() => {
       setLoading(false);
       setShowSlowMessage(false);
-      setError('La validación con Google está tardando demasiado. Por favor, inténtalo de nuevo.');
+      setError(
+        'La validación con Google está tardando demasiado. Por favor, inténtalo de nuevo.'
+      );
     }, 8000);
 
     try {
       const controller = new AbortController();
       const idTimeout = setTimeout(() => controller.abort(), 8000);
-      const response = await api.post('/auth/google', { 
-        id_token: credentialResponse.credential 
-      }, {
-        signal: controller.signal,
-      });
+      const response = await api.post(
+        '/auth/google',
+        {
+          id_token: credentialResponse.credential,
+        },
+        {
+          signal: controller.signal,
+        }
+      );
       clearTimeout(idTimeout);
       clearTimeout(timeoutRef.current!);
       clearTimeout(slowRef.current!);
@@ -57,9 +63,13 @@ export default function GoogleLoginButton() {
       }
     } catch (error: any) {
       if (error.name === 'AbortError') {
-        setError('La validación con Google está tardando demasiado. Por favor, inténtalo de nuevo.');
+        setError(
+          'La validación con Google está tardando demasiado. Por favor, inténtalo de nuevo.'
+        );
       } else {
-        setError(error instanceof Error ? error.message : 'Error al iniciar sesión');
+        setError(
+          error instanceof Error ? error.message : 'Error al iniciar sesión'
+        );
       }
     } finally {
       setLoading(false);
@@ -111,7 +121,10 @@ export default function GoogleLoginButton() {
             <span>Conectando con Google...</span>
           </div>
           {showSlowMessage && (
-            <div className="mt-2 text-xs text-yellow-600">La validación está tardando más de lo normal, por favor espera o reintenta.</div>
+            <div className="mt-2 text-xs text-yellow-600">
+              La validación está tardando más de lo normal, por favor espera o
+              reintenta.
+            </div>
           )}
         </div>
       )}
@@ -120,7 +133,11 @@ export default function GoogleLoginButton() {
           <p className="text-sm text-red-600 text-center">{error}</p>
           <button
             className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 mx-auto block"
-            onClick={() => { setError(''); setLoading(false); setShowSlowMessage(false); }}
+            onClick={() => {
+              setError('');
+              setLoading(false);
+              setShowSlowMessage(false);
+            }}
           >
             Reintentar
           </button>
@@ -155,4 +172,4 @@ export default function GoogleLoginButton() {
       `}</style>
     </div>
   );
-} 
+}

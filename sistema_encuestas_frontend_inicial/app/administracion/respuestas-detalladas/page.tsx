@@ -1,10 +1,15 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useCallback } from "react";
-import { useAuth } from "@/context/authContext";
-import api from "@/app/services/api";
-import { FaDownload, FaTable } from "react-icons/fa";
-import { exportToPDF, exportToExcel, exportToCSV, exportToJSON } from "@/app/utils/exportUtils";
+import { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '@/context/authContext';
+import api from '@/app/services/api';
+import { FaDownload, FaTable } from 'react-icons/fa';
+import {
+  exportToPDF,
+  exportToExcel,
+  exportToCSV,
+  exportToJSON,
+} from '@/app/utils/exportUtils';
 
 interface Encuesta {
   id: number;
@@ -32,22 +37,24 @@ export default function RespuestasDetalladasPage() {
 
   const cargarEncuestas = async () => {
     try {
-      const response = await api.get("/admin/encuestas-resumen");
+      const response = await api.get('/admin/encuestas-resumen');
       setEncuestas(response.data);
     } catch (error) {
-      console.error("Error al cargar encuestas:", error);
+      console.error('Error al cargar encuestas:', error);
     }
   };
 
   const cargarRespuestas = useCallback(async () => {
     if (!selectedEncuesta) return;
-    
+
     setLoading(true);
     try {
-      const response = await api.get(`/admin/respuestas-detalladas/${selectedEncuesta}`);
+      const response = await api.get(
+        `/admin/respuestas-detalladas/${selectedEncuesta}`
+      );
       setRespuestas(response.data);
     } catch (error) {
-      console.error("Error al cargar respuestas:", error);
+      console.error('Error al cargar respuestas:', error);
       setRespuestas([]);
     } finally {
       setLoading(false);
@@ -66,9 +73,18 @@ export default function RespuestasDetalladasPage() {
 
   const obtenerColumnas = () => {
     if (respuestas.length === 0) return [];
-    
+
     const respuestasKeys = Object.keys(respuestas[0].respuestas || {});
-    return ['participante_id', 'edad', 'sexo', 'localizacion', 'fecha', 'encuesta_id', 'encuesta_nom', ...respuestasKeys];
+    return [
+      'participante_id',
+      'edad',
+      'sexo',
+      'localizacion',
+      'fecha',
+      'encuesta_id',
+      'encuesta_nom',
+      ...respuestasKeys,
+    ];
   };
 
   const obtenerHeadersFormateados = () => {
@@ -81,7 +97,8 @@ export default function RespuestasDetalladasPage() {
       if (col === 'fecha') return 'Fecha';
       if (col === 'encuesta_id') return 'ID Encuesta';
       if (col === 'encuesta_nom') return 'Nombre Encuesta';
-      if (col.startsWith('respuesta_')) return col.replace('respuesta_', 'Pregunta ');
+      if (col.startsWith('respuesta_'))
+        return col.replace('respuesta_', 'Pregunta ');
       return col;
     });
   };
@@ -91,7 +108,7 @@ export default function RespuestasDetalladasPage() {
 
     const columnas = obtenerColumnas();
     const headers = obtenerHeadersFormateados();
-    
+
     const data = respuestas.map(r => {
       const row: (string | number)[] = [];
       columnas.forEach(col => {
@@ -111,32 +128,26 @@ export default function RespuestasDetalladasPage() {
 
     switch (formato) {
       case 'pdf':
-        exportToPDF({
+        exportToPDF(
           filename,
           headers,
           data,
-          title: `Respuestas: ${respuestas[0]?.encuesta_nom || ''}`
-        });
+          `Respuestas: ${respuestas[0]?.encuesta_nom || ''}`
+        );
         break;
       case 'excel':
-        exportToExcel({
-          filename,
-          headers,
-          data,
-          title: 'Respuestas Detalladas'
-        });
+        exportToExcel(filename, headers, data, 'Respuestas Detalladas');
         break;
       case 'csv':
         exportToCSV({
           filename,
-          headers,
-          data
+          data,
         });
         break;
       case 'json':
         exportToJSON({
           filename,
-          data: respuestas
+          data: respuestas,
         });
         break;
     }
@@ -156,7 +167,7 @@ export default function RespuestasDetalladasPage() {
         </label>
         <select
           value={selectedEncuesta || ''}
-          onChange={(e) => setSelectedEncuesta(Number(e.target.value))}
+          onChange={e => setSelectedEncuesta(Number(e.target.value))}
           className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
         >
           <option value="">-- Seleccione una encuesta --</option>
@@ -172,7 +183,8 @@ export default function RespuestasDetalladasPage() {
       {selectedEncuesta && respuestas.length > 0 && (
         <div className="bg-white rounded-lg shadow p-4 mb-6 flex justify-between items-center">
           <div className="text-lg font-medium text-gray-700">
-            Total de respuestas: <span className="text-blue-600 font-bold">{respuestas.length}</span>
+            Total de respuestas:{' '}
+            <span className="text-blue-600 font-bold">{respuestas.length}</span>
           </div>
           <div className="flex gap-3">
             <button
@@ -222,8 +234,8 @@ export default function RespuestasDetalladasPage() {
               <thead className="bg-gray-50">
                 <tr>
                   {obtenerHeadersFormateados().map((header, idx) => (
-                    <th 
-                      key={idx} 
+                    <th
+                      key={idx}
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       {header}
@@ -257,7 +269,10 @@ export default function RespuestasDetalladasPage() {
                     </td>
                     {Object.keys(respuesta.respuestas || {}).map(key => (
                       <td key={key} className="px-6 py-4 text-sm text-gray-700">
-                        <div className="max-w-xs" title={respuesta.respuestas[key]}>
+                        <div
+                          className="max-w-xs"
+                          title={respuesta.respuestas[key]}
+                        >
                           {respuesta.respuestas[key] || '-'}
                         </div>
                       </td>
@@ -272,20 +287,25 @@ export default function RespuestasDetalladasPage() {
         <div className="bg-white rounded-lg shadow p-10">
           <div className="text-center text-gray-500">
             <FaTable className="text-6xl mx-auto mb-4 text-gray-300" />
-            <p className="text-lg">No hay respuestas registradas para esta encuesta</p>
+            <p className="text-lg">
+              No hay respuestas registradas para esta encuesta
+            </p>
           </div>
         </div>
       ) : (
         <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-10">
           <div className="text-center text-blue-600">
             <FaTable className="text-6xl mx-auto mb-4 text-blue-400" />
-            <p className="text-lg font-medium">Seleccione una encuesta para ver las respuestas detalladas</p>
+            <p className="text-lg font-medium">
+              Seleccione una encuesta para ver las respuestas detalladas
+            </p>
             <p className="text-sm mt-2 text-blue-500">
-              La tabla mostrará todas las respuestas de los usuarios que completaron la encuesta seleccionada
+              La tabla mostrará todas las respuestas de los usuarios que
+              completaron la encuesta seleccionada
             </p>
           </div>
         </div>
       )}
     </div>
   );
-} 
+}

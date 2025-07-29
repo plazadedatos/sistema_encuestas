@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import api from "@/app/services/api";
-import Link from "next/link";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import api from '@/app/services/api';
+import Link from 'next/link';
 import {
   FaUser,
   FaEnvelope,
@@ -11,9 +11,9 @@ import {
   FaIdCard,
   FaPhone,
   FaSpinner,
-} from "react-icons/fa";
-import { toast } from "react-toastify";
-import GoogleLoginButton from "@/components/GoogleLoginButton";
+} from 'react-icons/fa';
+import { toast } from 'react-toastify';
+import GoogleLoginButton from '@/components/GoogleLoginButton';
 
 export default function RegistroPage() {
   const router = useRouter();
@@ -21,12 +21,12 @@ export default function RegistroPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [form, setForm] = useState({
-    nombre: "",
-    apellido: "",
-    documento_numero: "",
-    celular_numero: "",
-    email: "",
-    password: "",
+    nombre: '',
+    apellido: '',
+    documento_numero: '',
+    celular_numero: '',
+    email: '',
+    password: '',
   });
   const [termsAccepted, setTermsAccepted] = useState(false);
 
@@ -36,16 +36,28 @@ export default function RegistroPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("🔐 Iniciando proceso de registro...");
-    console.log("📋 Estado del formulario:", form);
+    console.log('🔐 Iniciando proceso de registro...');
+    console.log('📋 Estado del formulario:', form);
 
     // Validaciones
-    console.log("🔍 Verificando validaciones...");
-    console.log("  - Nombre:", form.nombre, "✅" + (form.nombre ? "" : "❌"));
-    console.log("  - Apellido:", form.apellido, "✅" + (form.apellido ? "" : "❌"));
-    console.log("  - Email:", form.email, "✅" + (form.email ? "" : "❌"));
-    console.log("  - Password:", form.password, "✅" + (form.password ? "" : "❌"));
-    console.log("  - Documento:", form.documento_numero, "✅" + (form.documento_numero ? "" : "❌"));
+    console.log('🔍 Verificando validaciones...');
+    console.log('  - Nombre:', form.nombre, '✅' + (form.nombre ? '' : '❌'));
+    console.log(
+      '  - Apellido:',
+      form.apellido,
+      '✅' + (form.apellido ? '' : '❌')
+    );
+    console.log('  - Email:', form.email, '✅' + (form.email ? '' : '❌'));
+    console.log(
+      '  - Password:',
+      form.password,
+      '✅' + (form.password ? '' : '❌')
+    );
+    console.log(
+      '  - Documento:',
+      form.documento_numero,
+      '✅' + (form.documento_numero ? '' : '❌')
+    );
 
     if (
       !form.nombre ||
@@ -54,55 +66,64 @@ export default function RegistroPage() {
       !form.password ||
       !form.documento_numero
     ) {
-      console.log("❌ Validación falló - campos obligatorios vacíos");
-      toast.error("Por favor completa todos los campos obligatorios");
+      console.log('❌ Validación falló - campos obligatorios vacíos');
+      toast.error('Por favor completa todos los campos obligatorios');
       return;
     }
 
-    console.log("✅ Validación de campos obligatorios pasó");
+    console.log('✅ Validación de campos obligatorios pasó');
 
     if (form.password.length < 6) {
-      console.log("❌ Validación falló - password muy corta");
-      toast.error("🔒 La contraseña debe tener al menos 6 caracteres. Por favor, usa una contraseña más segura.");
+      console.log('❌ Validación falló - password muy corta');
+      toast.error(
+        '🔒 La contraseña debe tener al menos 6 caracteres. Por favor, usa una contraseña más segura.'
+      );
       return;
     }
 
-    console.log("✅ Validación de password pasó");
+    console.log('✅ Validación de password pasó');
 
     // Validar términos y condiciones
-    console.log("🔍 Verificando términos y condiciones...");
-    console.log("  - Terms accepted:", termsAccepted, "✅" + (termsAccepted ? "" : "❌"));
-    
+    console.log('🔍 Verificando términos y condiciones...');
+    console.log(
+      '  - Terms accepted:',
+      termsAccepted,
+      '✅' + (termsAccepted ? '' : '❌')
+    );
+
     if (!termsAccepted) {
-      console.log("❌ Validación falló - términos no aceptados");
-      toast.error("Debes aceptar los términos y condiciones");
+      console.log('❌ Validación falló - términos no aceptados');
+      toast.error('Debes aceptar los términos y condiciones');
       return;
     }
 
-    console.log("✅ Validación de términos pasó");
+    console.log('✅ Validación de términos pasó');
 
     setIsLoading(true);
-    console.log("📤 Enviando datos de registro:", form);
-    console.log("🌐 URL de la API:", `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/auth/registro`);
+    console.log('📤 Enviando datos de registro:', form);
+    console.log(
+      '🌐 URL de la API:',
+      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/auth/registro`
+    );
 
     try {
-      console.log("🚀 Ejecutando api.post...");
-      const res = await api.post("/auth/registro", form);
+      console.log('🚀 Ejecutando api.post...');
+      const res = await api.post('/auth/registro', form);
 
-      console.log("✅ Respuesta del registro:", res);
+      console.log('✅ Respuesta del registro:', res);
 
       if (res.status === 200 || res.status === 201) {
         toast.success(
-          "¡Registro exitoso! Revisa tu correo para verificar tu cuenta.",
+          '¡Registro exitoso! Revisa tu correo para verificar tu cuenta.'
         );
         // Pequeño delay para que el usuario vea el mensaje
         setTimeout(() => {
-          router.push("/login");
+          router.push('/login');
         }, 1500);
       }
     } catch (err: any) {
-      console.error("❌ Error en registro:", err);
-      console.error("❌ Detalles del error:", {
+      console.error('❌ Error en registro:', err);
+      console.error('❌ Detalles del error:', {
         message: err.message,
         status: err.response?.status,
         data: err.response?.data,
@@ -113,10 +134,10 @@ export default function RegistroPage() {
 
       const errorMessage =
         err?.response?.data?.detail ||
-        "Error en el registro. Intenta nuevamente.";
+        'Error en el registro. Intenta nuevamente.';
       toast.error(errorMessage);
     } finally {
-      console.log("🏁 Finalizando handleSubmit");
+      console.log('🏁 Finalizando handleSubmit');
       setIsLoading(false);
     }
   };
@@ -370,14 +391,14 @@ export default function RegistroPage() {
                   <input
                     id="password"
                     name="password"
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     required
                     value={form.password}
                     onChange={handleChange}
                     className={`appearance-none relative block w-full pl-10 pr-10 py-3 border placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:z-10 sm:text-sm transition-colors ${
                       form.password.length > 0 && form.password.length < 6
-                        ? "border-red-300 focus:ring-red-500 focus:border-red-500"
-                        : "border-gray-300 focus:ring-brand-vibrant focus:border-brand-vibrant"
+                        ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
+                        : 'border-gray-300 focus:ring-brand-vibrant focus:border-brand-vibrant'
                     }`}
                     placeholder="Mínimo 6 caracteres"
                     disabled={isLoading}
@@ -436,7 +457,7 @@ export default function RegistroPage() {
                 name="terms"
                 type="checkbox"
                 checked={termsAccepted}
-                onChange={(e) => setTermsAccepted(e.target.checked)}
+                onChange={e => setTermsAccepted(e.target.checked)}
                 className="h-4 w-4 text-brand-vibrant focus:ring-brand-vibrant border-gray-300 rounded"
               />
               <label
@@ -460,7 +481,7 @@ export default function RegistroPage() {
                     Creando cuenta...
                   </>
                 ) : (
-                  "Crear cuenta"
+                  'Crear cuenta'
                 )}
               </button>
             </div>
@@ -485,7 +506,7 @@ export default function RegistroPage() {
             {/* Link de login */}
             <div className="text-center">
               <span className="text-sm text-gray-600">
-                ¿Ya tienes una cuenta?{" "}
+                ¿Ya tienes una cuenta?{' '}
                 <Link
                   href="/login"
                   className="font-medium text-brand-vibrant hover:text-brand-medium"

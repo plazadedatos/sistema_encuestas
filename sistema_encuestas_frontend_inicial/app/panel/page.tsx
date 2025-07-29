@@ -1,31 +1,40 @@
-"use client";
+'use client';
 
-import { useAuth } from "@/context/authContext";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { FaClipboardList, FaGift, FaHistory, FaUser, FaChartLine, FaTrophy, FaClock, FaLock } from "react-icons/fa";
-import Link from "next/link";
-import WelcomeScreen from "@/components/WelcomeScreen";
+import { useAuth } from '@/context/authContext';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import {
+  FaClipboardList,
+  FaGift,
+  FaHistory,
+  FaUser,
+  FaChartLine,
+  FaTrophy,
+  FaClock,
+  FaLock,
+} from 'react-icons/fa';
+import Link from 'next/link';
+import WelcomeScreen from '@/components/WelcomeScreen';
 
 export default function PanelPage() {
   const { user, loading, showWelcome, setShowWelcome } = useAuth();
   const router = useRouter();
-  const [greeting, setGreeting] = useState("");
+  const [greeting, setGreeting] = useState('');
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push("/login");
+      router.push('/login');
     }
   }, [user, loading, router]);
 
   useEffect(() => {
     const hour = new Date().getHours();
     if (hour < 12) {
-      setGreeting("Buenos días");
+      setGreeting('Buenos días');
     } else if (hour < 19) {
-      setGreeting("Buenas tardes");
+      setGreeting('Buenas tardes');
     } else {
-      setGreeting("Buenas noches");
+      setGreeting('Buenas noches');
     }
   }, []);
 
@@ -48,69 +57,69 @@ export default function PanelPage() {
 
   const menuItems = [
     {
-      title: "Encuestas Disponibles",
-      description: "Responde encuestas y gana puntos",
+      title: 'Encuestas Disponibles',
+      description: 'Responde encuestas y gana puntos',
       icon: <FaClipboardList className="text-3xl" />,
-      href: "/panel/encuestas",
-      color: "bg-gradient-to-br from-blue-500 to-blue-700",
-      iconBg: "bg-blue-100",
-      iconColor: "text-blue-600",
-      hoverEffect: "hover:from-blue-600 hover:to-blue-800"
+      href: '/panel/encuestas',
+      color: 'bg-gradient-to-br from-blue-500 to-blue-700',
+      iconBg: 'bg-blue-100',
+      iconColor: 'text-blue-600',
+      hoverEffect: 'hover:from-blue-600 hover:to-blue-800',
     },
     {
-      title: "Mis Recompensas",
-      description: "Canjea tus puntos por premios",
+      title: 'Mis Recompensas',
+      description: 'Canjea tus puntos por premios',
       icon: <FaGift className="text-3xl" />,
-      href: "/panel/recompensas",
-      color: "bg-gradient-to-br from-purple-500 to-purple-700",
-      iconBg: "bg-purple-100",
-      iconColor: "text-purple-600",
-      hoverEffect: "hover:from-purple-600 hover:to-purple-800"
+      href: '/panel/recompensas',
+      color: 'bg-gradient-to-br from-purple-500 to-purple-700',
+      iconBg: 'bg-purple-100',
+      iconColor: 'text-purple-600',
+      hoverEffect: 'hover:from-purple-600 hover:to-purple-800',
     },
     {
-      title: "Mi Historial",
-      description: "Revisa tus participaciones",
+      title: 'Mi Historial',
+      description: 'Revisa tus participaciones',
       icon: <FaHistory className="text-3xl" />,
-      href: "/panel/historial",
-      color: "bg-gradient-to-br from-green-500 to-green-700",
-      iconBg: "bg-green-100",
-      iconColor: "text-green-600",
-      hoverEffect: "hover:from-green-600 hover:to-green-800"
+      href: '/panel/historial',
+      color: 'bg-gradient-to-br from-green-500 to-green-700',
+      iconBg: 'bg-green-100',
+      iconColor: 'text-green-600',
+      hoverEffect: 'hover:from-green-600 hover:to-green-800',
     },
     {
-      title: "Mis Datos",
-      description: "Gestiona tu perfil",
+      title: 'Mis Datos',
+      description: 'Gestiona tu perfil',
       icon: <FaUser className="text-3xl" />,
-      href: "/panel/misdatos",
-      color: "bg-gradient-to-br from-orange-500 to-orange-700",
-      iconBg: "bg-orange-100",
-      iconColor: "text-orange-600",
-      hoverEffect: "hover:from-orange-600 hover:to-orange-800"
-    }
+      href: '/panel/misdatos',
+      color: 'bg-gradient-to-br from-orange-500 to-orange-700',
+      iconBg: 'bg-orange-100',
+      iconColor: 'text-orange-600',
+      hoverEffect: 'hover:from-orange-600 hover:to-orange-800',
+    },
   ];
 
   const statsCards = [
     {
-      title: "Puntos Totales",
+      title: 'Puntos Totales',
       value: user?.puntos_totales || 0,
       icon: <FaChartLine />,
-      color: "text-blue-600",
-      bgColor: "bg-blue-100"
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-100',
     },
     {
-      title: "Puntos Disponibles",
+      title: 'Puntos Disponibles',
       value: user?.puntos_disponibles || 0,
       icon: <FaTrophy />,
-      color: "text-green-600",
-      bgColor: "bg-green-100"
+      color: 'text-green-600',
+      bgColor: 'bg-green-100',
     },
     {
-      title: "Puntos Canjeados",
+      title: 'Puntos Canjeados',
       value: user?.puntos_canjeados || 0,
       icon: <FaClock />,
-      color: "text-purple-600",
-      bgColor: "bg-purple-100"
-    }
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-100',
+    },
   ];
 
   const isAdmin = user?.rol_id === 1 || user?.rol_id === 2;
@@ -132,7 +141,9 @@ export default function PanelPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Estadísticas */}
         <div className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Tu Resumen</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Tu Resumen
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {statsCards.map((stat, index) => (
               <div
@@ -147,7 +158,9 @@ export default function PanelPage() {
                     </p>
                   </div>
                   <div className={`${stat.bgColor} p-4 rounded-lg`}>
-                    <span className={`${stat.color} text-2xl`}>{stat.icon}</span>
+                    <span className={`${stat.color} text-2xl`}>
+                      {stat.icon}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -157,7 +170,9 @@ export default function PanelPage() {
 
         {/* Menu principal */}
         <div className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Acciones Rápidas</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Acciones Rápidas
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {menuItems.map((item, index) => (
               <Link
@@ -166,9 +181,7 @@ export default function PanelPage() {
                 className={`group relative overflow-hidden rounded-xl shadow-lg ${item.color} p-6 text-white transform transition-all duration-300 hover:scale-105 ${item.hoverEffect}`}
               >
                 <div className="relative z-10">
-                  <div className="mb-4">
-                    {item.icon}
-                  </div>
+                  <div className="mb-4">{item.icon}</div>
                   <h3 className="text-xl font-bold mb-2">{item.title}</h3>
                   <p className="text-white/90 text-sm">{item.description}</p>
                 </div>
@@ -186,8 +199,12 @@ export default function PanelPage() {
                 <FaLock className="text-2xl text-indigo-600" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-800">Área de Administración</h2>
-                <p className="text-gray-600">Accede a las estadísticas y gestión del sistema</p>
+                <h2 className="text-2xl font-bold text-gray-800">
+                  Área de Administración
+                </h2>
+                <p className="text-gray-600">
+                  Accede a las estadísticas y gestión del sistema
+                </p>
               </div>
             </div>
             <Link
@@ -203,7 +220,8 @@ export default function PanelPage() {
         {/* Mensaje motivacional */}
         <div className="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-100">
           <p className="text-center text-gray-700 italic">
-          &quot;Tu opinión es valiosa. Cada encuesta que completas nos ayuda a mejorar y te acerca a increíbles recompensas.&quot;
+            &quot;Tu opinión es valiosa. Cada encuesta que completas nos ayuda a
+            mejorar y te acerca a increíbles recompensas.&quot;
           </p>
         </div>
       </div>

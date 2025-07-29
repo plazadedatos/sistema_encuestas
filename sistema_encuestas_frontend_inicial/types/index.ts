@@ -88,4 +88,4 @@ export interface ErrorResponse {
 
 export type EstadoCanje = 'pendiente' | 'aprobado' | 'rechazado' | 'entregado';
 export type EstadoEncuesta = 'borrador' | 'activa' | 'finalizada';
-export type EstadoParticipacion = 'completada' | 'pendiente'; 
+export type EstadoParticipacion = 'completada' | 'pendiente';

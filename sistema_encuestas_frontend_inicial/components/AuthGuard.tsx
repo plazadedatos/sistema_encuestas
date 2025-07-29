@@ -1,7 +1,7 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "../context/authContext";
+'use client';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '../context/authContext';
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading, token } = useAuth();
@@ -12,15 +12,17 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     const checkAuth = () => {
       // Si no está cargando y no está autenticado, redirigir a login
       if (!loading && !isAuthenticated) {
-        console.log("🔒 AuthGuard: Usuario no autenticado, redirigiendo a login");
-        router.push("/login");
+        console.log(
+          '🔒 AuthGuard: Usuario no autenticado, redirigiendo a login'
+        );
+        router.push('/login');
         return;
       }
 
       // Si no hay token, redirigir a login
       if (!loading && !token) {
-        console.log("🔒 AuthGuard: No hay token, redirigiendo a login");
-        router.push("/login");
+        console.log('🔒 AuthGuard: No hay token, redirigiendo a login');
+        router.push('/login');
         return;
       }
 

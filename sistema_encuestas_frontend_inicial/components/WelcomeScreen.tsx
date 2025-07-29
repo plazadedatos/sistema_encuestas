@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -14,7 +14,7 @@ export default function WelcomeScreen({ onClose }: WelcomeScreenProps) {
   const [showConfetti, setShowConfetti] = useState(true);
   const [windowDimensions, setWindowDimensions] = useState({
     width: 0,
-    height: 0
+    height: 0,
   });
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function WelcomeScreen({ onClose }: WelcomeScreenProps) {
     const handleResize = () => {
       setWindowDimensions({
         width: window.innerWidth,
-        height: window.innerHeight
+        height: window.innerHeight,
       });
     };
 
@@ -70,12 +70,12 @@ export default function WelcomeScreen({ onClose }: WelcomeScreenProps) {
           animate={{ scale: 1, rotate: 0 }}
           exit={{ scale: 0, rotate: 180 }}
           transition={{
-            type: "spring",
+            type: 'spring',
             stiffness: 260,
-            damping: 20
+            damping: 20,
           }}
           className="bg-white rounded-3xl p-10 shadow-2xl max-w-md mx-auto text-center"
-          onClick={(e) => e.stopPropagation()}
+          onClick={e => e.stopPropagation()}
         >
           {/* Avatar animado */}
           <motion.div
@@ -119,7 +119,7 @@ export default function WelcomeScreen({ onClose }: WelcomeScreenProps) {
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ delay: 0.6, type: "spring" }}
+                transition={{ delay: 0.6, type: 'spring' }}
                 className="text-2xl font-bold text-blue-600"
               >
                 {user?.puntos_disponibles || 0}
@@ -131,7 +131,7 @@ export default function WelcomeScreen({ onClose }: WelcomeScreenProps) {
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ delay: 0.7, type: "spring" }}
+                transition={{ delay: 0.7, type: 'spring' }}
                 className="text-2xl font-bold text-purple-600"
               >
                 {user?.puntos_totales || 0}
@@ -156,4 +156,4 @@ export default function WelcomeScreen({ onClose }: WelcomeScreenProps) {
       </motion.div>
     </AnimatePresence>
   );
-} 
+}

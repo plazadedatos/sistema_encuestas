@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useAuth } from "@/context/authContext";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import api from "@/app/services/api";
+import { useEffect, useState } from 'react';
+import { useAuth } from '@/context/authContext';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import api from '@/app/services/api';
 
 interface ParticipacionItem {
   id_participacion: number;
@@ -22,7 +22,7 @@ export default function HistorialPage() {
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      router.push("/login");
+      router.push('/login');
     }
   }, [loading, isAuthenticated, router]);
 
@@ -35,7 +35,7 @@ export default function HistorialPage() {
         );
         setHistorial(res.data);
       } catch (error) {
-        console.error("Error cargando historial", error);
+        console.error('Error cargando historial', error);
       }
     };
 
@@ -48,8 +48,10 @@ export default function HistorialPage() {
 
       {historial.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">Aún no has respondido ninguna encuesta.</p>
-          <Link 
+          <p className="text-gray-500 text-lg">
+            Aún no has respondido ninguna encuesta.
+          </p>
+          <Link
             href="/panel/encuestas"
             className="mt-4 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
           >
@@ -58,7 +60,7 @@ export default function HistorialPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {historial.map((item) => (
+          {historial.map(item => (
             <div
               key={item.id_participacion}
               className="bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition-shadow"
@@ -69,12 +71,22 @@ export default function HistorialPage() {
                     {item.titulo_encuesta}
                   </h2>
                   <div className="space-y-1 text-sm text-gray-600">
-                    <p>📅 Respondida el {new Date(item.fecha_participacion).toLocaleDateString()}</p>
-                    <p>⭐ Puntaje obtenido: <span className="font-semibold text-green-600">{item.puntaje_obtenido} puntos</span></p>
-                    <p>⏱️ Tiempo de respuesta: {Math.round(item.tiempo_respuesta_segundos / 60)} minutos</p>
+                    <p>
+                      📅 Respondida el{' '}
+                      {new Date(item.fecha_participacion).toLocaleDateString()}
+                    </p>
+                    <p>
+                      ⭐ Puntaje obtenido:{' '}
+                      <span className="font-semibold text-green-600">
+                        {item.puntaje_obtenido} puntos
+                      </span>
+                    </p>
+                    <p>
+                      ⏱️ Tiempo de respuesta:{' '}
+                      {Math.round(item.tiempo_respuesta_segundos / 60)} minutos
+                    </p>
                   </div>
                 </div>
-
               </div>
             </div>
           ))}

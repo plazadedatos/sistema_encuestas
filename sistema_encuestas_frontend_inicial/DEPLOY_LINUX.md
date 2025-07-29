@@ -3,6 +3,7 @@
 ## 📋 Requisitos Previos
 
 ### Software Necesario
+
 - **Docker** (versión 20.10 o superior)
 - **Docker Compose** (versión 2.0 o superior)
 - **Git** (para clonar el repositorio)
@@ -54,6 +55,7 @@ nano .env
 ```
 
 **Variables importantes a configurar:**
+
 ```env
 # Configuración del Sistema de Encuestas Frontend
 NODE_ENV=production
@@ -175,6 +177,7 @@ docker-compose logs --tail=100
 ### Configuraciones Recomendadas
 
 1. **Firewall**: Configurar UFW para permitir solo puertos necesarios
+
 ```bash
 sudo ufw allow 22    # SSH
 sudo ufw allow 80    # HTTP
@@ -183,12 +186,14 @@ sudo ufw enable
 ```
 
 2. **SSL/TLS**: Usar Let's Encrypt para certificados gratuitos
+
 ```bash
 sudo apt install certbot python3-certbot-nginx
 sudo certbot --nginx -d tu-dominio.com
 ```
 
 3. **Actualizaciones**: Mantener el sistema actualizado
+
 ```bash
 sudo apt update && sudo apt upgrade -y
 ```
@@ -198,6 +203,7 @@ sudo apt update && sudo apt upgrade -y
 ### Problemas Comunes
 
 #### 1. Error de Permisos
+
 ```bash
 # Solución: Cambiar permisos de directorios
 sudo chown -R $USER:$USER .
@@ -205,6 +211,7 @@ chmod +x *.sh
 ```
 
 #### 2. Puerto en Uso
+
 ```bash
 # Verificar qué está usando el puerto
 sudo netstat -tulpn | grep :3000
@@ -215,6 +222,7 @@ ports:
 ```
 
 #### 3. Error de Memoria
+
 ```bash
 # Aumentar memoria disponible para Docker
 # Editar /etc/docker/daemon.json
@@ -224,6 +232,7 @@ ports:
 ```
 
 #### 4. Error de Build
+
 ```bash
 # Limpiar cache de Docker
 docker system prune -a
@@ -272,4 +281,4 @@ git pull
 
 ---
 
-**¡Tu Sistema de Encuestas Frontend está listo para usar!** 🎉 
+**¡Tu Sistema de Encuestas Frontend está listo para usar!** 🎉

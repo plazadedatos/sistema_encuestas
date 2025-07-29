@@ -1,23 +1,39 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useAuth } from "@/context/authContext";
-import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/context/authContext';
+import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 import {
-  BarChart, Bar, PieChart, Pie, LineChart, Line, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
-} from "recharts";
-import { 
-  FaUsers, FaPoll, FaChartLine, FaClock, FaDownload, 
-  FaFilter, FaCalendar 
-} from "react-icons/fa";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
-import api from "@/app/services/api";
-import { toast } from "react-toastify";
-import { useAdminAuth } from "../../../hooks/useAdminAuth";
-import autoTable from "jspdf-autotable"
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  LineChart,
+  Line,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
+import {
+  FaUsers,
+  FaPoll,
+  FaChartLine,
+  FaClock,
+  FaDownload,
+  FaFilter,
+  FaCalendar,
+} from 'react-icons/fa';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import api from '@/app/services/api';
+import { toast } from 'react-toastify';
+import { useAdminAuth } from '../../../hooks/useAdminAuth';
+import autoTable from 'jspdf-autotable';
 // Tipos de datos
 interface DashboardStats {
   totalRespuestas: number;
@@ -53,82 +69,95 @@ interface ParticipacionDetalle {
 }
 
 // Colores para los gráficos
-const COLORS = ['#3B82F6', '#8B5CF6', '#EC4899', '#10B981', '#F59E0B', '#EF4444'];
+const COLORS = [
+  '#3B82F6',
+  '#8B5CF6',
+  '#EC4899',
+  '#10B981',
+  '#F59E0B',
+  '#EF4444',
+];
 
 export default function DashboardPage() {
   const { user, token, loading: authLoading } = useAdminAuth();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [chartData, setChartData] = useState<ChartData | null>(null);
-  const [participaciones, setParticipaciones] = useState<ParticipacionDetalle[]>([]);
-  const [filtroFecha, setFiltroFecha] = useState("mes");
-  const [selectedParticipacion, setSelectedParticipacion] = useState<ParticipacionDetalle | null>(null);
+  const [participaciones, setParticipaciones] = useState<
+    ParticipacionDetalle[]
+  >([]);
+  const [filtroFecha, setFiltroFecha] = useState('mes');
+  const [selectedParticipacion, setSelectedParticipacion] =
+    useState<ParticipacionDetalle | null>(null);
 
   useEffect(() => {
     if (!authLoading && user && token) {
-      console.log("✅ Autenticación verificada, cargando datos del dashboard...");
+      console.log(
+        '✅ Autenticación verificada, cargando datos del dashboard...'
+      );
       cargarDatos();
     }
   }, [authLoading, user, token]);
 
   const cargarDatos = async () => {
-    console.log("📊 Iniciando carga de datos del dashboard...");
+    console.log('📊 Iniciando carga de datos del dashboard...');
     setLoading(true);
     try {
-      console.log("🚀 Realizando peticiones paralelas al backend...");
-      
+      console.log('🚀 Realizando peticiones paralelas al backend...');
+
       // Cargar datos reales desde el backend
       const [statsRes, chartsRes, participacionesRes] = await Promise.all([
-        api.get("/dashboard/stats").catch(err => {
-          console.error("❌ Error en /stats:", err);
+        api.get('/dashboard/stats').catch(err => {
+          console.error('❌ Error en /stats:', err);
           throw err;
         }),
-        api.get("/dashboard/charts").catch(err => {
-          console.error("❌ Error en /charts:", err);
+        api.get('/dashboard/charts').catch(err => {
+          console.error('❌ Error en /charts:', err);
           throw err;
         }),
-        api.get("/dashboard/participaciones").catch(err => {
-          console.error("❌ Error en /participaciones:", err);
+        api.get('/dashboard/participaciones').catch(err => {
+          console.error('❌ Error en /participaciones:', err);
           throw err;
-        })
+        }),
       ]);
-      
-      console.log("✅ Datos recibidos correctamente");
+
+      console.log('✅ Datos recibidos correctamente');
       setStats(statsRes.data);
       setChartData(chartsRes.data);
       setParticipaciones(participacionesRes.data);
-
     } catch (error: any) {
-      console.error("❌ Error detallado al cargar datos:", {
+      console.error('❌ Error detallado al cargar datos:', {
         message: error.message,
         status: error.response?.status,
         statusText: error.response?.statusText,
-        data: error.response?.data
+        data: error.response?.data,
       });
-      
+
       // Manejar errores específicos
       if (error.response?.status === 401) {
-        toast.error("Sesión expirada. Redirigiendo al login...");
+        toast.error('Sesión expirada. Redirigiendo al login...');
       } else if (error.response?.status === 403) {
-        toast.error("No tienes permisos para acceder a esta información.");
+        toast.error('No tienes permisos para acceder a esta información.');
       } else if (error.code === 'ERR_NETWORK') {
-        toast.error("Error de conexión. Verifica que el servidor esté ejecutándose.");
+        toast.error(
+          'Error de conexión. Verifica que el servidor esté ejecutándose.'
+        );
       } else {
-        toast.error("Error al cargar los datos del dashboard");
+        toast.error('Error al cargar los datos del dashboard');
       }
-      
+
       // Datos de respaldo en caso de error
       setStats({
         totalRespuestas: 0,
         usuariosActivos: 0,
         encuestasMasRespondidas: [],
-        tiempoPromedioRespuesta: 0
+        tiempoPromedioRespuesta: 0,
       });
 
       setChartData({
         respuestasPorEncuesta: [],
         distribucionDemografica: [],
-        respuestasPorDia: []
+        respuestasPorDia: [],
       });
 
       setParticipaciones([]);
@@ -139,57 +168,70 @@ export default function DashboardPage() {
 
   const exportarPDF = async () => {
     try {
-      console.log("📄 Exportando dashboard a PDF...");
+      console.log('📄 Exportando dashboard a PDF...');
       // Obtener datos actualizados para el PDF
-      const response = await api.get("/dashboard/export-data");
-      
-      const { stats: pdfStats, participaciones: pdfParticipaciones } = response.data;
-      
+      const response = await api.get('/dashboard/export-data');
+
+      const { stats: pdfStats, participaciones: pdfParticipaciones } =
+        response.data;
+
       const doc = new jsPDF();
-      
+
       // Título
       doc.setFontSize(20);
       doc.setTextColor(33, 150, 243);
-      doc.text("Dashboard de Administración", 20, 20);
-      
+      doc.text('Dashboard de Administración', 20, 20);
+
       // Fecha
       doc.setFontSize(10);
       doc.setTextColor(100);
-      doc.text(`Generado el: ${new Date().toLocaleDateString('es-ES')}`, 20, 30);
-      
+      doc.text(
+        `Generado el: ${new Date().toLocaleDateString('es-ES')}`,
+        20,
+        30
+      );
+
       // Estadísticas principales
       doc.setFontSize(14);
       doc.setTextColor(0);
-      doc.text("Resumen de Estadísticas", 20, 45);
-      
+      doc.text('Resumen de Estadísticas', 20, 45);
+
       doc.setFontSize(12);
-      doc.text(`Total de Respuestas: ${pdfStats?.totalRespuestas || 0}`, 30, 55);
+      doc.text(
+        `Total de Respuestas: ${pdfStats?.totalRespuestas || 0}`,
+        30,
+        55
+      );
       doc.text(`Usuarios Activos: ${pdfStats?.usuariosActivos || 0}`, 30, 65);
-      doc.text(`Tiempo Promedio de Respuesta: ${pdfStats?.tiempoPromedioRespuesta || 0} minutos`, 30, 75);
-      
+      doc.text(
+        `Tiempo Promedio de Respuesta: ${pdfStats?.tiempoPromedioRespuesta || 0} minutos`,
+        30,
+        75
+      );
+
       // Tabla de participaciones
       const tableData = pdfParticipaciones.map((p: any) => [
         p.usuario,
         p.encuesta,
         p.fecha,
-        `${p.duracion} min`
+        `${p.duracion} min`,
       ]);
-      
+
       autoTable(doc, {
         startY: 90,
         head: [['Usuario', 'Encuesta', 'Fecha', 'Duración']],
         body: tableData,
         theme: 'grid',
-        headStyles: { fillColor: [59, 130, 246] }
+        headStyles: { fillColor: [59, 130, 246] },
       });
-      
+
       // Guardar PDF
       doc.save(`dashboard_${new Date().toISOString().split('T')[0]}.pdf`);
-      toast.success("PDF exportado exitosamente");
-      console.log("✅ PDF exportado correctamente");
+      toast.success('PDF exportado exitosamente');
+      console.log('✅ PDF exportado correctamente');
     } catch (error) {
-      console.error("❌ Error al exportar PDF:", error);
-      toast.error("Error al exportar el PDF");
+      console.error('❌ Error al exportar PDF:', error);
+      toast.error('Error al exportar el PDF');
     }
   };
 
@@ -200,7 +242,7 @@ export default function DashboardPage() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">
-            {authLoading ? "Verificando permisos..." : "Cargando dashboard..."}
+            {authLoading ? 'Verificando permisos...' : 'Cargando dashboard...'}
           </p>
         </div>
       </div>
@@ -217,8 +259,12 @@ export default function DashboardPage() {
       >
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">Dashboard Administrativo</h1>
-            <p className="text-gray-600 mt-1">Estadísticas y análisis del sistema</p>
+            <h1 className="text-3xl font-bold text-gray-800">
+              Dashboard Administrativo
+            </h1>
+            <p className="text-gray-600 mt-1">
+              Estadísticas y análisis del sistema
+            </p>
           </div>
           <button
             onClick={exportarPDF}
@@ -243,7 +289,9 @@ export default function DashboardPage() {
             </div>
             <span className="text-sm text-gray-500">Total</span>
           </div>
-          <h3 className="text-2xl font-bold text-gray-800">{stats?.totalRespuestas || 0}</h3>
+          <h3 className="text-2xl font-bold text-gray-800">
+            {stats?.totalRespuestas || 0}
+          </h3>
           <p className="text-sm text-gray-600 mt-1">Respuestas totales</p>
         </motion.div>
 
@@ -259,7 +307,9 @@ export default function DashboardPage() {
             </div>
             <span className="text-sm text-gray-500">Activos</span>
           </div>
-          <h3 className="text-2xl font-bold text-gray-800">{stats?.usuariosActivos || 0}</h3>
+          <h3 className="text-2xl font-bold text-gray-800">
+            {stats?.usuariosActivos || 0}
+          </h3>
           <p className="text-sm text-gray-600 mt-1">Usuarios activos</p>
         </motion.div>
 
@@ -276,7 +326,7 @@ export default function DashboardPage() {
             <span className="text-sm text-gray-500">Top</span>
           </div>
           <h3 className="text-xl font-bold text-gray-800">
-            {stats?.encuestasMasRespondidas[0]?.titulo || "N/A"}
+            {stats?.encuestasMasRespondidas[0]?.titulo || 'N/A'}
           </h3>
           <p className="text-sm text-gray-600 mt-1">Encuesta más popular</p>
         </motion.div>
@@ -309,7 +359,9 @@ export default function DashboardPage() {
           transition={{ delay: 0.5 }}
           className="bg-white rounded-2xl p-6 shadow-lg"
         >
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Respuestas por Encuesta</h3>
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">
+            Respuestas por Encuesta
+          </h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={chartData?.respuestasPorEncuesta}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -328,7 +380,9 @@ export default function DashboardPage() {
           transition={{ delay: 0.6 }}
           className="bg-white rounded-2xl p-6 shadow-lg"
         >
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Distribución por Edad</h3>
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">
+            Distribución por Edad
+          </h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -336,13 +390,16 @@ export default function DashboardPage() {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={(entry) => `${entry.name}: ${entry.value}%`}
+                label={entry => `${entry.name}: ${entry.value}%`}
                 outerRadius={80}
                 fill="#8884d8"
                 dataKey="value"
               >
                 {chartData?.distribucionDemografica.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
                 ))}
               </Pie>
               <Tooltip />
@@ -357,17 +414,19 @@ export default function DashboardPage() {
           transition={{ delay: 0.7 }}
           className="bg-white rounded-2xl p-6 shadow-lg lg:col-span-2"
         >
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Respuestas por Día</h3>
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">
+            Respuestas por Día
+          </h3>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={chartData?.respuestasPorDia}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="fecha" />
               <YAxis />
               <Tooltip />
-              <Line 
-                type="monotone" 
-                dataKey="respuestas" 
-                stroke="#8B5CF6" 
+              <Line
+                type="monotone"
+                dataKey="respuestas"
+                stroke="#8B5CF6"
                 strokeWidth={3}
                 dot={{ fill: '#8B5CF6', strokeWidth: 2, r: 6 }}
                 activeDot={{ r: 8 }}
@@ -385,26 +444,49 @@ export default function DashboardPage() {
         className="max-w-7xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden"
       >
         <div className="p-6 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-800">Participaciones Recientes</h3>
+          <h3 className="text-lg font-semibold text-gray-800">
+            Participaciones Recientes
+          </h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700">Usuario</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700">Encuesta</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700">Fecha</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700">Duración</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700">Acciones</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700">
+                  Usuario
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700">
+                  Encuesta
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700">
+                  Fecha
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700">
+                  Duración
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700">
+                  Acciones
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {participaciones.map((participacion) => (
-                <tr key={participacion.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 text-sm text-gray-900">{participacion.usuario}</td>
-                  <td className="px-6 py-4 text-sm text-gray-900">{participacion.encuesta}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{participacion.fecha}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{participacion.duracion} min</td>
+              {participaciones.map(participacion => (
+                <tr
+                  key={participacion.id}
+                  className="hover:bg-gray-50 transition-colors"
+                >
+                  <td className="px-6 py-4 text-sm text-gray-900">
+                    {participacion.usuario}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900">
+                    {participacion.encuesta}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-600">
+                    {participacion.fecha}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-600">
+                    {participacion.duracion} min
+                  </td>
                   <td className="px-6 py-4">
                     <button
                       onClick={() => setSelectedParticipacion(participacion)}
@@ -422,7 +504,7 @@ export default function DashboardPage() {
 
       {/* Modal de detalles */}
       {selectedParticipacion && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
           onClick={() => setSelectedParticipacion(null)}
         >
@@ -430,9 +512,11 @@ export default function DashboardPage() {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className="bg-white rounded-2xl p-6 max-w-md w-full"
-            onClick={(e) => e.stopPropagation()}
+            onClick={e => e.stopPropagation()}
           >
-            <h3 className="text-xl font-semibold mb-4">Detalles de Participación</h3>
+            <h3 className="text-xl font-semibold mb-4">
+              Detalles de Participación
+            </h3>
             <div className="space-y-3">
               <div>
                 <span className="text-gray-600">Usuario:</span>
@@ -448,7 +532,9 @@ export default function DashboardPage() {
               </div>
               <div>
                 <span className="text-gray-600">Duración:</span>
-                <p className="font-medium">{selectedParticipacion.duracion} minutos</p>
+                <p className="font-medium">
+                  {selectedParticipacion.duracion} minutos
+                </p>
               </div>
             </div>
             <button
@@ -462,4 +548,4 @@ export default function DashboardPage() {
       )}
     </div>
   );
-} 
+}

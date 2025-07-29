@@ -1,5 +1,5 @@
-import { FaCalendar, FaClock, FaTrophy } from "react-icons/fa";
-import Image from "next/image";
+import { FaCalendar, FaClock, FaTrophy } from 'react-icons/fa';
+import Image from 'next/image';
 
 interface Encuesta {
   id_encuesta: number;
@@ -22,14 +22,14 @@ interface TarjetaEncuestaProps {
 export default function TarjetaEncuesta({
   encuesta,
   mostrarEstado = false,
-  onParticipate
+  onParticipate,
 }: TarjetaEncuestaProps) {
   return (
     <article className="group bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col h-full">
       {/* Imagen de la encuesta */}
       <div className="relative h-48 sm:h-56 lg:h-48 bg-gray-100">
         <Image
-          src={encuesta.imagen || "/img/default.jpg"}
+          src={encuesta.imagen || '/img/default.jpg'}
           alt={`Imagen de ${encuesta.titulo}`}
           fill
           className="object-cover"
@@ -43,7 +43,7 @@ export default function TarjetaEncuesta({
         <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
           {encuesta.titulo}
         </h3>
-        
+
         <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-1">
           {encuesta.descripcion}
         </p>
@@ -53,21 +53,22 @@ export default function TarjetaEncuesta({
           <div className="flex items-center gap-2">
             <FaCalendar className="text-blue-500" />
             <span className="truncate">
-              Hasta: {new Date(encuesta.fecha_fin).toLocaleDateString('es-ES', {
+              Hasta:{' '}
+              {new Date(encuesta.fecha_fin).toLocaleDateString('es-ES', {
                 day: 'numeric',
                 month: 'short',
-                year: 'numeric'
+                year: 'numeric',
               })}
             </span>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <FaTrophy className="text-yellow-500" />
             <span className="font-semibold text-green-600">
               {encuesta.puntos_otorga} puntos
             </span>
           </div>
-          
+
           {encuesta.tiempo_estimado && (
             <div className="flex items-center gap-2">
               <FaClock className="text-purple-500" />

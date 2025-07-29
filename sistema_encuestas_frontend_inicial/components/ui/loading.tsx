@@ -1,15 +1,23 @@
 import React from 'react';
 
 // Spinner básico de carga
-export const Spinner = ({ className = '', size = 'md' }: { className?: string; size?: 'sm' | 'md' | 'lg' }) => {
+export const Spinner = ({
+  className = '',
+  size = 'md',
+}: {
+  className?: string;
+  size?: 'sm' | 'md' | 'lg';
+}) => {
   const sizeClasses = {
     sm: 'w-4 h-4',
-    md: 'w-6 h-6', 
-    lg: 'w-8 h-8'
+    md: 'w-6 h-6',
+    lg: 'w-8 h-8',
   };
 
   return (
-    <div className={`inline-block animate-spin rounded-full border-2 border-solid border-current border-r-transparent ${sizeClasses[size]} ${className}`}>
+    <div
+      className={`inline-block animate-spin rounded-full border-2 border-solid border-current border-r-transparent ${sizeClasses[size]} ${className}`}
+    >
       <span className="sr-only">Cargando...</span>
     </div>
   );
@@ -26,7 +34,11 @@ export const SkeletonCard = () => (
 );
 
 // Loading overlay para páginas completas
-export const LoadingOverlay = ({ message = 'Cargando...' }: { message?: string }) => (
+export const LoadingOverlay = ({
+  message = 'Cargando...',
+}: {
+  message?: string;
+}) => (
   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div className="bg-white rounded-lg p-6 flex flex-col items-center">
       <Spinner size="lg" className="text-blue-600 mb-4" />
@@ -36,10 +48,14 @@ export const LoadingOverlay = ({ message = 'Cargando...' }: { message?: string }
 );
 
 // Loading inline para botones
-export const ButtonLoading = ({ children, loading, ...props }: { 
-  children: React.ReactNode; 
-  loading: boolean; 
-  [key: string]: any; 
+export const ButtonLoading = ({
+  children,
+  loading,
+  ...props
+}: {
+  children: React.ReactNode;
+  loading: boolean;
+  [key: string]: any;
 }) => (
   <button {...props} disabled={loading || props.disabled}>
     {loading && <Spinner size="sm" className="mr-2" />}
@@ -58,7 +74,10 @@ interface ErrorBoundaryState {
   error?: Error;
 }
 
-export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
@@ -101,4 +120,4 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 
     return this.props.children;
   }
-} 
+}

@@ -67,15 +67,20 @@ export interface FiltrosEncuesta {
 // Servicio de encuestas
 class EncuestasService {
   // Obtener encuestas activas con paginación y filtros
-  async obtenerEncuestasActivas(filtros: FiltrosEncuesta = {}): Promise<Encuesta[]> {
+  async obtenerEncuestasActivas(
+    filtros: FiltrosEncuesta = {}
+  ): Promise<Encuesta[]> {
     try {
       const params = new URLSearchParams();
-      
-      if (filtros.skip !== undefined) params.append('skip', filtros.skip.toString());
-      if (filtros.limit !== undefined) params.append('limit', filtros.limit.toString());
+
+      if (filtros.skip !== undefined)
+        params.append('skip', filtros.skip.toString());
+      if (filtros.limit !== undefined)
+        params.append('limit', filtros.limit.toString());
       if (filtros.orden) params.append('orden', filtros.orden);
       if (filtros.direccion) params.append('direccion', filtros.direccion);
-      if (filtros.filtro_visibilidad) params.append('filtro_visibilidad', filtros.filtro_visibilidad);
+      if (filtros.filtro_visibilidad)
+        params.append('filtro_visibilidad', filtros.filtro_visibilidad);
 
       const response = await api.get(`/encuestas/activas?${params}`);
       return response.data;
@@ -97,7 +102,9 @@ class EncuestasService {
   }
 
   // Crear nueva encuesta (solo admin)
-  async crearEncuesta(data: CrearEncuestaData): Promise<{ mensaje: string; id_encuesta: number; titulo: string }> {
+  async crearEncuesta(
+    data: CrearEncuestaData
+  ): Promise<{ mensaje: string; id_encuesta: number; titulo: string }> {
     try {
       const response = await api.post('/encuestas/', data);
       return response.data;
@@ -108,7 +115,10 @@ class EncuestasService {
   }
 
   // Actualizar encuesta (solo admin)
-  async actualizarEncuesta(id: number, data: Partial<CrearEncuestaData>): Promise<{ mensaje: string; id_encuesta: number }> {
+  async actualizarEncuesta(
+    id: number,
+    data: Partial<CrearEncuestaData>
+  ): Promise<{ mensaje: string; id_encuesta: number }> {
     try {
       const response = await api.put(`/encuestas/${id}`, data);
       return response.data;
@@ -130,7 +140,9 @@ class EncuestasService {
   }
 
   // Enviar respuestas de encuesta
-  async enviarRespuestas(data: RespuestaEncuesta): Promise<{ mensaje: string; puntos_obtenidos?: number }> {
+  async enviarRespuestas(
+    data: RespuestaEncuesta
+  ): Promise<{ mensaje: string; puntos_obtenidos?: number }> {
     try {
       const response = await api.post('/respuestas/', data);
       return response.data;
@@ -159,7 +171,9 @@ class EncuestasService {
   // Verificar si el usuario ya respondió una encuesta
   async verificarParticipacion(idEncuesta: number): Promise<boolean> {
     try {
-      const response = await api.get(`/participaciones/verificar/${idEncuesta}`);
+      const response = await api.get(
+        `/participaciones/verificar/${idEncuesta}`
+      );
       return response.data.ya_participo;
     } catch (error) {
       console.error('Error al verificar participación:', error);
@@ -200,39 +214,54 @@ export const useEncuestas = () => {
     obtenerEncuestas,
     obtenerEncuesta,
     enviarRespuestas,
-    verificarParticipacion: encuestasService.verificarParticipacion.bind(encuestasService),
-    obtenerHistorial: encuestasService.obtenerHistorialUsuario.bind(encuestasService),
+    verificarParticipacion:
+      encuestasService.verificarParticipacion.bind(encuestasService),
+    obtenerHistorial:
+      encuestasService.obtenerHistorialUsuario.bind(encuestasService),
   };
 };
 
 // --- PREMIOS Y CANJES ---
 
 export async function getPremios(token: string) {
-  return api.get('/premios/', { headers: { Authorization: `Bearer ${token}` } });
+  return api.get('/premios/', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
 
 export async function canjearPremio(data: any, token: string) {
-  return api.post('/premios/canje', data, { headers: { Authorization: `Bearer ${token}` } });
+  return api.post('/premios/canje', data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
 
 export async function getHistorialCanjes(token: string) {
-  return api.get('/premios/canjes', { headers: { Authorization: `Bearer ${token}` } });
+  return api.get('/premios/canjes', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
 
 export async function getMisDatos(token: string) {
-  return api.get('/usuario/me', { headers: { Authorization: `Bearer ${token}` } });
+  return api.get('/usuario/me', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
 
 export async function actualizarMisDatos(data: any, token: string) {
-  return api.put('/usuario/me', data, { headers: { Authorization: `Bearer ${token}` } });
+  return api.put('/usuario/me', data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
 
-export async function cambiarContrasena(data: {
-  contrasena_actual: string;
-  nueva_contrasena: string;
-  confirmar_contrasena: string;
-}, token: string) {
+export async function cambiarContrasena(
+  data: {
+    contrasena_actual: string;
+    nueva_contrasena: string;
+    confirmar_contrasena: string;
+  },
+  token: string
+) {
   return api.post('/usuario/cambiar-contrasena', data, {
-    headers: { Authorization: `Bearer ${token}` }
+    headers: { Authorization: `Bearer ${token}` },
   });
 }

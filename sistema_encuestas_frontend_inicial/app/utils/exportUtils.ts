@@ -1,87 +1,139 @@
-import jsPDF from "jspdf";
-import "jspdf-autotable";
-import * as XLSX from "xlsx";
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as ExcelJS from 'exceljs';
 
-interface ExportOptions {
-  filename: string;
-  headers: string[];
-  data: any[];
-  title?: string;
-}
+// Función para exportar a PDF
+export const exportToPDF = async (
+  filename: string,
+  headers: string[],
+  data: any[],
+  title?: string
+) => {
+  const doc = new jsPDF();
 
-// Exportar a PDF
-export const exportToPDF = ({ filename, headers, data, title }: ExportOptions) => {
-  const doc = new jsPDF({ orientation: 'landscape' });
-  
-  // Título
+  // Agregar título si se proporciona
   if (title) {
-    doc.setFontSize(18);
-    doc.setTextColor(33, 150, 243);
+    doc.setFontSize(16);
     doc.text(title, 20, 20);
+    doc.setFontSize(10);
+    doc.text(
+      `Generado el: ${new Date().toLocaleDateString('es-ES')}`,
+      20,
+      title ? 30 : 20
+    );
   }
-  
-  // Fecha
-  doc.setFontSize(10);
-  doc.setTextColor(100);
-  doc.text(`Generado el: ${new Date().toLocaleDateString('es-ES')}`, 20, title ? 30 : 20);
-  
-  // Tabla
-  (doc as any).autoTable({
-    startY: title ? 40 : 30,
+
+  // Configurar tabla
+  autoTable(doc, {
     head: [headers],
-    body: data,
-    theme: 'grid',
-    headStyles: { fillColor: [59, 130, 246] },
-    styles: { fontSize: 8 },
-    columnStyles: {
-      0: { cellWidth: 'auto' },
-      1: { cellWidth: 'auto' },
-    }
+    body: data.map(row => headers.map(header => row[header] || '')),
+    startY: title ? 40 : 20,
+    styles: {
+      fontSize: 8,
+      cellPadding: 2,
+    },
+    headStyles: {
+      fillColor: [59, 130, 246],
+      textColor: 255,
+      fontStyle: 'bold',
+    },
   });
-  
+
   doc.save(`${filename}.pdf`);
 };
 
-// Exportar a Excel
-export const exportToExcel = ({ filename, headers, data, title }: ExportOptions) => {
-  // Crear un nuevo libro
-  const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
-  const wb = XLSX.utils.book_new();
-  
-  // Agregar hoja con título
-  XLSX.utils.book_append_sheet(wb, ws, title || "Datos");
-  
-  // Guardar archivo
-  XLSX.writeFile(wb, `${filename}.xlsx`);
+// Función para exportar a Excel usando ExcelJS
+export const exportToExcel = async (
+  filename: string,
+  headers: string[],
+  data: any[],
+  title?: string
+) => {
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet('Datos');
+
+  // Agregar título si se proporciona
+  if (title) {
+    worksheet.addRow([title]);
+    worksheet.addRow([
+      `Generado el: ${new Date().toLocaleDateString('es-ES')}`,
+    ]);
+    worksheet.addRow([]); // Línea en blanco
+  }
+
+  // Agregar encabezados
+  worksheet.addRow(headers);
+
+  // Agregar datos
+  data.forEach(row => {
+    const rowData = headers.map(header => row[header] || '');
+    worksheet.addRow(rowData);
+  });
+
+  // Estilizar encabezados
+  const headerRow = worksheet.getRow(title ? 4 : 1);
+  headerRow.font = { bold: true };
+  headerRow.fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: 'FF3B82F6' },
+  };
+  headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+
+  // Autoajustar columnas
+  worksheet.columns.forEach(column => {
+    column.width = 15;
+  });
+
+  // Generar archivo
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  });
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `${filename}.xlsx`;
+  link.click();
+  window.URL.revokeObjectURL(url);
 };
 
-// Exportar a CSV
-export const exportToCSV = ({ filename, headers, data }: ExportOptions) => {
-  // Crear contenido CSV
-  const csvContent = [
-    headers.join(','),
-    ...data.map(row => 
-      row.map((cell: any) => {
-        // Escapar comillas y envolver en comillas si contiene comas
-        const cellStr = String(cell);
-        if (cellStr.includes(',') || cellStr.includes('"')) {
-          return `"${cellStr.replace(/"/g, '""')}"`;
-        }
-        return cellStr;
-      }).join(',')
-    )
-  ].join('\n');
-  
-  // Crear blob y descargar
-  const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+// Función para exportar a CSV
+export const exportToCSV = async ({
+  filename,
+  data,
+}: {
+  filename: string;
+  data: any[];
+}) => {
+  if (data.length === 0) return;
+
+  const columnKeys = Object.keys(data[0]);
+  const csvContent =
+    'data:text/csv;charset=utf-8,' +
+    columnKeys.join(',') +
+    '\n' +
+    data
+      .map(obj => columnKeys.map(key => `"${obj[key] || ''}"`).join(','))
+      .join('\n');
+
+  const encodedUri = encodeURI(csvContent);
   const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = `${filename}.csv`;
+  link.setAttribute('href', encodedUri);
+  link.setAttribute('download', `${filename}.csv`);
+  document.body.appendChild(link);
   link.click();
+  document.body.removeChild(link);
 };
 
 // Exportar a JSON
-export const exportToJSON = ({ filename, data }: { filename: string; data: any }) => {
+export const exportToJSON = ({
+  filename,
+  data,
+}: {
+  filename: string;
+  data: any;
+}) => {
   const jsonStr = JSON.stringify(data, null, 2);
   const blob = new Blob([jsonStr], { type: 'application/json' });
   const link = document.createElement('a');
@@ -92,10 +144,8 @@ export const exportToJSON = ({ filename, data }: { filename: string; data: any }
 
 // Función auxiliar para convertir objetos a arrays para la tabla
 export const objectsToTableData = (
-  objects: any[], 
+  objects: any[],
   columnKeys: string[]
 ): any[][] => {
-  return objects.map(obj => 
-    columnKeys.map(key => obj[key] || '')
-  );
-}; 
+  return objects.map(obj => columnKeys.map(key => obj[key] || ''));
+};

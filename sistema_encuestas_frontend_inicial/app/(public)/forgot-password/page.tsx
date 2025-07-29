@@ -1,35 +1,39 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { FaEnvelope, FaArrowLeft } from "react-icons/fa";
-import api from "@/app/services/api";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { FaEnvelope, FaArrowLeft } from 'react-icons/fa';
+import api from '@/app/services/api';
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
-    setMessage("");
+    setError('');
+    setMessage('');
 
     try {
-      const response = await api.post("/auth/forgot-password", {
-        email: email.trim().toLowerCase()
+      const response = await api.post('/auth/forgot-password', {
+        email: email.trim().toLowerCase(),
       });
 
       setIsSuccess(true);
-      setMessage("Si el email existe en nuestro sistema, recibirás un correo con instrucciones para restablecer tu contraseña.");
-      setEmail("");
+      setMessage(
+        'Si el email existe en nuestro sistema, recibirás un correo con instrucciones para restablecer tu contraseña.'
+      );
+      setEmail('');
     } catch (error: any) {
-      setError("Ocurrió un error al procesar tu solicitud. Por favor intenta nuevamente.");
+      setError(
+        'Ocurrió un error al procesar tu solicitud. Por favor intenta nuevamente.'
+      );
     } finally {
       setIsLoading(false);
     }
@@ -54,7 +58,10 @@ export default function ForgotPasswordPage() {
           {!isSuccess ? (
             <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Correo electrónico
                 </label>
                 <input
@@ -66,7 +73,7 @@ export default function ForgotPasswordPage() {
                   className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
                   placeholder="tu@email.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={e => setEmail(e.target.value)}
                 />
               </div>
 
@@ -90,14 +97,30 @@ export default function ForgotPasswordPage() {
                 >
                   {isLoading ? (
                     <span className="flex items-center">
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
                       </svg>
                       Enviando...
                     </span>
                   ) : (
-                    "Enviar correo de recuperación"
+                    'Enviar correo de recuperación'
                   )}
                 </button>
               </div>
@@ -118,7 +141,7 @@ export default function ForgotPasswordPage() {
                 <p className="text-center font-medium">¡Correo enviado!</p>
                 <p className="text-center text-sm mt-2">{message}</p>
               </div>
-              
+
               <div className="text-center">
                 <Link
                   href="/login"
@@ -134,4 +157,4 @@ export default function ForgotPasswordPage() {
       </div>
     </div>
   );
-} 
+}

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import api from "@/app/services/api";
-import Link from "next/link";
+import { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import api from '@/app/services/api';
+import Link from 'next/link';
 
 interface PreguntaDetalle {
   id_pregunta: number;
@@ -40,7 +40,7 @@ export default function DetalleParticipacionPage() {
         const res = await api.get(`/participaciones/${id}/detalle`);
         setDetalle(res.data);
       } catch (error) {
-        console.error("Error cargando detalle", error);
+        console.error('Error cargando detalle', error);
       } finally {
         setCargando(false);
       }
@@ -50,7 +50,8 @@ export default function DetalleParticipacionPage() {
   }, [id]);
 
   if (cargando) return <p className="p-10">Cargando detalle...</p>;
-  if (!detalle) return <p className="p-10 text-red-500">Detalle no encontrado</p>;
+  if (!detalle)
+    return <p className="p-10 text-red-500">Detalle no encontrado</p>;
 
   return (
     <main className="max-w-4xl mx-auto py-10 px-4 space-y-6">
@@ -63,29 +64,28 @@ export default function DetalleParticipacionPage() {
       <p className="text-gray-600">{detalle.encuesta.descripcion}</p>
       <div className="text-sm text-gray-700 space-y-1">
         <p>
-          <strong>Fecha:</strong>{" "}
+          <strong>Fecha:</strong>{' '}
           {new Date(detalle.fecha_participacion).toLocaleString()}
         </p>
         <p>
           <strong>Puntaje obtenido:</strong> {detalle.puntaje_obtenido}
         </p>
         <p>
-          <strong>Tiempo de respuesta:</strong> {" "}
+          <strong>Tiempo de respuesta:</strong>{' '}
           {detalle.tiempo_respuesta_segundos} segundos
         </p>
       </div>
 
       <section className="space-y-4">
-        {detalle.preguntas.map((p) => (
-          <div
-            key={p.id_pregunta}
-            className="bg-white p-4 rounded-xl shadow"
-          >
+        {detalle.preguntas.map(p => (
+          <div key={p.id_pregunta} className="bg-white p-4 rounded-xl shadow">
             <p className="font-medium mb-2">{p.texto}</p>
-            {p.tipo === "texto_libre" ? (
+            {p.tipo === 'texto_libre' ? (
               <p className="text-gray-700">Respuesta: {p.respuesta_texto}</p>
             ) : (
-              <p className="text-gray-700">Opción elegida: {p.opcion_elegida}</p>
+              <p className="text-gray-700">
+                Opción elegida: {p.opcion_elegida}
+              </p>
             )}
           </div>
         ))}

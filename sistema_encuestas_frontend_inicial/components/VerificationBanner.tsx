@@ -17,7 +17,7 @@ export default function VerificationBanner() {
       console.log('🔍 VerificationBanner - Estado del usuario:', {
         email: user.email,
         email_verificado: user.email_verificado,
-        tipo_valor: typeof user.email_verificado
+        tipo_valor: typeof user.email_verificado,
       });
     }
   }, [user]);
@@ -26,19 +26,23 @@ export default function VerificationBanner() {
   // 1. No hay usuario
   // 2. El email está verificado (true o 'true' como string)
   // 3. El usuario lo ocultó manualmente
-  const emailVerificado = user?.email_verificado === true || String(user?.email_verificado) === 'true';
-  
+  const emailVerificado =
+    user?.email_verificado === true ||
+    String(user?.email_verificado) === 'true';
+
   if (!user || emailVerificado || !isVisible) {
     return null;
   }
 
   const handleResendVerification = async () => {
     if (!user?.email) return;
-    
+
     setIsResending(true);
     try {
       await api.post('/auth/reenviar-verificacion', { email: user.email });
-      toast.success('📧 Correo de verificación enviado. Revisa tu bandeja de entrada.');
+      toast.success(
+        '📧 Correo de verificación enviado. Revisa tu bandeja de entrada.'
+      );
     } catch (error) {
       toast.error('No se pudo enviar el correo. Intenta más tarde.');
     } finally {
@@ -60,15 +64,16 @@ export default function VerificationBanner() {
         <div className="bg-blue-100 rounded-full p-2 flex-shrink-0">
           <FaEnvelope className="w-5 h-5 text-blue-600" />
         </div>
-        
+
         <div className="flex-1">
           <h4 className="text-sm font-semibold text-blue-900 mb-1">
             📧 Verificación de email (opcional)
           </h4>
           <p className="text-sm text-blue-700 mb-3">
-            Tu cuenta funciona perfectamente, pero puedes verificar tu email para mayor seguridad y recibir notificaciones importantes.
+            Tu cuenta funciona perfectamente, pero puedes verificar tu email
+            para mayor seguridad y recibir notificaciones importantes.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-2">
             <button
               onClick={handleResendVerification}
@@ -87,7 +92,7 @@ export default function VerificationBanner() {
                 </>
               )}
             </button>
-            
+
             <button
               onClick={() => setIsVisible(false)}
               className="text-sm text-blue-600 hover:text-blue-700 px-4 py-2 transition-colors"
@@ -97,14 +102,15 @@ export default function VerificationBanner() {
           </div>
         </div>
       </div>
-      
+
       {/* Indicador de beneficios */}
       <div className="mt-3 pt-3 border-t border-blue-200">
         <p className="text-xs text-blue-600 flex items-center">
           <FaCheckCircle className="w-3 h-3 mr-1" />
-          Beneficios: Recuperación de cuenta, notificaciones importantes y mayor seguridad
+          Beneficios: Recuperación de cuenta, notificaciones importantes y mayor
+          seguridad
         </p>
       </div>
     </div>
   );
-} 
+}

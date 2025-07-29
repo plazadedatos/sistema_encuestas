@@ -1,7 +1,7 @@
-"use client";
-import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
-import { HiOutlineMail } from "react-icons/hi";
-import { GoLocation } from "react-icons/go";
+'use client';
+import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { HiOutlineMail } from 'react-icons/hi';
+import { GoLocation } from 'react-icons/go';
 
 export default function Footer() {
   return (
@@ -35,13 +35,22 @@ export default function Footer() {
         <div>
           <h3 className="font-semibold text-lg mb-2">Síguenos</h3>
           <div className="flex gap-4 text-xl mt-2">
-            <a href="#"className="hover:text-yellow-300 hover:scale-110 transition duration-300">
+            <a
+              href="#"
+              className="hover:text-yellow-300 hover:scale-110 transition duration-300"
+            >
               <FaFacebook />
             </a>
-            <a href="#" className="hover:text-yellow-300 hover:scale-110 transition duration-300">
+            <a
+              href="#"
+              className="hover:text-yellow-300 hover:scale-110 transition duration-300"
+            >
               <FaInstagram />
             </a>
-            <a href="#" className="hover:text-yellow-300 hover:scale-110 transition duration-300">
+            <a
+              href="#"
+              className="hover:text-yellow-300 hover:scale-110 transition duration-300"
+            >
               <FaTwitter />
             </a>
           </div>
@@ -50,7 +59,8 @@ export default function Footer() {
 
       {/* COPYRIGHT */}
       <div className="text-center text-sm bg-primary-dark/80 py-3">
-        © {new Date().getFullYear()} Plaza de Datos. Todos los derechos reservados.
+        © {new Date().getFullYear()} Plaza de Datos. Todos los derechos
+        reservados.
       </div>
     </footer>
   );

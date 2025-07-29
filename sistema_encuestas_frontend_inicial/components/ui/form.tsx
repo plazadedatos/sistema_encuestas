@@ -10,7 +10,9 @@ export const useFormValidation = (initialValues: any, validationRules: any) => {
 
   const validate = (fieldName?: string) => {
     const newErrors: any = {};
-    const fieldsToValidate = fieldName ? [fieldName] : Object.keys(validationRules);
+    const fieldsToValidate = fieldName
+      ? [fieldName]
+      : Object.keys(validationRules);
 
     fieldsToValidate.forEach(field => {
       const rules = validationRules[field];
@@ -22,11 +24,19 @@ export const useFormValidation = (initialValues: any, validationRules: any) => {
           newErrors[field] = rules.required;
         }
         // Min length validation
-        else if (rules.minLength && value && value.length < rules.minLength.value) {
+        else if (
+          rules.minLength &&
+          value &&
+          value.length < rules.minLength.value
+        ) {
           newErrors[field] = rules.minLength.message;
         }
         // Max length validation
-        else if (rules.maxLength && value && value.length > rules.maxLength.value) {
+        else if (
+          rules.maxLength &&
+          value &&
+          value.length > rules.maxLength.value
+        ) {
           newErrors[field] = rules.maxLength.message;
         }
         // Pattern validation
@@ -50,17 +60,25 @@ export const useFormValidation = (initialValues: any, validationRules: any) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
     setValues((prev: any) => ({ ...prev, [name]: value }));
-    
+
     // Validar campo individual si ya fue tocado
     if ((touched as any)[name]) {
       setTimeout(() => validate(name), 100);
     }
   };
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleBlur = (
+    e: React.FocusEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name } = e.target;
     setTouched((prev: any) => ({ ...prev, [name]: true }));
     validate(name);
@@ -68,7 +86,7 @@ export const useFormValidation = (initialValues: any, validationRules: any) => {
 
   const handleSubmit = async (onSubmit: (values: any) => Promise<void>) => {
     setIsSubmitting(true);
-    
+
     // Marcar todos los campos como tocados
     const allTouched = Object.keys(values).reduce((acc, key) => {
       acc[key] = true;
@@ -78,7 +96,7 @@ export const useFormValidation = (initialValues: any, validationRules: any) => {
 
     // Validar todo el formulario
     const isValid = validate();
-    
+
     if (isValid) {
       try {
         await onSubmit(values);
@@ -88,7 +106,7 @@ export const useFormValidation = (initialValues: any, validationRules: any) => {
     } else {
       toast.error('Por favor, corrige los errores en el formulario');
     }
-    
+
     setIsSubmitting(false);
   };
 
@@ -108,7 +126,7 @@ export const useFormValidation = (initialValues: any, validationRules: any) => {
     handleBlur,
     handleSubmit,
     resetForm,
-    setValues
+    setValues,
   };
 };
 
@@ -140,13 +158,16 @@ export const Input: React.FC<InputProps> = ({
   onChange,
   onBlur,
   className = '',
-  disabled = false
+  disabled = false,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div className={`mb-4 ${className}`}>
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
+      <label
+        htmlFor={name}
+        className="block text-sm font-medium text-gray-700 mb-1"
+      >
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
@@ -163,16 +184,15 @@ export const Input: React.FC<InputProps> = ({
         className={`
           w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 
           focus:outline-none focus:ring-2 focus:border-transparent
-          ${error && touched 
-            ? 'border-red-500 focus:ring-red-500' 
-            : 'border-gray-300 focus:ring-blue-500'
+          ${
+            error && touched
+              ? 'border-red-500 focus:ring-red-500'
+              : 'border-gray-300 focus:ring-blue-500'
           }
           ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
         `}
       />
-      {error && touched && (
-        <p className="mt-1 text-xs text-red-500">{error}</p>
-      )}
+      {error && touched && <p className="mt-1 text-xs text-red-500">{error}</p>}
     </div>
   );
 };
@@ -205,11 +225,14 @@ export const TextArea: React.FC<TextAreaProps> = ({
   onBlur,
   rows = 3,
   className = '',
-  disabled = false
+  disabled = false,
 }) => {
   return (
     <div className={`mb-4 ${className}`}>
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
+      <label
+        htmlFor={name}
+        className="block text-sm font-medium text-gray-700 mb-1"
+      >
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
@@ -225,16 +248,15 @@ export const TextArea: React.FC<TextAreaProps> = ({
         className={`
           w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 
           focus:outline-none focus:ring-2 focus:border-transparent resize-vertical
-          ${error && touched 
-            ? 'border-red-500 focus:ring-red-500' 
-            : 'border-gray-300 focus:ring-blue-500'
+          ${
+            error && touched
+              ? 'border-red-500 focus:ring-red-500'
+              : 'border-gray-300 focus:ring-blue-500'
           }
           ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
         `}
       />
-      {error && touched && (
-        <p className="mt-1 text-xs text-red-500">{error}</p>
-      )}
+      {error && touched && <p className="mt-1 text-xs text-red-500">{error}</p>}
     </div>
   );
 };
@@ -267,11 +289,14 @@ export const Select: React.FC<SelectProps> = ({
   options,
   placeholder = 'Seleccionar...',
   className = '',
-  disabled = false
+  disabled = false,
 }) => {
   return (
     <div className={`mb-4 ${className}`}>
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
+      <label
+        htmlFor={name}
+        className="block text-sm font-medium text-gray-700 mb-1"
+      >
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
@@ -285,9 +310,10 @@ export const Select: React.FC<SelectProps> = ({
         className={`
           w-full px-3 py-2 border rounded-md shadow-sm 
           focus:outline-none focus:ring-2 focus:border-transparent
-          ${error && touched 
-            ? 'border-red-500 focus:ring-red-500' 
-            : 'border-gray-300 focus:ring-blue-500'
+          ${
+            error && touched
+              ? 'border-red-500 focus:ring-red-500'
+              : 'border-gray-300 focus:ring-blue-500'
           }
           ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
         `}
@@ -299,9 +325,7 @@ export const Select: React.FC<SelectProps> = ({
           </option>
         ))}
       </select>
-      {error && touched && (
-        <p className="mt-1 text-xs text-red-500">{error}</p>
-      )}
+      {error && touched && <p className="mt-1 text-xs text-red-500">{error}</p>}
     </div>
   );
-}; 
+};
